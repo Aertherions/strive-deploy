@@ -171,6 +171,37 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 .monthly-summary .stat-lbl { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 2px; }
 
 /* ---- 历史 ---- */
+/* ---- 学习资源 ---- */
+.resource-subject { margin-bottom: 10px; }
+.resource-subject-header {
+  display: flex; align-items: center; gap: 8px; padding: 10px 0;
+  cursor: pointer; border-bottom: 1px solid var(--line);
+  font-size: 13px; letter-spacing: 0.03em; user-select: none;
+}
+.resource-subject-header .arrow { transition: transform 0.25s; font-size: 10px; color: var(--ink-dim); }
+.resource-subject.open .arrow { transform: rotate(90deg); }
+.resource-subject-body { display: none; padding: 8px 0 4px 16px; }
+.resource-subject.open .resource-subject-body { display: block; }
+.resource-link {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  font-size: 12px; color: var(--ink-dim); text-decoration: none;
+  border-bottom: 1px solid rgba(240,236,228,0.03); transition: color 0.2s;
+}
+.resource-link:hover { color: var(--gold); }
+.resource-link .r-num {
+  width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; flex-shrink: 0; font-family: var(--mono);
+}
+.resource-link:hover .r-num { border-color: var(--gold); color: var(--gold); }
+.resource-link .r-tag {
+  font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  border: 1px solid var(--line); flex-shrink: 0;
+}
+.resource-link .r-tag.bilibili { border-color: #fb7299; color: #fb7299; }
+.resource-link .r-tag.mooc { border-color: #5cb85c; color: #5cb85c; }
+.resource-link .r-tag.quark { border-color: #f0ad4e; color: #f0ad4e; }
+
 .history-list { max-height: 200px; overflow-y: auto; }
 .history-row {
   display: flex; align-items: center; gap: 10px; padding: 8px 0;
@@ -300,6 +331,76 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
   </div>
 </div>
 
+<!-- 学习资源 -->
+<div class="card section">
+  <h2>免费网课资源 · 点击直接跳转</h2>
+
+  <!-- 数学一 -->
+  <div class="resource-subject open" id="res-math">
+    <div class="resource-subject-header" onclick="toggleResource('res-math')">
+      <span class="arrow">▶</span> ∫ 数学一
+    </div>
+    <div class="resource-subject-body">
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=武忠祥 高等数学 0基础" target="_blank"><span class="r-num">1</span> 武忠祥 · 高数0基础课（B站 2454万播放）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Zvw5eAExX/" target="_blank"><span class="r-num">2</span> 张宇 · 2027基础30讲 书课包<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=汤家凤 考研数学 零基础 完整版" target="_blank"><span class="r-num">3</span> 汤家凤 · 零基础完整版（2195万播放）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Yx4y197kp/" target="_blank"><span class="r-num">4</span> 李永乐 · 线代全程班 基础+强化<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=周洋鑫 2027 考研数学" target="_blank"><span class="r-num">5</span> 周洋鑫 · 笑过全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=2027考研数学一 全程班 免费" target="_blank"><span class="r-num">6</span> 更多B站数学一免费资源汇总<span class="r-tag bilibili">B站</span></a>
+    </div>
+  </div>
+
+  <!-- 408专业课 -->
+  <div class="resource-subject" id="res-cs">
+    <div class="resource-subject-header" onclick="toggleResource('res-cs')">
+      <span class="arrow">▶</span> ◇ 408 计算机专业课
+    </div>
+    <div class="resource-subject-body">
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1RoSRBiETj/" target="_blank"><span class="r-num">1</span> 王道 · 2027 408领学班（数据结构+计组+OS+网络）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1nh411U71K/" target="_blank"><span class="r-num">2</span> 湖科大教书匠 · 计算机网络（计网救星）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/HIT-1001527001" target="_blank"><span class="r-num">3</span> 哈工大刘宏伟 · 计算机组成原理 Mooc<span class="r-tag mooc">Mooc</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1bAF6zCEUG/" target="_blank"><span class="r-num">4</span> 王道 · 数据结构精讲（咸鱼学长）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=王道 操作系统 2027" target="_blank"><span class="r-num">5</span> 王道 · 操作系统完整课程<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=B姐 bok 408 计算机 强化" target="_blank"><span class="r-num">6</span> B姐(bok) · 408四科思维导图串联强化课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/USTC-1002531006" target="_blank"><span class="r-num">7</span> 中国科大 · 操作系统原理 Mooc<span class="r-tag mooc">Mooc</span></a>
+    </div>
+  </div>
+
+  <!-- 英语一 -->
+  <div class="resource-subject" id="res-eng">
+    <div class="resource-subject-header" onclick="toggleResource('res-eng')">
+      <span class="arrow">▶</span> 🌐 英语一
+    </div>
+    <div class="resource-subject-body">
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1aT411n7wG/" target="_blank"><span class="r-num">1</span> 唐迟 · 阅读方法论（18年经典版，B站免费）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=颉斌斌 66句 长难句 完整版" target="_blank"><span class="r-num">2</span> 颉斌斌 · 66句长难句精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ShSoBwEAL/" target="_blank"><span class="r-num">3</span> 田静+刘晓艳+颉斌斌 · 三合一语法课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=Monkey老师 百句实战 长难句" target="_blank"><span class="r-num">4</span> Monkey(边明锐) · 长难句百句实战<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=石雷鹏 考研作文 免费" target="_blank"><span class="r-num">5</span> 石雷鹏 · 作文功能句/实训班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=唐静 考研翻译 免费课" target="_blank"><span class="r-num">6</span> 唐静 · 翻译精讲课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=考研英语 单词 红宝书 免费" target="_blank"><span class="r-num">7</span> 单词 · 红宝书/墨墨背单词APP推荐<span class="r-tag bilibili">B站</span></a>
+    </div>
+  </div>
+
+  <!-- 政治 -->
+  <div class="resource-subject" id="res-pol">
+    <div class="resource-subject-header" onclick="toggleResource('res-pol')">
+      <span class="arrow">▶</span> 📜 政治
+    </div>
+    <div class="resource-subject-body">
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=徐涛 考研政治 强化班 完整版" target="_blank"><span class="r-num">1</span> 徐涛 · 强化班完整版（打基础首选）<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=腿姐 2027 考研政治 技巧班" target="_blank"><span class="r-num">2</span> 腿姐(陆寓丰) · 选择题技巧班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=肖秀荣 1000题 精讲 逐题" target="_blank"><span class="r-num">3</span> 肖秀荣 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=苏一 肖1000 带背 2027" target="_blank"><span class="r-num">4</span> 苏一 · 肖1000带刷+背诵手册<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=张修齐 考研政治 肖1000 使用" target="_blank"><span class="r-num">5</span> 张修齐 · 肖1000使用指南+避坑<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV11r5p6CEgr/" target="_blank"><span class="r-num">6</span> 徐涛+腿姐+肖秀荣 · 三合一笔记+出题拆解<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ZCnfegEHX/" target="_blank"><span class="r-num">7</span> 政治80+ · 全程复习规划保70冲80<span class="r-tag bilibili">B站</span></a>
+    </div>
+  </div>
+
+  <div style="font-size:10px;color:var(--ink-dim);text-align:center;padding-top:8px;">所有链接均为免费公开资源 · 点击直接跳转 · 建议B站资源按"最新发布"排序</div>
+</div>
+
 <!-- 各科进度 -->
 <div class="card section">
   <h2>各科进度</h2>
@@ -417,6 +518,11 @@ function renderChecklist() {
   }).join('');
 }
 function toggleCheck(id) { saveCheck(id, !getChecks()[id]); renderChecklist(); }
+
+// ── 资源折叠 ───────────────────────────
+function toggleResource(id) {
+  document.getElementById(id).classList.toggle('open');
+}
 
 // ── 进度 ───────────────────────────────
 function renderProgress() {
