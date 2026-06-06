@@ -28,6 +28,12 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ---- 粒子画布 ---- */
+#particles {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.7;
+}
+
 body {
   background: var(--paper);
   color: var(--ink);
@@ -355,6 +361,7 @@ body::before {
 </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
 
 <div class="header">
   <h1>考研督学</h1>
@@ -496,6 +503,111 @@ body::before {
 <div id="toasts"></div>
 
 <script>
+// ═══════════════════════════════════════════
+// 粒子系统 · 暗金星尘
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: -999, y: -999 };
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+document.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+class Particle {
+  constructor() {
+    this.reset(true);
+  }
+  reset(init) {
+    this.x = Math.random() * w;
+    this.y = init ? Math.random() * h : h + 20;
+    this.size = Math.random() * 2.5 + 0.8;
+    this.speedY = -(Math.random() * 0.4 + 0.15);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.6 + 0.1;
+    this.flickerSpeed = Math.random() * 0.02 + 0.005;
+    this.flickerOffset = Math.random() * Math.PI * 2;
+    this.golden = Math.random() < 0.15; // 15% 金色粒子
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    // 鼠标引力
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 120) {
+      const force = (120 - dist) / 120;
+      this.x += (dx / dist) * force * 0.6;
+      this.y += (dy / dist) * force * 0.6;
+    }
+    // 边界重置
+    if (this.y < -20 || this.x < -20 || this.x > w + 20) {
+      this.reset(false);
+    }
+    this.opacity += Math.sin(Date.now() * this.flickerSpeed + this.flickerOffset) * 0.003;
+    this.opacity = Math.max(0.05, Math.min(0.7, this.opacity));
+  }
+  draw() {
+    const alpha = this.opacity;
+    if (this.golden) {
+      ctx.fillStyle = `rgba(201,169,110,${alpha})`;
+      ctx.shadowColor = `rgba(201,169,110,${alpha * 0.8})`;
+      ctx.shadowBlur = this.size * 3;
+    } else {
+      ctx.fillStyle = `rgba(240,236,228,${alpha * 0.35})`;
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function initParticles(count) {
+  particles = [];
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle());
+  }
+}
+initParticles(80);
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  // 偶尔生成新粒子在鼠标附近
+  if (mouse.x > 0 && Math.random() < 0.3) {
+    const spark = new Particle();
+    spark.x = mouse.x + (Math.random() - 0.5) * 40;
+    spark.y = mouse.y + (Math.random() - 0.5) * 40;
+    spark.size = Math.random() * 1.5 + 0.5;
+    spark.speedY = -(Math.random() * 0.6 + 0.2);
+    spark.speedX = (Math.random() - 0.5) * 0.8;
+    spark.golden = true;
+    spark.opacity = 0.8;
+    particles.push(spark);
+    if (particles.length > 150) particles.shift();
+  }
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ═══════════════════════════════════════════
+
 const EXAM = new Date(2027, 11, 25, 8, 30, 0);
 
 const CHECK_ITEMS = [
