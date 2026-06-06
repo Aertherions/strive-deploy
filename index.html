@@ -684,6 +684,16 @@ body::before {
 <!-- Tab 1: 督学面板 -->
 <div class="tab-panel active" id="tab-dashboard">
 
+<!-- 今日建议 · 快速反馈（置顶） -->
+<div class="card" id="advice-card" style="border-color:rgba(201,169,110,0.25);">
+  <h2>💡 今日学习建议 <span style="font-size:10px;color:var(--ink-dim);">（点击课程名直接跳转网课）</span></h2>
+  <div id="advice-content">
+    <div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">
+      提交每日汇报后，AI 将自动生成个性化建议
+    </div>
+  </div>
+</div>
+
 <!-- API 设置 -->
 <div class="settings-toggle" onclick="toggleSettings()">⚙ API 设置</div>
 <div class="settings-panel" id="settings-panel">
@@ -720,17 +730,6 @@ body::before {
     </div>
     <div class="score-detail" id="score-detail"></div>
   </div>
-</div>
-
-<!-- 今日建议 · 快速反馈 -->
-<div class="card section" id="advice-card">
-  <h2>💡 今日学习建议 <span style="font-size:10px;color:var(--ink-dim);">（根据当前进度+网课观看自动生成）</span></h2>
-  <div id="advice-content">
-    <div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">
-      提交每日汇报后，AI 将自动生成个性化建议
-    </div>
-  </div>
-  <div id="advice-quick" style="display:none;margin-top:10px;"></div>
 </div>
 
 <!-- 历史记录 -->
@@ -1690,6 +1689,50 @@ function showMonthlySummary(data) {
   div.classList.add('show');
 }
 
+// ── 课程名 → B站链接映射 ──────────────────
+function getCourseLink(courseName, subject) {
+  // 提取关键词搜索
+  const keywordMap = {
+    '张宇': '张宇 2027 基础30讲',
+    '武忠祥': '武忠祥 高数 0基础',
+    '汤家凤': '汤家凤 零基础 完整版',
+    '李永乐': '李永乐 线代 全程班',
+    '周洋鑫': '周洋鑫 2027 考研数学',
+    '宋浩': '宋浩 线性代数 完整版',
+    '方浩': '方浩 概率统计 基础班',
+    '余炳森': '余炳森 概率论 考研',
+    '王道': '王道 408 ' + (subject === 'cs' ? '领学班' : ''),
+    '咸鱼': '王道 408 数据结构 咸鱼',
+    '湖科大': '湖科大教书匠 计算机网络',
+    'B姐': 'B姐 bok 408 强化',
+    '天勤': '率辉 天勤 数据结构',
+    '唐迟': '唐迟 阅读方法论',
+    '颉斌斌': '颉斌斌 66句 长难句',
+    '田静': '田静 考研英语 长难句',
+    'Monkey': 'Monkey老师 百句实战 长难句',
+    '石雷鹏': '石雷鹏 考研作文 功能句',
+    '唐静': '唐静 考研翻译',
+    '易熙人': '易熙人 完形填空 真题',
+    '刘琦': '刘琦 新题型 英一',
+    '潘赟': '潘赟 作文 九宫格',
+    '柴荣': '柴荣 考研英语 阅读',
+    '徐涛': '徐涛 考研政治 强化班',
+    '腿姐': '腿姐 2027 考研政治 技巧班',
+    '肖秀荣': '肖秀荣 1000题 精讲',
+    '苏一': '苏一 肖1000 带背',
+    '张修齐': '张修齐 考研政治',
+    '米鹏': '米鹏 考研政治 全程班',
+    '空卡': '空卡 考研政治 带背',
+    '大牙': '大牙 考研政治 选择题',
+    '刘宏伟': '哈工大 刘宏伟 计组',
+  };
+  let keyword = courseName;
+  for (const [k, v] of Object.entries(keywordMap)) {
+    if (courseName.includes(k)) { keyword = v; break; }
+  }
+  return `https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}`;
+}
+
 // ── 今日建议卡片 ────────────────────────
 function renderAdvice() {
   const reports = getReports();
@@ -1714,7 +1757,7 @@ function renderAdvice() {
       html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;">`;
       html += `<div style="font-size:11px;color:${colors[k]||'var(--ink-dim)'};letter-spacing:0.04em;">${labels[k]||k}</div>`;
       html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v}</div>`;
-      if (c[k]) html += `<div style="font-size:10px;color:var(--ink-dim);margin-top:2px;">📺 ${c[k]}</div>`;
+      if (c[k]) html += `<a href="${getCourseLink(c[k], k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;" onclick="event.stopPropagation()">📺 ${c[k]} →</a>`;
       html += '</div>';
     });
     html += '</div>';
@@ -1746,7 +1789,7 @@ function renderAdvice() {
       html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;${isWeak ? 'border-color:var(--gold);' : ''}">`;
       html += `<div style="font-size:11px;color:${colors[k]};letter-spacing:0.04em;">${labels[k]} ${isWeak ? '⚠ 薄弱' : ''}</div>`;
       html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v.hrs}</div>`;
-      html += `<div style="font-size:10px;color:var(--ink-dim);margin-top:2px;">📺 ${v.course}</div>`;
+      html += `<a href="${getCourseLink(v.course, k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;">📺 ${v.course} →</a>`;
       html += '</div>';
     });
     html += '</div>';
