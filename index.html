@@ -354,9 +354,145 @@ body::before {
 
 .section { margin-top: 20px; }
 
-@media (max-width: 400px) {
-  body { padding: 20px 16px 120px; }
-  h1 { font-size: 28px; }
+/* ═══════════════════════════════════════════
+   响应式 · 自动适配设备
+   ═══════════════════════════════════════════ */
+
+/* ── 手机竖屏 < 480px ── */
+@media (max-width: 479px) {
+  body { padding: 16px 12px 110px; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 13px; margin-bottom: 14px; }
+  .header { padding: 30px 0 10px; }
+  .header .tagline { font-size: 11px; }
+  .card { padding: 16px; margin-bottom: 12px; }
+  .countdown-strip {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    margin: 16px 0 20px;
+  }
+  .countdown-strip .cell { padding: 12px 10px; min-width: auto; }
+  .countdown-strip .num { font-size: 28px; }
+  .countdown-strip .lbl { font-size: 10px; }
+  .check-row { padding: 12px 10px; gap: 10px; }
+  .check-mark { width: 22px; height: 22px; font-size: 10px; }
+  .check-icon { font-size: 18px; width: 24px; }
+  .check-label { font-size: 13px; }
+  .check-target { font-size: 10px; }
+  .report-area { min-height: 110px; padding: 12px; font-size: 13px; line-height: 1.7; }
+  .btn { padding: 8px 14px; font-size: 11px; }
+  .btn.small { padding: 5px 10px; font-size: 10px; }
+  .score-header { gap: 12px; }
+  .score-circle { width: 48px; height: 48px; font-size: 20px; }
+  .score-grade { font-size: 15px; }
+  .score-comment { font-size: 12px; }
+  .score-detail { font-size: 11px; }
+  .score-card { padding: 16px; margin-top: 12px; }
+  .monthly-summary .stat-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .monthly-summary .stat-num { font-size: 22px; }
+  .monthly-summary .stat-lbl { font-size: 10px; }
+  .resource-subject-label { font-size: 13px; }
+  .resource-link { font-size: 11px; padding: 7px 0 7px 8px; }
+  .resource-link .r-num { width: 18px; height: 18px; font-size: 9px; }
+  .resource-link .r-tag { font-size: 9px; padding: 1px 4px; }
+  .history-row { font-size: 11px; }
+  .history-row .h-date { min-width: 70px; }
+  .bottom-bar {
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 10px));
+    gap: 6px;
+  }
+  .bottom-bar .btn { max-width: none; font-size: 11px; padding: 8px 12px; }
+  .quote-block .quote { font-size: 14px; line-height: 1.8; }
+  .progress-label { font-size: 10px; min-width: 60px; }
+  .progress-val { font-size: 10px; min-width: 28px; }
+  .settings-panel { padding: 10px; }
+  .settings-panel input { padding: 8px 10px; font-size: 12px; }
+  .section { margin-top: 12px; }
+  /* 减少粒子数 */
+  #particles { opacity: 0.4; }
+}
+
+/* ── 平板 480px-768px ── */
+@media (min-width: 480px) and (max-width: 768px) {
+  body { padding: 24px 20px 130px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 14px; }
+  .header { padding: 40px 0 12px; }
+  .card { padding: 22px; margin-bottom: 16px; }
+  .countdown-strip { margin: 22px 0 28px; }
+  .countdown-strip .cell { padding: 16px 18px; min-width: 68px; }
+  .countdown-strip .num { font-size: 34px; }
+  .countdown-strip .lbl { font-size: 11px; }
+  .report-area { min-height: 120px; padding: 15px; font-size: 14px; }
+  .btn { padding: 9px 17px; font-size: 12px; }
+  .score-circle { width: 56px; height: 56px; font-size: 23px; }
+  .score-grade { font-size: 16px; }
+  .score-comment { font-size: 13px; }
+  .score-detail { font-size: 12px; }
+  .quote-block .quote { font-size: 16px; }
+  .resource-link { font-size: 12px; }
+  .resource-link .r-num { width: 20px; height: 20px; font-size: 10px; }
+  .section { margin-top: 16px; }
+}
+
+/* ── 小屏笔记本 768px-1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body { padding: 28px 40px 140px; }
+  .card { padding: 26px; }
+}
+
+/* ── 桌面大屏 > 1024px ── */
+@media (min-width: 1025px) {
+  body {
+    padding: 40px 0 150px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .header, .countdown-strip, .card, .settings-panel, .bottom-bar {
+    width: 100%; max-width: 720px;
+  }
+  .card { padding: 34px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 16px; }
+  .report-area { min-height: 160px; font-size: 16px; padding: 22px; }
+  .countdown-strip .cell { padding: 22px 30px; min-width: 84px; }
+  .countdown-strip .num { font-size: 44px; }
+  .countdown-strip .lbl { font-size: 13px; }
+  .check-row { padding: 18px 22px; }
+  .check-label { font-size: 16px; }
+  .btn { padding: 12px 24px; font-size: 14px; }
+  .score-circle { width: 72px; height: 72px; font-size: 30px; }
+  .score-grade { font-size: 20px; }
+  .score-comment { font-size: 15px; }
+  .score-detail { font-size: 14px; }
+  .quote-block .quote { font-size: 19px; }
+  .resource-link { font-size: 14px; padding: 10px 0 10px 14px; }
+  .resource-link .r-num { width: 24px; height: 24px; font-size: 12px; }
+  .resource-subject-label { font-size: 16px; }
+  .history-row { font-size: 14px; }
+  .monthly-summary .stat-num { font-size: 30px; }
+  .monthly-summary .stat-lbl { font-size: 12px; }
+  .monthly-summary .summary-text { font-size: 15px; }
+  .progress-label { font-size: 13px; }
+  .progress-val { font-size: 13px; }
+  .settings-panel input { font-size: 15px; padding: 12px 16px; }
+  .section { margin-top: 24px; }
+  /* 底部栏跟随居中 */
+  .bottom-bar {
+    left: 50%; transform: translateX(-50%);
+    max-width: 720px; border-radius: var(--radius) var(--radius) 0 0;
+  }
+}
+
+/* ── 横屏手机 / 短屏幕 ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  body { padding: 10px 20px 80px; }
+  .header { padding: 10px 0; }
+  .header h1 { font-size: 22px; }
+  .countdown-strip { margin: 8px 0 12px; }
+  .countdown-strip .cell { padding: 8px 12px; }
+  .countdown-strip .num { font-size: 24px; }
+  .card { padding: 12px 16px; margin-bottom: 8px; }
+  .section { margin-top: 6px; }
+  .bottom-bar { padding: 6px 12px; }
 }
 </style>
 </head>
@@ -516,7 +652,18 @@ function resize() {
   w = canvas.width = window.innerWidth;
   h = canvas.height = window.innerHeight;
 }
-window.addEventListener('resize', resize);
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+  resize();
+  const newWidth = window.innerWidth;
+  if ((lastWidth < 480 && newWidth >= 480) ||
+      (lastWidth < 768 && newWidth >= 768) ||
+      (lastWidth >= 768 && newWidth < 768) ||
+      (lastWidth >= 480 && newWidth < 480)) {
+    initParticles(newWidth < 480 ? 40 : newWidth < 768 ? 60 : 80);
+  }
+  lastWidth = newWidth;
+});
 resize();
 
 document.addEventListener('mousemove', e => {
@@ -582,7 +729,7 @@ function initParticles(count) {
     particles.push(new Particle());
   }
 }
-initParticles(80);
+initParticles(window.innerWidth < 480 ? 40 : window.innerWidth < 768 ? 60 : 80);
 
 function animate() {
   ctx.clearRect(0, 0, w, h);
