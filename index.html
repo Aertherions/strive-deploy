@@ -722,6 +722,17 @@ body::before {
   </div>
 </div>
 
+<!-- 今日建议 · 快速反馈 -->
+<div class="card section" id="advice-card">
+  <h2>💡 今日学习建议 <span style="font-size:10px;color:var(--ink-dim);">（根据当前进度+网课观看自动生成）</span></h2>
+  <div id="advice-content">
+    <div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">
+      提交每日汇报后，AI 将自动生成个性化建议
+    </div>
+  </div>
+  <div id="advice-quick" style="display:none;margin-top:10px;"></div>
+</div>
+
 <!-- 历史记录 -->
 <div class="card section">
   <h2>近期汇报记录</h2>
@@ -1373,6 +1384,8 @@ async function submitReport() {
     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
 
+    // 刷新建议卡片
+    renderAdvice();
     // 更新统计图表
     refreshStatsIfVisible();
   } catch (err) {
@@ -1677,7 +1690,71 @@ function showMonthlySummary(data) {
   div.classList.add('show');
 }
 
-// ── 标签切换 ───────────────────────────
+// ── 今日建议卡片 ────────────────────────
+function renderAdvice() {
+  const reports = getReports();
+  const todayReport = reports[today()];
+  const content = document.getElementById('advice-content');
+
+  if (todayReport && todayReport.score != null) {
+    // 有今日汇报 → 显示 AI 生成的个性化建议
+    const s = todayReport.tomorrow_schedule || {};
+    const c = todayReport.tomorrow_courses || {};
+    let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">';
+    html += `<div style="font-size:40px;font-family:var(--mono);color:var(--gold);">${todayReport.score}</div>`;
+    html += `<div><div style="font-size:14px;color:var(--ink);">今日评分 · ${todayReport.grade || '--'} 级</div>`;
+    html += `<div style="font-size:12px;color:var(--ink-dim);">${todayReport.comment || ''}</div></div></div>`;
+
+    // 8小时计划
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+    const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
+    const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+    Object.entries(s).forEach(([k, v]) => {
+      if (k === 'total' || !v || v === '0小时') return;
+      html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;">`;
+      html += `<div style="font-size:11px;color:${colors[k]||'var(--ink-dim)'};letter-spacing:0.04em;">${labels[k]||k}</div>`;
+      html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v}</div>`;
+      if (c[k]) html += `<div style="font-size:10px;color:var(--ink-dim);margin-top:2px;">📺 ${c[k]}</div>`;
+      html += '</div>';
+    });
+    html += '</div>';
+    html += `<div style="font-size:10px;color:var(--gold-burn);text-align:right;margin-top:8px;">每日学习 ${s.total || '8小时'}</div>`;
+
+    content.innerHTML = html;
+  } else {
+    // 无今日汇报 → 根据进度生成默认建议
+    const prog = {};
+    PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; });
+    const weak = Object.entries(prog).sort((a, b) => a[1] - b[1]);
+
+    const defaultPlan = {
+      math: { hrs: '3小时', course: '张宇基础30讲' },
+      cs: { hrs: '3小时', course: '王道数据结构+计组' },
+      eng: { hrs: '1.5小时', course: '唐迟阅读方法论' },
+      pol: { hrs: '0.5小时', course: '今日暂不安排政治' },
+    };
+
+    let html = '<div style="text-align:center;margin-bottom:10px;">';
+    html += '<div style="font-size:24px;font-family:var(--mono);color:var(--gold);">8h</div>';
+    html += '<div style="font-size:12px;color:var(--ink-dim);">每日学习时长目标</div></div>';
+
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+    const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
+    const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+    Object.entries(defaultPlan).forEach(([k, v]) => {
+      const isWeak = weak[0] && weak[0][0] === k;
+      html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;${isWeak ? 'border-color:var(--gold);' : ''}">`;
+      html += `<div style="font-size:11px;color:${colors[k]};letter-spacing:0.04em;">${labels[k]} ${isWeak ? '⚠ 薄弱' : ''}</div>`;
+      html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v.hrs}</div>`;
+      html += `<div style="font-size:10px;color:var(--ink-dim);margin-top:2px;">📺 ${v.course}</div>`;
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<div style="font-size:11px;color:var(--ink-dim);text-align:center;margin-top:10px;">提交汇报后 AI 会生成个性化建议替换此默认计划</div>';
+
+    content.innerHTML = html;
+  }
+}
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -2027,6 +2104,9 @@ function init() {
   if (cachedMonthly) {
     showMonthlySummary(cachedMonthly);
   }
+
+  // 渲染今日建议
+  renderAdvice();
 }
 
 init();
