@@ -431,6 +431,86 @@ body::before {
 .quote-block .quote { font-size: 17px; font-style: italic; color: var(--ink-dim); line-height: 2.0; }
 .quote-block .quote em { color: var(--gold); font-style: normal; }
 
+/* ---- AI答疑聊天 ---- */
+.chat-container {
+  display: flex; flex-direction: column; height: calc(100vh - 280px); min-height: 400px;
+}
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 8px 0; -webkit-overflow-scrolling: touch;
+}
+.chat-msg {
+  margin-bottom: 12px; max-width: 88%; animation: fadeUp 0.3s ease;
+}
+.chat-msg.user { margin-left: auto; }
+.chat-msg.user .chat-bubble {
+  background: rgba(201,169,110,0.15); border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 14px 14px 4px 14px; padding: 10px 14px;
+  color: var(--ink); font-size: 13px; line-height: 1.6;
+}
+.chat-msg.ai .chat-bubble {
+  background: var(--paper-lift); border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px; padding: 10px 14px;
+  color: var(--ink-dim); font-size: 13px; line-height: 1.7;
+}
+.chat-msg.ai .chat-bubble code {
+  background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px;
+  font-family: var(--mono); font-size: 11px; color: var(--gold);
+}
+.chat-msg.ai .chat-bubble pre {
+  background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 6px;
+  overflow-x: auto; font-size: 11px; margin: 6px 0;
+}
+.chat-msg-label {
+  font-size: 10px; color: var(--ink-dim); margin-bottom: 3px; letter-spacing: 0.06em;
+}
+.chat-msg.user .chat-msg-label { text-align: right; }
+.chat-input-row {
+  display: flex; gap: 8px; padding: 10px 0; border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.chat-input {
+  flex: 1; background: transparent; border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 14px; color: var(--ink);
+  font-size: 13px; font-family: var(--font); outline: none; resize: none;
+  min-height: 42px; max-height: 100px; line-height: 1.5;
+}
+.chat-input:focus { border-color: var(--gold); }
+.chat-input::placeholder { color: var(--ink-dim); opacity: 0.4; }
+.chat-send {
+  padding: 10px 16px; background: var(--gold); color: var(--paper);
+  border: none; border-radius: 8px; font-size: 13px; font-family: var(--font);
+  cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.chat-send:hover { background: var(--gold-burn); }
+.chat-send:disabled { opacity: 0.4; pointer-events: none; }
+.chat-send.loading {
+  position: relative; color: transparent;
+}
+.chat-send.loading::after {
+  content: ''; position: absolute; inset: 0; margin: auto;
+  width: 14px; height: 14px; border: 2px solid var(--paper);
+  border-top-color: transparent; border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+.chat-typing {
+  display: none; padding: 8px 14px; color: var(--ink-dim); font-size: 11px;
+}
+.chat-typing.show { display: block; animation: fadeUp 0.3s ease; }
+.chat-clear {
+  text-align: center; padding: 6px;
+}
+.chat-clear button {
+  background: none; border: none; color: var(--ink-dim); font-size: 10px;
+  cursor: pointer; opacity: 0.5; letter-spacing: 0.04em;
+}
+.chat-clear button:hover { opacity: 1; color: var(--rust); }
+
+@media (max-width: 479px) {
+  .chat-container { height: calc(100vh - 240px); min-height: 300px; }
+  .chat-msg { max-width: 94%; }
+  .chat-msg .chat-bubble { font-size: 12px; padding: 8px 12px; }
+}
+
 .section { margin-top: 20px; }
 
 /* ---- 顶部标签导航 ---- */
@@ -679,6 +759,7 @@ body::before {
   <button class="tab-btn active" onclick="switchTab('dashboard')">📊 督学面板</button>
   <button class="tab-btn" onclick="switchTab('stats')">📈 数据统计</button>
   <button class="tab-btn" onclick="switchTab('resources')">📚 网课资源</button>
+  <button class="tab-btn" onclick="switchTab('qa')">💬 AI答疑</button>
 </div>
 
 <!-- Tab 1: 督学面板 -->
@@ -864,6 +945,19 @@ body::before {
       </div>
     </div>
   </div>
+
+  <!-- 月度总结 -->
+  <div class="card section">
+    <h2>📅 月度总结</h2>
+    <div style="font-size:13px;color:var(--ink-dim);margin-bottom:12px;">
+      选择月份，AI 自动汇总该月所有汇报，生成学习成果总结。
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="month-select" style="background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink);font-size:13px;font-family:var(--font);outline:none;" onchange="onMonthChange()"></select>
+      <button class="btn primary" id="monthly-btn" onclick="generateMonthly()">生成 AI 月度总结</button>
+    </div>
+    <div class="monthly-summary" id="monthly-summary"></div>
+  </div>
 </div><!-- /tab-stats -->
 
 <!-- Tab 3: 网课资源（直接展示） -->
@@ -872,6 +966,29 @@ body::before {
     <h2>📚 免费网课资源 · 点击直接跳转</h2>
     <div id="tab-resource-content"></div>
     <div style="font-size:11px;color:var(--ink-dim);text-align:center;padding-top:12px;">全部免费公开 · 点击跳转B站 · 播放量标注仅供参考</div>
+  </div>
+</div>
+
+<!-- Tab 4: AI 答疑 -->
+<div class="tab-panel" id="tab-qa">
+  <div class="card section">
+    <h2>💬 AI 考研答疑 <span style="font-size:10px;color:var(--ink-dim);">（DeepSeek · 数一/408/英一/政治）</span></h2>
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg ai">
+          <div class="chat-msg-label">🤖 AI 导师</div>
+          <div class="chat-bubble">你好！我是你的考研AI导师。数学一、408专业课、英语一、政治，任何问题都可以问我。<br><br>试试问：<br>• "求极限的常用方法有哪些？"<br>• "KMP算法 next 数组怎么求？"<br>• "英语阅读理解怎么提高正确率？"<br>• "马原的剩余价值率怎么算？"</div>
+        </div>
+      </div>
+      <div class="chat-typing" id="chat-typing">⏳ AI 正在思考...</div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat-input" placeholder="输入你的学习问题..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">发送</button>
+      </div>
+      <div class="chat-clear">
+        <button onclick="clearChat()">清除对话</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -887,19 +1004,6 @@ body::before {
     <div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">提交汇报后 AI 自动更新进度</div>
   </div>
 </div>
-</div>
-
-<!-- 月度总结 -->
-<div class="card section">
-  <h2>月度总结</h2>
-  <div style="font-size:13px;color:var(--ink-dim);margin-bottom:12px;">
-    选择月份，AI 自动汇总该月所有汇报，生成学习成果总结。
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-    <select id="month-select" style="background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink);font-size:13px;font-family:var(--font);outline:none;" onchange="onMonthChange()"></select>
-    <button class="btn primary" id="monthly-btn" onclick="generateMonthly()">生成 AI 月度总结</button>
-  </div>
-  <div class="monthly-summary" id="monthly-summary"></div>
 </div>
 
 <!-- 每日金句 -->
@@ -1963,6 +2067,99 @@ async function regenerateAdvice() {
     toast('生成失败，使用默认计划');
   }
 }
+// ── AI 答疑聊天 ────────────────────────
+function getChatHistory() { return S('chat_history') || []; }
+function saveChatHistory(h) { S('chat_history', h.slice(-40)); }
+function clearChat() {
+  S('chat_history', []);
+  document.getElementById('chat-messages').innerHTML = `
+    <div class="chat-msg ai">
+      <div class="chat-msg-label">🤖 AI 导师</div>
+      <div class="chat-bubble">对话已清除。有什么学习问题尽管问！</div>
+    </div>`;
+  toast('对话已清除');
+}
+
+function renderChatHistory() {
+  const msgs = document.getElementById('chat-messages');
+  const history = getChatHistory();
+  if (!history.length) return;
+  msgs.innerHTML = history.map(m => `
+    <div class="chat-msg ${m.role === 'user' ? 'user' : 'ai'}">
+      <div class="chat-msg-label">${m.role === 'user' ? '👤 你' : '🤖 AI 导师'}</div>
+      <div class="chat-bubble">${m.role === 'user' ? m.content.replace(/</g,'&lt;').replace(/\n/g,'<br>') : m.content.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div>
+    </div>
+  `).join('');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-send-btn');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('settings-panel').classList.add('show');
+    toast('请先填写 DeepSeek API Key');
+    return;
+  }
+
+  input.disabled = true; btn.disabled = true;
+  btn.classList.add('loading'); btn.textContent = '';
+  document.getElementById('chat-typing').classList.add('show');
+
+  const history = getChatHistory();
+  history.push({ role: 'user', content: question });
+
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg user"><div class="chat-msg-label">👤 你</div><div class="chat-bubble">${question.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const contextMessages = [
+      { role: 'system', content: '你是考研AI导师。学生目标：天大×港理工 380分（数一+408+英一+政治），考试2027.12.25。回答简洁准确，数学给步骤，408结合王道教材，英语给技巧+例句，政治结合肖秀荣/徐涛。用中文回答，专业术语保留英文。' },
+      ...history.slice(-10).map(m => ({ role: m.role, content: m.content })),
+    ];
+
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: getApiModel(), messages: contextMessages, temperature: 0.7, max_tokens: 1000 }),
+    });
+
+    if (!resp.ok) throw new Error('API error: ' + resp.status);
+    const data = await resp.json();
+    const answer = data.choices[0].message.content.trim();
+
+    history.push({ role: 'assistant', content: answer });
+    saveChatHistory(history);
+
+    document.getElementById('chat-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble">${answer.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch (err) {
+    document.getElementById('chat-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble" style="color:var(--rust);">抱歉出错了：${err.message}</div></div>`;
+  } finally {
+    input.disabled = false; btn.disabled = false;
+    btn.classList.remove('loading'); btn.textContent = '发送';
+    input.value = ''; input.focus();
+  }
+}
+
+// 自适应输入框高度
+document.addEventListener('DOMContentLoaded', function() {
+  const ta = document.getElementById('chat-input');
+  if (ta) {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+  }
+});
+
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1972,6 +2169,7 @@ function switchTab(name) {
   if (panel) panel.classList.add('active');
   if (name === 'stats') { renderStats(); }
   if (name === 'resources') { renderResourceTab(); checkStaleLinks(); }
+  if (name === 'qa') { renderChatHistory(); }
 }
 
 // ── 渲染网课资源到标签页 ──────────────────
