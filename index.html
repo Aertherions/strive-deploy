@@ -705,6 +705,7 @@ body::before {
     placeholder="写下今天学了什么、有什么收获、遇到什么困难...&#10;&#10;AI 会根据你的打卡完成度 + 汇报内容综合打分。"></textarea>
   <div style="display:flex;gap:8px;">
     <button class="btn primary" id="submit-btn" onclick="submitReport()">提交汇报 · AI 评分</button>
+    <button class="btn" id="auto-report-btn" onclick="autoGenerateReport()">🤖 AI 自动写汇报</button>
     <button class="btn small" onclick="loadTodayDraft()">恢复草稿</button>
   </div>
 
@@ -1177,6 +1178,97 @@ async function callDeepSeek(systemPrompt, userMessage) {
 }
 
 // ── 提交每日汇报 ────────────────────────
+// ── AI 自动生成汇报 ────────────────────
+async function autoGenerateReport() {
+  const btn = document.getElementById('auto-report-btn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 撰写中...';
+  toast('AI 正在分析今日数据...');
+
+  try {
+    // 收集数据
+    const checks = getChecks();
+    const checkSummary = CHECK_ITEMS.map(i => {
+      const done = checks[i.id] ? '已完成' : '未完成';
+      return `${i.icon} ${i.label}：${done}`;
+    }).join('；');
+    const doneCount = CHECK_ITEMS.filter(i => checks[i.id]).length;
+
+    const progressSummary = PROGRESS_ITEMS.map(p => {
+      return `${p.label}进度 ${S('prog_' + p.key) || 0}%`;
+    }).join('；');
+
+    const resClicks = S('res_clicks') || {};
+    const recentClicks = Object.entries(resClicks)
+      .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 7)
+      .map(([k, v]) => `${k}: ${v.count}次`)
+      .join(', ') || '今日尚未观看网课';
+
+    const genPrompt = `你是一位考研备考生。根据以下今日学习数据，用第一人称写一段200字左右的每日学习汇报。
+
+要求：
+- 语气真诚、有反思、不浮夸
+- 如实描述完成情况，没完成的诚实说
+- 提到具体学了什么内容、用了谁的网课
+- 最后写一两句明天的改进方向
+
+【今日打卡】${checkSummary}（共完成${doneCount}/${CHECK_ITEMS.length}项）
+【各科进度】${progressSummary}
+【网课观看】${recentClicks}
+
+请直接返回汇报文本，不要JSON，不要引号包裹。`;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      document.getElementById('settings-panel').classList.add('show');
+      toast('请先填写 DeepSeek API Key');
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.textContent = '🤖 AI 自动写汇报';
+      return;
+    }
+
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey,
+      },
+      body: JSON.stringify({
+        model: getApiModel(),
+        messages: [
+          { role: 'system', content: '你是一个诚实的考研学生，写每日学习汇报。用第一人称，语气真诚。' },
+          { role: 'user', content: genPrompt },
+        ],
+        temperature: 0.8,
+        max_tokens: 600,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(`API 错误 (${resp.status})`);
+    }
+
+    const data = await resp.json();
+    const generatedText = data.choices[0].message.content.trim();
+
+    // 填入文本框
+    document.getElementById('report-input').value = generatedText;
+    saveDraft(generatedText);
+    toast('AI 汇报已生成，检查后可提交评分');
+  } catch (err) {
+    console.error(err);
+    toast('生成失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '🤖 AI 自动写汇报';
+  }
+}
+
 async function submitReport() {
   const btn = document.getElementById('submit-btn');
   const reportText = document.getElementById('report-input').value.trim();
