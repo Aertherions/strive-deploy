@@ -1601,7 +1601,10 @@ async function submitReport() {
       .map(([k, v]) => `${k}: ${v.count}次点击`)
       .join(', ') || '暂无网课观看记录';
 
-    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【近7天网课观看记录】\n${recentClicks}\n\n【学习汇报】\n${reportText}`;
+    // 收集最近答疑
+    const recentQA = getChatHistory().slice(-6).map(m => `[${m.role === 'user' ? '问' : '答'}] ${m.content.slice(0, 100)}`).join('\n');
+
+    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【近7天网课观看记录】\n${recentClicks}\n\n【近期答疑记录】\n${recentQA || '无'}\n\n【学习汇报】\n${reportText}`;
 
     const result = await callDeepSeek(systemPrompt, userMessage);
 
@@ -2032,6 +2035,12 @@ function renderAdviceData(data, content) {
   let html = '<div style="text-align:center;margin-bottom:10px;">';
   html += '<div style="font-size:24px;font-family:var(--mono);color:var(--gold);">8h</div>';
   html += '<div style="font-size:12px;color:var(--ink-dim);">每日学习时长目标</div></div>';
+  if (data.painPoints) {
+    html += `<div style="padding:8px 12px;margin-bottom:10px;border:1px solid rgba(201,169,110,0.3);border-radius:6px;font-size:11px;color:var(--gold-burn);text-align:center;">🎯 诊断薄弱点：${data.painPoints}</div>`;
+  }
+  if (data.tip) {
+    html += `<div style="font-size:12px;color:var(--ink);text-align:center;margin-bottom:10px;font-style:italic;">"${data.tip}"</div>`;
+  }
   html += buildAdviceGrid(data.schedule || {}, data.courses || {}, data.weakSubjects || []);
   html += '<div style="text-align:center;margin-top:10px;"><button class="btn small" onclick="regenerateAdvice()">🔄 DeepSeek 刷新建议</button></div>';
   content.innerHTML = html;
@@ -2087,26 +2096,44 @@ async function generateDailyAdvice() {
   const last3 = dates.slice(-3).map(d => reports[d].score || 0);
   const avgRecent = last3.length ? Math.round(last3.reduce((a,b)=>a+b,0)/last3.length) : 0;
 
+  // 收集最近的答疑问题，分析薄弱点
+  const chatHistory = getChatHistory();
+  const recentQuestions = chatHistory
+    .filter(m => m.role === 'user')
+    .slice(-10)
+    .map(m => m.content.slice(0, 80))
+    .join(' | ');
+  const recentAnswers = chatHistory
+    .filter(m => m.role === 'assistant')
+    .slice(-5)
+    .map(m => m.content.slice(0, 100))
+    .join(' | ');
+
   const prompt = `你是一位考研督学AI。学生目标：天大×港理工 380分。每日学习8小时。
 
 当前数据：
 - 各科AI估算进度：${JSON.stringify(prog)}
 - 近14天网课观看：${recentClicks}
 - 近3天平均分：${avgRecent}
+- 学生最近提问的问题：${recentQuestions || '暂无'}
+- AI最近回答摘要：${recentAnswers || '暂无'}
 
-请生成今日8小时学习计划，返回严格JSON：
+请分析学生最近在问什么类型的题、卡在哪个知识点，然后量身定制今日8小时学习计划，返回严格JSON：
 {
   "schedule": {"math":"3小时","cs":"3小时","eng":"1.5小时","pol":"0.5小时"},
   "courses": {"math":"张宇基础30讲第X讲","cs":"王道数据结构第X章","eng":"唐迟阅读方法论第X课","pol":"今日暂不安排"},
   "weakSubjects": ["cs"],
+  "painPoints": "学生最近卡在极限计算和KMP算法",
   "tip": "一句话学习建议"
 }
 
 规则：
+- 根据提问内容判断学生卡在哪，优先攻克痛点
 - 薄弱科目（进度最低的）多分配时间
 - 课程名具体到章节，确保能搜到
 - 政治进度<30%时不安排
-- tip 简短有力，有煽动性`;
+- tip 简短有力，有煽动性
+- painPoints 一句话总结学生当前的知识薄弱点`;
 
   const resp = await fetch('https://api.deepseek.com/chat/completions', {
     method: 'POST',
