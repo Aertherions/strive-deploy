@@ -1741,61 +1741,148 @@ function renderAdvice() {
 
   if (todayReport && todayReport.score != null) {
     // 有今日汇报 → 显示 AI 生成的个性化建议
-    const s = todayReport.tomorrow_schedule || {};
-    const c = todayReport.tomorrow_courses || {};
-    let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">';
-    html += `<div style="font-size:40px;font-family:var(--mono);color:var(--gold);">${todayReport.score}</div>`;
-    html += `<div><div style="font-size:14px;color:var(--ink);">今日评分 · ${todayReport.grade || '--'} 级</div>`;
-    html += `<div style="font-size:12px;color:var(--ink-dim);">${todayReport.comment || ''}</div></div></div>`;
-
-    // 8小时计划
-    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
-    const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
-    const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
-    Object.entries(s).forEach(([k, v]) => {
-      if (k === 'total' || !v || v === '0小时') return;
-      html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;">`;
-      html += `<div style="font-size:11px;color:${colors[k]||'var(--ink-dim)'};letter-spacing:0.04em;">${labels[k]||k}</div>`;
-      html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v}</div>`;
-      if (c[k]) html += `<a href="${getCourseLink(c[k], k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;" onclick="event.stopPropagation()">📺 ${c[k]} →</a>`;
-      html += '</div>';
-    });
-    html += '</div>';
-    html += `<div style="font-size:10px;color:var(--gold-burn);text-align:right;margin-top:8px;">每日学习 ${s.total || '8小时'}</div>`;
-
-    content.innerHTML = html;
+    renderAdviceFromReport(todayReport, content);
   } else {
-    // 无今日汇报 → 根据进度生成默认建议
-    const prog = {};
-    PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; });
-    const weak = Object.entries(prog).sort((a, b) => a[1] - b[1]);
+    // 无今日汇报 → 先显示缓存建议，无则自动生成
+    const cached = S('advice_' + today());
+    if (cached) {
+      renderAdviceData(cached, content);
+    } else {
+      content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">⏳ DeepSeek 正在生成今日学习建议...</div>';
+      generateDailyAdvice().then(data => {
+        S('advice_' + today(), data);
+        renderAdviceData(data, content);
+      }).catch(() => {
+        // 降级：硬编码默认
+        const fallback = getFallbackAdvice();
+        S('advice_' + today(), fallback);
+        renderAdviceData(fallback, content);
+      });
+    }
+  }
+}
 
-    const defaultPlan = {
-      math: { hrs: '3小时', course: '张宇基础30讲' },
-      cs: { hrs: '3小时', course: '王道数据结构+计组' },
-      eng: { hrs: '1.5小时', course: '唐迟阅读方法论' },
-      pol: { hrs: '0.5小时', course: '今日暂不安排政治' },
-    };
+function renderAdviceFromReport(report, content) {
+  const s = report.tomorrow_schedule || {};
+  const c = report.tomorrow_courses || {};
+  let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">';
+  html += `<div style="font-size:40px;font-family:var(--mono);color:var(--gold);">${report.score}</div>`;
+  html += `<div><div style="font-size:14px;color:var(--ink);">今日评分 · ${report.grade || '--'} 级</div>`;
+  html += `<div style="font-size:12px;color:var(--ink-dim);">${report.comment || ''}</div></div></div>`;
+  html += buildAdviceGrid(s, c);
+  html += `<div style="font-size:10px;color:var(--gold-burn);text-align:right;margin-top:8px;">每日学习 ${s.total || '8小时'}</div>`;
+  html += '<div style="text-align:center;margin-top:8px;"><button class="btn small" onclick="regenerateAdvice()">🔄 DeepSeek 刷新建议</button></div>';
+  content.innerHTML = html;
+}
 
-    let html = '<div style="text-align:center;margin-bottom:10px;">';
-    html += '<div style="font-size:24px;font-family:var(--mono);color:var(--gold);">8h</div>';
-    html += '<div style="font-size:12px;color:var(--ink-dim);">每日学习时长目标</div></div>';
+function renderAdviceData(data, content) {
+  let html = '<div style="text-align:center;margin-bottom:10px;">';
+  html += '<div style="font-size:24px;font-family:var(--mono);color:var(--gold);">8h</div>';
+  html += '<div style="font-size:12px;color:var(--ink-dim);">每日学习时长目标</div></div>';
+  html += buildAdviceGrid(data.schedule || {}, data.courses || {}, data.weakSubjects || []);
+  html += '<div style="text-align:center;margin-top:10px;"><button class="btn small" onclick="regenerateAdvice()">🔄 DeepSeek 刷新建议</button></div>';
+  content.innerHTML = html;
+}
 
-    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
-    const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
-    const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
-    Object.entries(defaultPlan).forEach(([k, v]) => {
-      const isWeak = weak[0] && weak[0][0] === k;
-      html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;${isWeak ? 'border-color:var(--gold);' : ''}">`;
-      html += `<div style="font-size:11px;color:${colors[k]};letter-spacing:0.04em;">${labels[k]} ${isWeak ? '⚠ 薄弱' : ''}</div>`;
-      html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${v.hrs}</div>`;
-      html += `<a href="${getCourseLink(v.course, k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;">📺 ${v.course} →</a>`;
-      html += '</div>';
-    });
+function buildAdviceGrid(schedule, courses, weakSubjects) {
+  const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
+  const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const defaults = {
+    math: { hrs: '3小时', course: '张宇基础30讲' },
+    cs: { hrs: '3小时', course: '王道数据结构+计组' },
+    eng: { hrs: '1.5小时', course: '唐迟阅读方法论' },
+    pol: { hrs: '0.5小时', course: '今日暂不安排政治' },
+  };
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+  ['math', 'cs', 'eng', 'pol'].forEach(k => {
+    const hrs = (schedule && schedule[k]) ? schedule[k] : defaults[k].hrs;
+    const course = (courses && courses[k]) ? courses[k] : defaults[k].course;
+    const isWeak = weakSubjects && weakSubjects.includes(k);
+    html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;${isWeak ? 'border-color:var(--gold);' : ''}">`;
+    html += `<div style="font-size:11px;color:${colors[k]};letter-spacing:0.04em;">${labels[k]} ${isWeak ? '⚠ 薄弱' : ''}</div>`;
+    html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${hrs}</div>`;
+    html += `<a href="${getCourseLink(course, k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;">📺 ${course} →</a>`;
     html += '</div>';
-    html += '<div style="font-size:11px;color:var(--ink-dim);text-align:center;margin-top:10px;">提交汇报后 AI 会生成个性化建议替换此默认计划</div>';
+  });
+  html += '</div>';
+  return html;
+}
 
-    content.innerHTML = html;
+function getFallbackAdvice() {
+  return {
+    schedule: { math: '3小时', cs: '3小时', eng: '1.5小时', pol: '0.5小时' },
+    courses: { math: '张宇基础30讲', cs: '王道数据结构+计组', eng: '唐迟阅读方法论', pol: '徐涛马原强化' },
+    weakSubjects: [],
+  };
+}
+
+// ── DeepSeek 自动生成每日学习建议 ──────────
+async function generateDailyAdvice() {
+  const apiKey = getApiKey();
+  if (!apiKey) return getFallbackAdvice();
+
+  const prog = {};
+  PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; });
+  const weak = Object.entries(prog).sort((a, b) => a[1] - b[1]).map(e => e[0]);
+  const resClicks = S('res_clicks') || {};
+  const recentClicks = Object.entries(resClicks)
+    .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 14)
+    .map(([k]) => k).join(', ') || '无记录';
+  const reports = getReports();
+  const dates = Object.keys(reports).sort();
+  const last3 = dates.slice(-3).map(d => reports[d].score || 0);
+  const avgRecent = last3.length ? Math.round(last3.reduce((a,b)=>a+b,0)/last3.length) : 0;
+
+  const prompt = `你是一位考研督学AI。学生目标：天大×港理工 380分。每日学习8小时。
+
+当前数据：
+- 各科进度：数学${prog.math}% 408专业课${prog.cs}% 英语${prog.eng}% 政治${prog.pol}%
+- 近14天网课观看：${recentClicks}
+- 近3天平均分：${avgRecent}
+
+请生成今日8小时学习计划，返回严格JSON：
+{
+  "schedule": {"math":"3小时","cs":"3小时","eng":"1.5小时","pol":"0.5小时"},
+  "courses": {"math":"张宇基础30讲第X讲","cs":"王道数据结构第X章","eng":"唐迟阅读方法论第X课","pol":"今日暂不安排"},
+  "weakSubjects": ["cs"],
+  "tip": "一句话学习建议"
+}
+
+规则：
+- 薄弱科目（进度最低的）多分配时间
+- 课程名具体到章节，确保能搜到
+- 政治进度<30%时不安排
+- tip 简短有力，有煽动性`;
+
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: getApiModel(),
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7, max_tokens: 500,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) throw new Error('API error');
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ── 手动刷新建议 ──────────────────────────
+async function regenerateAdvice() {
+  const content = document.getElementById('advice-content');
+  content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">⏳ DeepSeek 重新生成建议...</div>';
+  try {
+    S('advice_' + today(), null); // 清除缓存
+    const data = await generateDailyAdvice();
+    S('advice_' + today(), data);
+    renderAdviceData(data, content);
+    toast('建议已刷新');
+  } catch {
+    const fallback = getFallbackAdvice();
+    renderAdviceData(fallback, content);
+    toast('生成失败，使用默认计划');
   }
 }
 function switchTab(name) {
