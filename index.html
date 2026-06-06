@@ -39,7 +39,7 @@ body {
   color: var(--ink);
   font-family: var(--font);
   min-height: 100vh;
-  padding: 20px 20px 120px;
+  padding: 32px 24px 140px;
   -webkit-tap-highlight-color: transparent;
   user-select: none; -webkit-user-select: none;
   background-image:
@@ -47,100 +47,100 @@ body {
     radial-gradient(ellipse at 80% 100%, rgba(177,85,51,0.03) 0%, transparent 50%);
 }
 
-h1 { font-size: 26px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink); }
-h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink-dim); margin-bottom: 14px; }
+h1 { font-size: 34px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink); }
+h2 { font-size: 15px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink-dim); margin-bottom: 20px; }
 .numeral { font-family: var(--mono); font-feature-settings: "tnum"; }
 
-.header { text-align: center; padding: 30px 0 10px; }
-.header h1 { margin-bottom: 4px; }
-.header .tagline { font-size: 12px; color: var(--ink-dim); letter-spacing: 0.06em; }
+.header { text-align: center; padding: 50px 0 16px; }
+.header h1 { margin-bottom: 6px; }
+.header .tagline { font-size: 13px; color: var(--ink-dim); letter-spacing: 0.06em; }
 
 .countdown-strip {
-  display: flex; gap: 1px; justify-content: center; margin: 18px 0 28px;
+  display: flex; gap: 1px; justify-content: center; margin: 28px 0 36px;
   background: var(--line); border-radius: var(--radius); overflow: hidden;
 }
 .countdown-strip .cell {
-  background: var(--paper-lift); padding: 14px 16px; text-align: center; min-width: 62px;
+  background: var(--paper-lift); padding: 20px 24px; text-align: center; min-width: 76px;
 }
-.countdown-strip .num { font-size: 30px; font-weight: 400; color: var(--gold); font-family: var(--mono); line-height: 1; }
-.countdown-strip .lbl { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.08em; margin-top: 4px; }
+.countdown-strip .num { font-size: 40px; font-weight: 400; color: var(--gold); font-family: var(--mono); line-height: 1; }
+.countdown-strip .lbl { font-size: 12px; color: var(--ink-dim); letter-spacing: 0.08em; margin-top: 6px; }
 
 .card {
   background: var(--paper-lift); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 18px; margin-bottom: 10px;
+  padding: 28px; margin-bottom: 20px;
 }
 
 /* ---- 打卡 ---- */
 .check-row {
-  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
   border-bottom: 1px solid var(--line); cursor: pointer; transition: all 0.2s;
 }
 .check-row:last-child { border-bottom: none; }
 .check-row.done { opacity: 0.4; }
 .check-row.done .check-mark { border-color: var(--gold); background: var(--gold); }
 .check-mark {
-  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line);
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line);
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 10px; transition: all 0.2s;
+  font-size: 12px; transition: all 0.2s;
 }
-.check-icon { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
-.check-label { flex: 1; font-size: 13px; }
-.check-target { font-size: 11px; color: var(--ink-dim); font-family: var(--mono); }
+.check-icon { font-size: 22px; width: 30px; text-align: center; flex-shrink: 0; }
+.check-label { flex: 1; font-size: 15px; }
+.check-target { font-size: 12px; color: var(--ink-dim); font-family: var(--mono); }
 
 /* ---- 汇报 + 评分 ---- */
 .report-area {
-  width: 100%; min-height: 100px; background: transparent;
+  width: 100%; min-height: 140px; background: transparent;
   border: 1px solid var(--line); border-radius: 8px;
-  padding: 12px; color: var(--ink); font-size: 13px;
+  padding: 18px; color: var(--ink); font-size: 15px;
   font-family: var(--font); resize: vertical; outline: none;
-  line-height: 1.7; margin-bottom: 10px;
+  line-height: 1.8; margin-bottom: 14px;
 }
 .report-area:focus { border-color: var(--gold); }
 .report-area::placeholder { color: var(--ink-dim); opacity: 0.5; }
 
 .score-card {
-  margin-top: 12px; padding: 16px; border-radius: 8px;
+  margin-top: 18px; padding: 24px; border-radius: 8px;
   border: 1px solid var(--line); display: none;
 }
 .score-card.show { display: block; animation: fadeUp 0.4s ease; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
 
 .score-header {
-  display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 18px; margin-bottom: 16px;
 }
 .score-circle {
-  width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--gold);
+  width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold);
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-family: var(--mono); color: var(--gold); flex-shrink: 0;
+  font-size: 26px; font-family: var(--mono); color: var(--gold); flex-shrink: 0;
 }
 .score-circle.high { border-color: #7a9e7e; color: #7a9e7e; }
 .score-circle.mid { border-color: var(--gold); color: var(--gold); }
 .score-circle.low { border-color: var(--rust); color: var(--rust); }
 .score-meta { flex: 1; }
-.score-grade { font-size: 16px; font-family: var(--mono); }
-.score-comment { font-size: 13px; color: var(--ink-dim); margin-top: 2px; line-height: 1.5; }
+.score-grade { font-size: 18px; font-family: var(--mono); }
+.score-comment { font-size: 14px; color: var(--ink-dim); margin-top: 4px; line-height: 1.6; }
 
-.score-detail { font-size: 12px; color: var(--ink-dim); line-height: 1.7; }
+.score-detail { font-size: 13px; color: var(--ink-dim); line-height: 1.8; }
 .score-detail .hl { color: #7a9e7e; }
 .score-detail .prob { color: var(--rust); }
 .score-detail .prio { color: var(--gold-burn); }
 .score-detail .subject-tag {
   display: inline-block; padding: 2px 8px; border-radius: 4px;
-  font-size: 11px; margin: 2px 4px 2px 0;
+  font-size: 12px; margin: 3px 6px 3px 0;
   border: 1px solid var(--line); color: var(--ink-dim);
 }
 
 /* ---- 按钮 ---- */
 .btn {
-  padding: 8px 16px; border: 1px solid var(--gold); border-radius: 6px;
-  background: transparent; color: var(--gold); font-size: 12px;
+  padding: 10px 20px; border: 1px solid var(--gold); border-radius: 6px;
+  background: transparent; color: var(--gold); font-size: 13px;
   font-family: var(--font); cursor: pointer; letter-spacing: 0.04em;
   transition: all 0.2s; white-space: nowrap;
 }
 .btn:hover, .btn:active { background: var(--gold); color: var(--paper); }
 .btn.primary { background: var(--gold); color: var(--paper); border-color: var(--gold); }
 .btn.primary:hover { background: var(--gold-burn); }
-.btn.small { padding: 5px 10px; font-size: 11px; }
+.btn.small { padding: 6px 14px; font-size: 12px; }
 .btn:disabled { opacity: 0.4; pointer-events: none; }
 .btn.loading {
   position: relative; color: transparent;
@@ -161,11 +161,11 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 }
 .monthly-summary.show { display: block; }
 .monthly-summary h3 {
-  font-size: 14px; font-weight: 400; color: var(--gold);
-  letter-spacing: 0.04em; margin-bottom: 10px;
+  font-size: 15px; font-weight: 400; color: var(--gold);
+  letter-spacing: 0.04em; margin-bottom: 14px;
 }
 .monthly-summary .summary-text {
-  font-size: 13px; line-height: 1.8; color: var(--ink-dim);
+  font-size: 14px; line-height: 1.9; color: var(--ink-dim);
 }
 .monthly-summary .stat-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0;
@@ -173,31 +173,31 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 .monthly-summary .stat-item {
   padding: 10px; border: 1px solid var(--line); border-radius: 6px; text-align: center;
 }
-.monthly-summary .stat-num { font-size: 22px; font-family: var(--mono); color: var(--gold); }
-.monthly-summary .stat-lbl { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 2px; }
+.monthly-summary .stat-num { font-size: 26px; font-family: var(--mono); color: var(--gold); }
+.monthly-summary .stat-lbl { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 4px; }
 
 /* ---- 历史 ---- */
 /* ---- 学习资源 ---- */
-.resource-subject { margin-bottom: 12px; }
+.resource-subject { margin-bottom: 18px; }
 .resource-subject-label {
-  font-size: 13px; font-weight: 400; letter-spacing: 0.04em;
-  color: var(--gold); padding: 8px 0 6px;
-  border-bottom: 1px solid var(--line); margin-bottom: 4px;
+  font-size: 15px; font-weight: 400; letter-spacing: 0.04em;
+  color: var(--gold); padding: 10px 0 8px;
+  border-bottom: 1px solid var(--line); margin-bottom: 6px;
 }
 .resource-link {
-  display: flex; align-items: center; gap: 8px; padding: 7px 0 7px 12px;
-  font-size: 12px; color: var(--ink-dim); text-decoration: none;
+  display: flex; align-items: center; gap: 10px; padding: 9px 0 9px 12px;
+  font-size: 13px; color: var(--ink-dim); text-decoration: none;
   border-bottom: 1px solid rgba(240,236,228,0.03); transition: color 0.2s;
 }
 .resource-link:hover { color: var(--gold); }
 .resource-link .r-num {
-  width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line);
+  width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line);
   display: flex; align-items: center; justify-content: center;
-  font-size: 10px; flex-shrink: 0; font-family: var(--mono);
+  font-size: 11px; flex-shrink: 0; font-family: var(--mono);
 }
 .resource-link:hover .r-num { border-color: var(--gold); color: var(--gold); }
 .resource-link .r-tag {
-  font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  font-size: 10px; padding: 2px 7px; border-radius: 3px;
   border: 1px solid var(--line); flex-shrink: 0;
 }
 .resource-link .r-tag.bilibili { border-color: #fb7299; color: #fb7299; }
@@ -205,18 +205,18 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 
 .history-list { max-height: 200px; overflow-y: auto; }
 .history-row {
-  display: flex; align-items: center; gap: 10px; padding: 8px 0;
-  border-bottom: 1px solid var(--line); font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid var(--line); font-size: 13px; cursor: pointer;
 }
 .history-row:last-child { border-bottom: none; }
-.history-row .h-date { color: var(--ink-dim); font-family: var(--mono); min-width: 80px; }
-.history-row .h-score { font-family: var(--mono); color: var(--gold); min-width: 36px; }
+.history-row .h-date { color: var(--ink-dim); font-family: var(--mono); min-width: 90px; }
+.history-row .h-score { font-family: var(--mono); color: var(--gold); min-width: 40px; }
 .history-row .h-preview { flex: 1; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ---- 设置 ---- */
 .settings-toggle {
-  font-size: 11px; color: var(--ink-dim); cursor: pointer;
-  text-align: center; padding: 6px; letter-spacing: 0.06em; opacity: 0.6;
+  font-size: 12px; color: var(--ink-dim); cursor: pointer;
+  text-align: center; padding: 8px; letter-spacing: 0.06em; opacity: 0.6;
   transition: opacity 0.2s;
 }
 .settings-toggle:hover { opacity: 1; }
@@ -227,27 +227,27 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 .settings-panel.show { display: block; }
 .settings-panel input {
   width: 100%; background: transparent; border: 1px solid var(--line);
-  border-radius: 6px; padding: 8px 10px; color: var(--ink); font-size: 13px;
-  font-family: var(--mono); outline: none; margin-bottom: 8px;
+  border-radius: 6px; padding: 10px 14px; color: var(--ink); font-size: 14px;
+  font-family: var(--mono); outline: none; margin-bottom: 10px;
 }
 .settings-panel input:focus { border-color: var(--gold); }
 
 /* ---- 进度条 ---- */
 .progress-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
-.progress-label { font-size: 11px; min-width: 70px; letter-spacing: 0.06em; color: var(--ink-dim); }
+.progress-label { font-size: 12px; min-width: 80px; letter-spacing: 0.06em; color: var(--ink-dim); }
 .progress-track { flex: 1; height: 2px; background: var(--line); position: relative; }
 .progress-fill { height: 100%; position: absolute; left: 0; top: 0; transition: width 0.5s; }
 .progress-fill.math { background: var(--gold); }
 .progress-fill.cs { background: var(--rust); }
 .progress-fill.eng { background: #7a9e7e; }
 .progress-fill.pol { background: #8b6b5a; }
-.progress-val { font-size: 11px; font-family: var(--mono); color: var(--ink-dim); min-width: 32px; text-align: right; }
+.progress-val { font-size: 12px; font-family: var(--mono); color: var(--ink-dim); min-width: 36px; text-align: right; }
 
 /* ---- 底部 ---- */
 .bottom-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: var(--paper); border-top: 1px solid var(--line);
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 12px));
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 12px));
   display: flex; gap: 8px; justify-content: center; z-index: 100;
 }
 .bottom-bar .btn { flex: 1; max-width: 240px; text-align: center; }
@@ -256,7 +256,7 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 .toast {
   position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
   background: var(--gold); color: var(--paper); padding: 8px 18px;
-  border-radius: 20px; font-size: 12px; letter-spacing: 0.04em; z-index: 999;
+  border-radius: 20px; font-size: 13px; letter-spacing: 0.04em; z-index: 999;
   animation: toastAnim 2s forwards; pointer-events: none;
 }
 @keyframes toastAnim {
@@ -349,14 +349,14 @@ body::before {
 }
 
 .quote-block { text-align: center; padding: 16px 0; }
-.quote-block .quote { font-size: 15px; font-style: italic; color: var(--ink-dim); line-height: 1.8; }
+.quote-block .quote { font-size: 17px; font-style: italic; color: var(--ink-dim); line-height: 2.0; }
 .quote-block .quote em { color: var(--gold); font-style: normal; }
 
-.section { margin-top: 8px; }
+.section { margin-top: 20px; }
 
 @media (max-width: 400px) {
-  body { padding: 14px 14px 110px; }
-  h1 { font-size: 22px; }
+  body { padding: 20px 16px 120px; }
+  h1 { font-size: 28px; }
 }
 </style>
 </head>
@@ -375,7 +375,7 @@ body::before {
 <div class="settings-panel" id="settings-panel">
   <input type="password" id="api-key" placeholder="DeepSeek API Key（sk-...）" oninput="saveApiKey()">
   <input type="text" id="api-model" placeholder="模型名称（默认 deepseek-chat）" value="deepseek-chat" oninput="saveApiKey()">
-  <div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">Key 仅存储在浏览器本地，不会上传到任何第三方。</div>
+  <div style="font-size:12px;color:var(--ink-dim);margin-top:6px;">Key 仅存储在浏览器本地，不会上传到任何第三方。</div>
 </div>
 
 <!-- 每日打卡 -->
@@ -411,7 +411,7 @@ body::before {
 <div class="card section">
   <h2>近期汇报记录</h2>
   <div class="history-list" id="history-list">
-    <div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>
+    <div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>
   </div>
 </div>
 
@@ -466,7 +466,7 @@ body::before {
     <a class="resource-link" href="https://www.bilibili.com/video/BV1ZCnfegEHX/" target="_blank"><span class="r-num">7</span> 政治80+ · 全程复习规划保70冲80<span class="r-tag bilibili">B站</span></a>
   </div>
 
-  <div style="font-size:10px;color:var(--ink-dim);text-align:center;padding-top:8px;">全部免费公开资源 · 点击直接跳转 · B站搜索建议按"最新发布"排序</div>
+  <div style="font-size:11px;color:var(--ink-dim);text-align:center;padding-top:10px;">全部免费公开资源 · 点击直接跳转 · B站搜索建议按"最新发布"排序</div>
 </div>
 
 <!-- 各科进度 -->
@@ -478,7 +478,7 @@ body::before {
 <!-- 月度总结 -->
 <div class="card section">
   <h2>月度总结</h2>
-  <div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">
+  <div style="font-size:13px;color:var(--ink-dim);margin-bottom:12px;">
     选择月份，AI 自动汇总该月所有汇报，生成学习成果总结。
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -901,7 +901,7 @@ function renderHistory() {
   const list = document.getElementById('history-list');
 
   if (!dates.length) {
-    list.innerHTML = '<div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>';
+    list.innerHTML = '<div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>';
     return;
   }
 
@@ -971,7 +971,7 @@ function onMonthChange() {
 
   const summaryDiv = document.getElementById('monthly-summary');
   if (!daysInMonth.length) {
-    summaryDiv.innerHTML = '<div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">该月暂无汇报记录</div>';
+    summaryDiv.innerHTML = '<div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">该月暂无汇报记录</div>';
     summaryDiv.classList.add('show');
     return;
   }
