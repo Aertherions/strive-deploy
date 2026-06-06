@@ -880,10 +880,13 @@ body::before {
   📚<span class="drawer-badge" id="drawer-badge" style="display:none"></span>
 </button>
 
-<!-- 各科进度 -->
+<!-- 各科进度 · AI 自动估算 -->
 <div class="card section">
-  <h2>各科进度</h2>
-  <div id="progress-bars"></div>
+  <h2>📊 各科进度 <span style="font-size:10px;color:var(--ink-dim);">（AI 根据汇报自动估算）</span></h2>
+  <div id="progress-ai">
+    <div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">提交汇报后 AI 自动更新进度</div>
+  </div>
+</div>
 </div>
 
 <!-- 月度总结 -->
@@ -1115,22 +1118,91 @@ function renderChecklist() {
 function toggleCheck(id) { saveCheck(id, !getChecks()[id]); renderChecklist(); }
 
 // ── 进度 ───────────────────────────────
+// AI 估算进度 + 渲染
 function renderProgress() {
-  document.getElementById('progress-bars').innerHTML = PROGRESS_ITEMS.map(p => {
-    const v = S('prog_' + p.key) || 0;
+  const container = document.getElementById('progress-ai');
+  if (!container) return;
+  const cached = S('prog_ai_estimate');
+  if (cached && cached.date === today()) {
+    renderProgressBars(cached.data, container);
+  } else {
+    container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">⏳ AI 正在估算各科进度...</div>';
+    estimateProgressWithAI().then(data => {
+      S('prog_ai_estimate', { date: today(), data });
+      renderProgressBars(data, container);
+    }).catch(() => {
+      // 降级：从 localStorage 读取旧进度
+      const fallback = {};
+      PROGRESS_ITEMS.forEach(p => { fallback[p.key] = S('prog_' + p.key) || 0; });
+      renderProgressBars(fallback, container);
+    });
+  }
+}
+
+function renderProgressBars(data, container) {
+  const labels = { math: '数学一', cs: '408专业课', eng: '英语一', pol: '政治' };
+  const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+  container.innerHTML = Object.entries(data).map(([k, v]) => {
+    const pct = Math.min(100, Math.max(0, parseInt(v) || 0));
     return `
       <div class="progress-row">
-        <div class="progress-label">${p.label}</div>
+        <div class="progress-label">${labels[k] || k}</div>
         <div class="progress-track">
-          <div class="progress-fill ${p.cls}" style="width:${v}%"></div>
+          <div class="progress-fill ${k}" style="width:${pct}%;background:${colors[k]||'var(--gold)'};"></div>
         </div>
-        <div class="progress-val">${v}%</div>
+        <div class="progress-val">${pct}%</div>
       </div>
-      <input type="range" min="0" max="100" value="${v}" style="width:100%;-webkit-appearance:none;height:2px;background:var(--line);border-radius:1px;outline:none;margin-bottom:6px;" oninput="updateProgress('${p.key}', this.value)">
+      <div style="font-size:10px;color:var(--ink-dim);margin:-4px 0 8px 80px;">${data[k+'_note'] || ''}</div>
     `;
   }).join('');
+  // 同步写入 localStorage
+  Object.entries(data).forEach(([k, v]) => {
+    if (!k.endsWith('_note')) S('prog_' + k, parseInt(v) || 0);
+  });
 }
-function updateProgress(key, val) { S('prog_' + key, parseInt(val)); renderProgress(); }
+
+async function estimateProgressWithAI() {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('No key');
+
+  const reports = getReports();
+  const allDates = Object.keys(reports).sort();
+  const recentReports = allDates.slice(-14).map(d => ({
+    date: d, score: reports[d].score, grade: reports[d].grade,
+    feedback: JSON.stringify(reports[d].subject_feedback || {}),
+    comment: reports[d].comment || '',
+  }));
+
+  const currentProg = {};
+  PROGRESS_ITEMS.forEach(p => { currentProg[p.key] = S('prog_' + p.key) || 0; });
+
+  const prompt = `你是考研进度分析师。学生目标380分（天大×港理工），考试2027.12.25。
+
+当前手动记录的进度：${JSON.stringify(currentProg)}
+最近14天汇报数据：${JSON.stringify(recentReports).slice(0, 2000)}
+
+请根据汇报频率、评分趋势、各科反馈，估算当前各科真实进度(0-100%)，返回严格JSON：
+{
+  "math": 25, "math_note": "基础阶段，高数上册过半",
+  "cs": 15, "cs_note": "数据结构刚起步，计组未开始",
+  "eng": 30, "eng_note": "单词积累中，阅读刚开始",
+  "pol": 0, "pol_note": "未开始，7月后启动"
+}`;
+
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: getApiModel(),
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.5, max_tokens: 400,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) throw new Error('API error');
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
 
 // ── 金句 ───────────────────────────────
 function renderQuote() {
@@ -1206,9 +1278,12 @@ async function autoGenerateReport() {
     }).join('；');
     const doneCount = CHECK_ITEMS.filter(i => checks[i.id]).length;
 
-    const progressSummary = PROGRESS_ITEMS.map(p => {
-      return `${p.label}进度 ${S('prog_' + p.key) || 0}%`;
-    }).join('；');
+    const aiProg = S('prog_ai_estimate');
+    const progData = (aiProg && aiProg.data) || {};
+    const progressSummary = Object.entries(progData)
+      .filter(([k]) => !k.endsWith('_note'))
+      .map(([k, v]) => `${k}: ${v}%`)
+      .join('；') || '暂无AI进度估算';
 
     const resClicks = S('res_clicks') || {};
     const recentClicks = Object.entries(resClicks)
@@ -1383,6 +1458,8 @@ async function submitReport() {
     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
 
+    // 清除进度缓存触发AI重估
+    S('prog_ai_estimate', null);
     // 刷新建议卡片
     renderAdvice();
     // 更新统计图表
@@ -1821,9 +1898,10 @@ async function generateDailyAdvice() {
   const apiKey = getApiKey();
   if (!apiKey) return getFallbackAdvice();
 
-  const prog = {};
-  PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; });
-  const weak = Object.entries(prog).sort((a, b) => a[1] - b[1]).map(e => e[0]);
+  const aiProg = S('prog_ai_estimate');
+  const prog = (aiProg && aiProg.data) || {};
+  if (!prog.math) { PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; }); }
+  const weak = Object.entries(prog).filter(([k]) => !k.endsWith('_note')).sort((a, b) => (a[1]||0) - (b[1]||0)).map(e => e[0]);
   const resClicks = S('res_clicks') || {};
   const recentClicks = Object.entries(resClicks)
     .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 14)
@@ -1836,7 +1914,7 @@ async function generateDailyAdvice() {
   const prompt = `你是一位考研督学AI。学生目标：天大×港理工 380分。每日学习8小时。
 
 当前数据：
-- 各科进度：数学${prog.math}% 408专业课${prog.cs}% 英语${prog.eng}% 政治${prog.pol}%
+- 各科AI估算进度：${JSON.stringify(prog)}
 - 近14天网课观看：${recentClicks}
 - 近3天平均分：${avgRecent}
 
@@ -2092,8 +2170,13 @@ function drawSubjectChart(reports, dates, thisMonth) {
   const colors = { math: '#c9a96e', cs: '#b15533', eng: '#7a9e7e', pol: '#8b6b5a' };
   const labels = { math: '数学', cs: '408', eng: '英语', pol: '政治' };
 
-  // 从进度条取本月平均 (简化：取当前值)
-  const vals = PROGRESS_ITEMS.map(p => ({ key: p.key, val: S('prog_' + p.key) || 0 }));
+  // 从AI估算或本地取进度
+  const aiProg = S('prog_ai_estimate');
+  const progData = (aiProg && aiProg.data) || {};
+  const vals = PROGRESS_ITEMS.map(p => ({
+    key: p.key,
+    val: progData[p.key] || S('prog_' + p.key) || 0
+  }));
   const total = vals.reduce((s, v) => s + v.val, 0);
 
   const cx = w * 0.38, cy = h / 2, r = Math.min(60, w * 0.22);
