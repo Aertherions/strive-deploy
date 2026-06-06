@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="考研督学">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a0f'/><text x='50' y='68' font-size='58' text-anchor='middle'>⏳</text></svg>">
+<title>考研督学 · 天大×港理工 · 380+</title>
+<style>
+/* ============================================================
+   Strive · Art Direction · 暗金墨色
+   后续所有网页设计按此风格执行（永久锁定）
+   ============================================================ */
+:root {
+  --ink: #f0ece4;
+  --ink-dim: #8b887e;
+  --paper: #0d0d12;
+  --paper-lift: #15151d;
+  --gold: #c9a96e;
+  --gold-burn: #e8c97a;
+  --rust: #b15533;
+  --line: rgba(240,236,228,0.08);
+  --radius: 10px;
+  --font: 'Georgia', 'Times New Roman', 'PingFang SC', 'Noto Serif SC', serif;
+  --mono: 'SF Mono', 'Menlo', 'Monaco', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 20px 20px 120px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(177,85,51,0.03) 0%, transparent 50%);
+}
+
+h1 { font-size: 26px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink); }
+h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink-dim); margin-bottom: 14px; }
+.numeral { font-family: var(--mono); font-feature-settings: "tnum"; }
+
+.header { text-align: center; padding: 30px 0 10px; }
+.header h1 { margin-bottom: 4px; }
+.header .tagline { font-size: 12px; color: var(--ink-dim); letter-spacing: 0.06em; }
+
+.countdown-strip {
+  display: flex; gap: 1px; justify-content: center; margin: 18px 0 28px;
+  background: var(--line); border-radius: var(--radius); overflow: hidden;
+}
+.countdown-strip .cell {
+  background: var(--paper-lift); padding: 14px 16px; text-align: center; min-width: 62px;
+}
+.countdown-strip .num { font-size: 30px; font-weight: 400; color: var(--gold); font-family: var(--mono); line-height: 1; }
+.countdown-strip .lbl { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.08em; margin-top: 4px; }
+
+.card {
+  background: var(--paper-lift); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; margin-bottom: 10px;
+}
+
+/* ---- 打卡 ---- */
+.check-row {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border-bottom: 1px solid var(--line); cursor: pointer; transition: all 0.2s;
+}
+.check-row:last-child { border-bottom: none; }
+.check-row.done { opacity: 0.4; }
+.check-row.done .check-mark { border-color: var(--gold); background: var(--gold); }
+.check-mark {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; transition: all 0.2s;
+}
+.check-icon { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+.check-label { flex: 1; font-size: 13px; }
+.check-target { font-size: 11px; color: var(--ink-dim); font-family: var(--mono); }
+
+/* ---- 汇报 + 评分 ---- */
+.report-area {
+  width: 100%; min-height: 100px; background: transparent;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px; color: var(--ink); font-size: 13px;
+  font-family: var(--font); resize: vertical; outline: none;
+  line-height: 1.7; margin-bottom: 10px;
+}
+.report-area:focus { border-color: var(--gold); }
+.report-area::placeholder { color: var(--ink-dim); opacity: 0.5; }
+
+.score-card {
+  margin-top: 12px; padding: 16px; border-radius: 8px;
+  border: 1px solid var(--line); display: none;
+}
+.score-card.show { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
+
+.score-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+}
+.score-circle {
+  width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-family: var(--mono); color: var(--gold); flex-shrink: 0;
+}
+.score-circle.high { border-color: #7a9e7e; color: #7a9e7e; }
+.score-circle.mid { border-color: var(--gold); color: var(--gold); }
+.score-circle.low { border-color: var(--rust); color: var(--rust); }
+.score-meta { flex: 1; }
+.score-grade { font-size: 16px; font-family: var(--mono); }
+.score-comment { font-size: 13px; color: var(--ink-dim); margin-top: 2px; line-height: 1.5; }
+
+.score-detail { font-size: 12px; color: var(--ink-dim); line-height: 1.7; }
+.score-detail .hl { color: #7a9e7e; }
+.score-detail .prob { color: var(--rust); }
+.score-detail .prio { color: var(--gold-burn); }
+.score-detail .subject-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; margin: 2px 4px 2px 0;
+  border: 1px solid var(--line); color: var(--ink-dim);
+}
+
+/* ---- 按钮 ---- */
+.btn {
+  padding: 8px 16px; border: 1px solid var(--gold); border-radius: 6px;
+  background: transparent; color: var(--gold); font-size: 12px;
+  font-family: var(--font); cursor: pointer; letter-spacing: 0.04em;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn:hover, .btn:active { background: var(--gold); color: var(--paper); }
+.btn.primary { background: var(--gold); color: var(--paper); border-color: var(--gold); }
+.btn.primary:hover { background: var(--gold-burn); }
+.btn.small { padding: 5px 10px; font-size: 11px; }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+.btn.loading {
+  position: relative; color: transparent;
+}
+.btn.loading::after {
+  content: ''; position: absolute; inset: 0;
+  margin: auto; width: 14px; height: 14px;
+  border: 2px solid var(--gold); border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- 月度总结 ---- */
+.monthly-summary {
+  display: none; margin-top: 12px; padding: 16px;
+  border-radius: 8px; border: 1px solid var(--line);
+  animation: fadeUp 0.4s ease;
+}
+.monthly-summary.show { display: block; }
+.monthly-summary h3 {
+  font-size: 14px; font-weight: 400; color: var(--gold);
+  letter-spacing: 0.04em; margin-bottom: 10px;
+}
+.monthly-summary .summary-text {
+  font-size: 13px; line-height: 1.8; color: var(--ink-dim);
+}
+.monthly-summary .stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0;
+}
+.monthly-summary .stat-item {
+  padding: 10px; border: 1px solid var(--line); border-radius: 6px; text-align: center;
+}
+.monthly-summary .stat-num { font-size: 22px; font-family: var(--mono); color: var(--gold); }
+.monthly-summary .stat-lbl { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 2px; }
+
+/* ---- 历史 ---- */
+.history-list { max-height: 200px; overflow-y: auto; }
+.history-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--line); font-size: 12px; cursor: pointer;
+}
+.history-row:last-child { border-bottom: none; }
+.history-row .h-date { color: var(--ink-dim); font-family: var(--mono); min-width: 80px; }
+.history-row .h-score { font-family: var(--mono); color: var(--gold); min-width: 36px; }
+.history-row .h-preview { flex: 1; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- 设置 ---- */
+.settings-toggle {
+  font-size: 11px; color: var(--ink-dim); cursor: pointer;
+  text-align: center; padding: 6px; letter-spacing: 0.06em; opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.settings-toggle:hover { opacity: 1; }
+.settings-panel {
+  display: none; padding: 14px; border: 1px solid var(--line);
+  border-radius: var(--radius); margin-bottom: 10px;
+}
+.settings-panel.show { display: block; }
+.settings-panel input {
+  width: 100%; background: transparent; border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 10px; color: var(--ink); font-size: 13px;
+  font-family: var(--mono); outline: none; margin-bottom: 8px;
+}
+.settings-panel input:focus { border-color: var(--gold); }
+
+/* ---- 进度条 ---- */
+.progress-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.progress-label { font-size: 11px; min-width: 70px; letter-spacing: 0.06em; color: var(--ink-dim); }
+.progress-track { flex: 1; height: 2px; background: var(--line); position: relative; }
+.progress-fill { height: 100%; position: absolute; left: 0; top: 0; transition: width 0.5s; }
+.progress-fill.math { background: var(--gold); }
+.progress-fill.cs { background: var(--rust); }
+.progress-fill.eng { background: #7a9e7e; }
+.progress-fill.pol { background: #8b6b5a; }
+.progress-val { font-size: 11px; font-family: var(--mono); color: var(--ink-dim); min-width: 32px; text-align: right; }
+
+/* ---- 底部 ---- */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--paper); border-top: 1px solid var(--line);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 12px));
+  display: flex; gap: 8px; justify-content: center; z-index: 100;
+}
+.bottom-bar .btn { flex: 1; max-width: 240px; text-align: center; }
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--paper); padding: 8px 18px;
+  border-radius: 20px; font-size: 12px; letter-spacing: 0.04em; z-index: 999;
+  animation: toastAnim 2s forwards; pointer-events: none;
+}
+@keyframes toastAnim {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.quote-block { text-align: center; padding: 16px 0; }
+.quote-block .quote { font-size: 15px; font-style: italic; color: var(--ink-dim); line-height: 1.8; }
+.quote-block .quote em { color: var(--gold); font-style: normal; }
+
+.section { margin-top: 8px; }
+
+@media (max-width: 400px) {
+  body { padding: 14px 14px 110px; }
+  h1 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>考研督学</h1>
+  <div class="tagline">天大 × 港理工 · 深圳未来技术学院 · 目标 380 · 2027.12.25</div>
+</div>
+
+<div class="countdown-strip" id="countdown"></div>
+
+<!-- API 设置 -->
+<div class="settings-toggle" onclick="toggleSettings()">⚙ API 设置</div>
+<div class="settings-panel" id="settings-panel">
+  <input type="password" id="api-key" placeholder="DeepSeek API Key（sk-...）" oninput="saveApiKey()">
+  <input type="text" id="api-model" placeholder="模型名称（默认 deepseek-chat）" value="deepseek-chat" oninput="saveApiKey()">
+  <div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">Key 仅存储在浏览器本地，不会上传到任何第三方。</div>
+</div>
+
+<!-- 每日打卡 -->
+<div class="card">
+  <h2>今日打卡 · <span id="today-str" style="font-weight:400;letter-spacing:0.02em;"></span></h2>
+  <div id="checklist"></div>
+</div>
+
+<!-- 每日汇报 + AI 评分 -->
+<div class="card section">
+  <h2>每日汇报 · AI 评分 <span style="font-size:11px;color:var(--ink-dim);">（DeepSeek）</span></h2>
+  <textarea class="report-area" id="report-input"
+    placeholder="写下今天学了什么、有什么收获、遇到什么困难...&#10;&#10;AI 会根据你的打卡完成度 + 汇报内容综合打分。"></textarea>
+  <div style="display:flex;gap:8px;">
+    <button class="btn primary" id="submit-btn" onclick="submitReport()">提交汇报 · AI 评分</button>
+    <button class="btn small" onclick="loadTodayDraft()">恢复草稿</button>
+  </div>
+
+  <!-- 评分结果 -->
+  <div class="score-card" id="score-card">
+    <div class="score-header">
+      <div class="score-circle" id="score-circle">--</div>
+      <div class="score-meta">
+        <div class="score-grade" id="score-grade"></div>
+        <div class="score-comment" id="score-comment"></div>
+      </div>
+    </div>
+    <div class="score-detail" id="score-detail"></div>
+  </div>
+</div>
+
+<!-- 历史记录 -->
+<div class="card section">
+  <h2>近期汇报记录</h2>
+  <div class="history-list" id="history-list">
+    <div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>
+  </div>
+</div>
+
+<!-- 各科进度 -->
+<div class="card section">
+  <h2>各科进度</h2>
+  <div id="progress-bars"></div>
+</div>
+
+<!-- 月度总结 -->
+<div class="card section">
+  <h2>月度总结</h2>
+  <div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">
+    选择月份，AI 自动汇总该月所有汇报，生成学习成果总结。
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <select id="month-select" style="background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink);font-size:13px;font-family:var(--font);outline:none;" onchange="onMonthChange()"></select>
+    <button class="btn primary" id="monthly-btn" onclick="generateMonthly()">生成 AI 月度总结</button>
+  </div>
+  <div class="monthly-summary" id="monthly-summary"></div>
+</div>
+
+<!-- 每日金句 -->
+<div class="card section">
+  <div class="quote-block">
+    <div class="quote" id="quote"></div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <button class="btn primary" onclick="submitReport()">提交今日汇报</button>
+  <button class="btn" onclick="generateMonthly()">生成本月总结</button>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+const EXAM = new Date(2027, 11, 25, 8, 30, 0);
+
+const CHECK_ITEMS = [
+  { id:'words', icon:'📖', label:'背单词', target:'200+ 词' },
+  { id:'math', icon:'∫', label:'数学', target:'4 小时' },
+  { id:'cs', icon:'◇', label:'408 专业课', target:'4 小时' },
+  { id:'eng', icon:'🌐', label:'英语', target:'2 小时' },
+  { id:'review', icon:'◎', label:'复盘 + 列计划', target:'30 分钟' },
+];
+
+const PROGRESS_ITEMS = [
+  { key:'math', label:'数学一', cls:'math' },
+  { key:'cs', label:'408 专业课', cls:'cs' },
+  { key:'eng', label:'英语一', cls:'eng' },
+  { key:'pol', label:'政治', cls:'pol' },
+];
+
+const QUOTES = [
+  '双非二本四级没过。<em>这是你的起点，不是终点。</em>',
+  '和你竞争的人，<em>现在正在刷数学一。</em>',
+  '四级没过的人考研英语一 65+，<em>你做得到吗？你敢做吗？</em>',
+  '一张考研卷，两个学位。<em>机会就在那里，拿不拿得到看你自己。</em>',
+  '深圳未来技术学院第一届硕士，<em>不卷你卷谁？</em>',
+  '408 四本书，<em>每一页都是你翻盘的武器。</em>',
+  '忍受自律的痛苦，<em>还是忍受后悔的痛苦？</em>',
+  '你现在的对手是 370 分，<em>不是身边的任何人。</em>',
+  '四门课，十八个月。<em>一次机会。把它攥紧。</em>',
+  '别人在刷抖音，你在刷张宇。<em>一年后，差距就是 985 双证。</em>',
+];
+
+// ── 工具 ──────────────────────────────
+function S(k, v) {
+  const key = 'strive_' + k;
+  if (v !== undefined) { localStorage.setItem(key, JSON.stringify(v)); return v; }
+  try { return JSON.parse(localStorage.getItem(key)); } catch { return undefined; }
+}
+function today() { return new Date().toISOString().slice(0,10); }
+function toast(msg) {
+  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+  document.getElementById('toasts').appendChild(el); setTimeout(() => el.remove(), 2100);
+}
+
+// ── API Key ────────────────────────────
+function getApiKey() { return S('api_key') || ''; }
+function getApiModel() { return S('api_model') || 'deepseek-chat'; }
+function saveApiKey() {
+  S('api_key', document.getElementById('api-key').value.trim());
+  S('api_model', document.getElementById('api-model').value.trim() || 'deepseek-chat');
+}
+function toggleSettings() {
+  document.getElementById('settings-panel').classList.toggle('show');
+}
+
+// ── 倒计时 ─────────────────────────────
+function renderCountdown() {
+  const d = Math.max(0, Math.ceil((EXAM - new Date()) / 86400000));
+  document.getElementById('countdown').innerHTML = `
+    <div class="cell"><div class="num">${d}</div><div class="lbl">天</div></div>
+    <div class="cell"><div class="num">380</div><div class="lbl">目标分</div></div>
+    <div class="cell"><div class="num">18</div><div class="lbl">个月</div></div>
+    <div class="cell"><div class="num">双证</div><div class="lbl">天大+港理工</div></div>
+  `;
+}
+
+// ── 打卡 ───────────────────────────────
+function getChecks() { return S('check_' + today()) || {}; }
+function saveCheck(id, v) { const c = getChecks(); c[id] = v; S('check_' + today(), c); }
+function renderChecklist() {
+  document.getElementById('today-str').textContent = today();
+  const checks = getChecks();
+  document.getElementById('checklist').innerHTML = CHECK_ITEMS.map(item => {
+    const done = checks[item.id];
+    return `
+      <div class="check-row ${done ? 'done' : ''}" onclick="toggleCheck('${item.id}')">
+        <div class="check-mark">${done ? '✓' : ''}</div>
+        <div class="check-icon">${item.icon}</div>
+        <div class="check-label">${item.label}</div>
+        <div class="check-target">${item.target}</div>
+      </div>
+    `;
+  }).join('');
+}
+function toggleCheck(id) { saveCheck(id, !getChecks()[id]); renderChecklist(); }
+
+// ── 进度 ───────────────────────────────
+function renderProgress() {
+  document.getElementById('progress-bars').innerHTML = PROGRESS_ITEMS.map(p => {
+    const v = S('prog_' + p.key) || 0;
+    return `
+      <div class="progress-row">
+        <div class="progress-label">${p.label}</div>
+        <div class="progress-track">
+          <div class="progress-fill ${p.cls}" style="width:${v}%"></div>
+        </div>
+        <div class="progress-val">${v}%</div>
+      </div>
+      <input type="range" min="0" max="100" value="${v}" style="width:100%;-webkit-appearance:none;height:2px;background:var(--line);border-radius:1px;outline:none;margin-bottom:6px;" oninput="updateProgress('${p.key}', this.value)">
+    `;
+  }).join('');
+}
+function updateProgress(key, val) { S('prog_' + key, parseInt(val)); renderProgress(); }
+
+// ── 金句 ───────────────────────────────
+function renderQuote() {
+  document.getElementById('quote').innerHTML = QUOTES[new Date().getDate() % QUOTES.length];
+}
+
+// ── 汇报草稿 ───────────────────────────
+function saveDraft(text) { S('draft_' + today(), text); }
+function loadTodayDraft() {
+  const draft = S('draft_' + today()) || '';
+  document.getElementById('report-input').value = draft;
+  if (draft) toast('已恢复今日草稿'); else toast('今日暂无草稿');
+}
+
+// ── 汇报存储 ───────────────────────────
+function getReports() { return S('reports') || {}; }
+function saveReport(date, data) {
+  const reports = getReports();
+  reports[date] = data;
+  S('reports', reports);
+}
+
+// ── DeepSeek API 调用 ────────────────────
+async function callDeepSeek(systemPrompt, userMessage) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('settings-panel').classList.add('show');
+    toast('请先填写 DeepSeek API Key');
+    throw new Error('API Key 未配置');
+  }
+  const model = getApiModel();
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey,
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`API 错误 (${resp.status}): ${err}`);
+  }
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ── 提交每日汇报 ────────────────────────
+async function submitReport() {
+  const btn = document.getElementById('submit-btn');
+  const reportText = document.getElementById('report-input').value.trim();
+  if (!reportText) { toast('请先写今日汇报'); return; }
+
+  // 保存草稿
+  saveDraft(reportText);
+
+  // 收集打卡数据
+  const checks = getChecks();
+  const checkSummary = CHECK_ITEMS.map(i => {
+    const done = checks[i.id] ? '✅' : '⬜';
+    return `${done} ${i.icon} ${i.label}（${i.target}）`;
+  }).join('\n');
+  const doneCount = CHECK_ITEMS.filter(i => checks[i.id]).length;
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 评分中...';
+  toast('正在提交 DeepSeek 评分...');
+
+  try {
+    const systemPrompt = `你是一位严厉但公正的考研督学导师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供每日评分。目标分数：380分。考试日期：2027年12月25日。
+
+学生每天提交学习汇报，你需要：
+1. 综合打卡完成度和汇报内容质量打分（0-100）
+2. 给出等级：S(95+)/A(85-94)/B(75-84)/C(65-74)/D(<65)
+3. 写一段鼓励但犀利的评语（2-3句话）
+4. 指出今天做得好的1-2个点
+5. 指出需要改进的1-2个点
+6. 给出明天最优先做的一件事
+7. 对各科给出简短建议
+
+评分权重：打卡完成度 40% + 学习时长 30% + 复盘反思质量 30%
+
+请返回严格JSON：
+{
+  "score": 85,
+  "grade": "A",
+  "comment": "评语",
+  "highlights": ["亮点1", "亮点2"],
+  "problems": ["问题1"],
+  "tomorrow_priority": "明天优先事项",
+  "subject_feedback": {
+    "math": "数学建议",
+    "cs": "408建议",
+    "eng": "英语建议",
+    "pol": "政治建议"
+  }
+}`;
+
+    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【学习汇报】\n${reportText}`;
+
+    const result = await callDeepSeek(systemPrompt, userMessage);
+
+    // 保存结果
+    const reportData = {
+      date: today(),
+      checks: checks,
+      doneCount: doneCount,
+      report: reportText,
+      score: result.score,
+      grade: result.grade,
+      comment: result.comment,
+      highlights: result.highlights || [],
+      problems: result.problems || [],
+      tomorrow_priority: result.tomorrow_priority || '',
+      subject_feedback: result.subject_feedback || {},
+    };
+    saveReport(today(), reportData);
+
+    // 显示评分
+    showScore(reportData);
+    renderHistory();
+    toast(`评分完成：${result.score} 分 · ${result.grade}`);
+  } catch (err) {
+    console.error(err);
+    toast('评分失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '提交汇报 · AI 评分';
+  }
+}
+
+// ── 显示评分 ───────────────────────────
+function showScore(data) {
+  const card = document.getElementById('score-card');
+  const circle = document.getElementById('score-circle');
+  const grade = document.getElementById('score-grade');
+  const comment = document.getElementById('score-comment');
+  const detail = document.getElementById('score-detail');
+
+  circle.textContent = data.score;
+
+  // 颜色
+  circle.className = 'score-circle';
+  if (data.score >= 85) circle.classList.add('high');
+  else if (data.score >= 65) circle.classList.add('mid');
+  else circle.classList.add('low');
+
+  grade.innerHTML = `等级 <strong>${data.grade}</strong> · ${data.date}`;
+  comment.textContent = data.comment;
+
+  let detailHTML = '';
+  if (data.highlights && data.highlights.length) {
+    detailHTML += '<div style="margin-top:8px;">✨ 做得好的：</div>';
+    data.highlights.forEach(h => { detailHTML += `<div class="hl">+ ${h}</div>`; });
+  }
+  if (data.problems && data.problems.length) {
+    detailHTML += '<div style="margin-top:8px;">⚠ 需要改进：</div>';
+    data.problems.forEach(p => { detailHTML += `<div class="prob">- ${p}</div>`; });
+  }
+  if (data.tomorrow_priority) {
+    detailHTML += `<div style="margin-top:8px;">🎯 明天优先：<span class="prio">${data.tomorrow_priority}</span></div>`;
+  }
+  if (data.subject_feedback && Object.keys(data.subject_feedback).length) {
+    detailHTML += '<div style="margin-top:8px;">📚 各科建议：</div>';
+    const labels = { math:'数学', cs:'408专业课', eng:'英语', pol:'政治' };
+    Object.entries(data.subject_feedback).forEach(([k, v]) => {
+      if (v) detailHTML += `<span class="subject-tag">${labels[k] || k}: ${v}</span>`;
+    });
+  }
+
+  detail.innerHTML = detailHTML;
+  card.classList.add('show');
+}
+
+// ── 历史记录 ───────────────────────────
+function renderHistory() {
+  const reports = getReports();
+  const dates = Object.keys(reports).sort().reverse().slice(0, 14);
+  const list = document.getElementById('history-list');
+
+  if (!dates.length) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>';
+    return;
+  }
+
+  list.innerHTML = dates.map(d => {
+    const r = reports[d];
+    const score = r.score != null ? r.score : '?';
+    const preview = (r.report || '').slice(0, 40) + '...';
+    return `
+      <div class="history-row" onclick="loadHistoryReport('${d}')">
+        <span class="h-date">${d}</span>
+        <span class="h-score">${score}分</span>
+        <span class="h-preview">${preview}</span>
+        <span style="color:var(--gold);font-size:11px;">查看→</span>
+      </div>
+    `;
+  }).join('');
+
+  // 更新月份选择器
+  updateMonthSelect(dates);
+}
+
+function loadHistoryReport(date) {
+  const reports = getReports();
+  const r = reports[date];
+  if (!r) { toast('无此日期记录'); return; }
+
+  // 显示评分
+  showScore(r);
+
+  // 回填汇报内容
+  if (r.report) {
+    document.getElementById('report-input').value = r.report;
+  }
+
+  toast(`已加载 ${date} 的汇报`);
+}
+
+// ── 月度总结 ───────────────────────────
+function updateMonthSelect(dates) {
+  const months = new Set();
+  (dates || Object.keys(getReports())).forEach(d => {
+    months.add(d.slice(0, 7)); // YYYY-MM
+  });
+
+  const select = document.getElementById('month-select');
+  const sorted = Array.from(months).sort().reverse();
+
+  if (!sorted.length) {
+    // 至少有当前月份
+    const now = new Date();
+    const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    sorted.push(thisMonth);
+  }
+
+  select.innerHTML = sorted.map(m => {
+    const [y, mo] = m.split('-');
+    return `<option value="${m}">${y}年${mo}月</option>`;
+  }).join('');
+
+  onMonthChange();
+}
+
+function onMonthChange() {
+  const month = document.getElementById('month-select').value;
+  const reports = getReports();
+  const daysInMonth = Object.keys(reports).filter(d => d.startsWith(month));
+
+  const summaryDiv = document.getElementById('monthly-summary');
+  if (!daysInMonth.length) {
+    summaryDiv.innerHTML = '<div style="font-size:12px;color:var(--ink-dim);text-align:center;padding:16px;">该月暂无汇报记录</div>';
+    summaryDiv.classList.add('show');
+    return;
+  }
+
+  // 显示本地统计
+  const scores = daysInMonth.map(d => reports[d].score).filter(s => s != null);
+  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+
+  summaryDiv.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">${daysInMonth.length}</div>
+        <div class="stat-lbl">汇报天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${avgScore}</div>
+        <div class="stat-lbl">平均分</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${scores.filter(s => s >= 85).length}</div>
+        <div class="stat-lbl">优秀天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${scores.filter(s => s < 65).length}</div>
+        <div class="stat-lbl">需改进天数</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--ink-dim);text-align:center;margin-top:8px;">点击"生成 AI 月度总结"获取深度分析</div>
+  `;
+  summaryDiv.classList.add('show');
+}
+
+async function generateMonthly() {
+  const month = document.getElementById('month-select').value;
+  const btn = document.getElementById('monthly-btn');
+  const reports = getReports();
+  const monthReports = Object.keys(reports)
+    .filter(d => d.startsWith(month))
+    .sort()
+    .map(d => reports[d]);
+
+  if (!monthReports.length) {
+    toast('该月暂无汇报记录，无法生成总结');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 分析中...';
+  toast('正在生成月度总结...');
+
+  try {
+    const systemPrompt = `你是一位考研战略分析师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供月度分析。目标分数：380分（数学一+英语一+408计算机专业基础+政治）。考试日期：2027年12月25日。
+
+请根据学生一个月的每日学习数据，生成深度月度总结报告。
+
+分析维度：
+1. 本月总体完成率、学习趋势（上升/下降/波动）
+2. 各科投入时间分布是否合理（数学40% + 408 35% + 英语15% + 政治10%为理想比例）
+3. 学习习惯分析：是否有规律？是否有明显断档？
+4. 与目标380分的距离评估和学习节奏建议
+5. 下月具体战略：哪科加码、哪科调整方法
+6. 写一段有煽动力的月度总评（2-3句）
+
+请返回严格JSON：
+{
+  "overall_score": 82,
+  "total_days_reported": 25,
+  "avg_daily_score": 82,
+  "trend": "稳中有升",
+  "subject_analysis": {
+    "math": "数学一分析...",
+    "cs": "408专业课分析...",
+    "eng": "英语一分析...",
+    "pol": "政治分析..."
+  },
+  "strengths": ["优势1", "优势2"],
+  "weaknesses": ["短板1", "短板2"],
+  "next_month_strategy": "下月核心策略...",
+  "summary": "完整月度总结（200字左右，有煽动力）"
+}`;
+
+    const userMessage = monthReports.map((r, i) => {
+      return `【第${i+1}天 · ${r.date}】\n打卡完成：${r.doneCount}/${CHECK_ITEMS.length}\n评分：${r.score}分 · ${r.grade}\n汇报：${r.report}\n评语：${r.comment}`;
+    }).join('\n\n---\n\n');
+
+    const result = await callDeepSeek(systemPrompt, userMessage);
+
+    // 保存月度总结
+    const monthlyData = {
+      month: month,
+      generatedAt: today(),
+      ...result,
+    };
+    S('monthly_' + month, monthlyData);
+
+    // 显示
+    showMonthlySummary(monthlyData);
+    toast('月度总结生成完成');
+  } catch (err) {
+    console.error(err);
+    toast('月度总结生成失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '生成 AI 月度总结';
+  }
+}
+
+function showMonthlySummary(data) {
+  const div = document.getElementById('monthly-summary');
+  const trendIcon = { '上升':'📈', '下降':'📉', '波动':'📊', '稳中有升':'📈', '平稳':'➡️' };
+  const icon = trendIcon[data.trend] || '📊';
+
+  let html = `<h3>${data.month} 月度总结</h3>`;
+  html += `<div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">${data.total_days_reported}</div><div class="stat-lbl">汇报天数</div></div>
+    <div class="stat-item"><div class="stat-num">${data.avg_daily_score || data.overall_score}</div><div class="stat-lbl">综合评分</div></div>
+    <div class="stat-item"><div class="stat-num">${data.overall_score}</div><div class="stat-lbl">月度总分</div></div>
+    <div class="stat-item"><div class="stat-num">${icon} ${data.trend}</div><div class="stat-lbl">学习趋势</div></div>
+  </div>`;
+
+  html += `<div class="summary-text">${data.summary}</div>`;
+
+  if (data.strengths && data.strengths.length) {
+    html += '<div style="margin-top:10px;font-size:12px;">✅ 优势：' + data.strengths.map(s => `<span class="hl">${s}</span>`).join(' · ') + '</div>';
+  }
+  if (data.weaknesses && data.weaknesses.length) {
+    html += '<div style="margin-top:4px;font-size:12px;">⚠ 短板：' + data.weaknesses.map(s => `<span class="prob">${s}</span>`).join(' · ') + '</div>';
+  }
+  if (data.next_month_strategy) {
+    html += `<div style="margin-top:8px;font-size:12px;">🎯 下月战略：<span style="color:var(--gold-burn);">${data.next_month_strategy}</span></div>`;
+  }
+  if (data.subject_analysis) {
+    html += '<div style="margin-top:10px;font-size:12px;color:var(--ink-dim);">';
+    Object.entries(data.subject_analysis).forEach(([k, v]) => {
+      if (v) html += `<span class="subject-tag">${k}: ${v}</span> `;
+    });
+    html += '</div>';
+  }
+
+  div.innerHTML = html;
+  div.classList.add('show');
+}
+
+// ── 初始化 ──────────────────────────────
+function init() {
+  // 恢复 API 设置
+  const savedKey = S('api_key');
+  document.getElementById('api-key').value = savedKey || '';
+  document.getElementById('api-model').value = getApiModel();
+
+  // 渲染
+  renderCountdown();
+  renderChecklist();
+  renderProgress();
+  renderQuote();
+  renderHistory();
+
+  // 检查今日是否已有评分
+  const reports = getReports();
+  const todayReport = reports[today()];
+  if (todayReport && todayReport.score != null) {
+    showScore(todayReport);
+    if (todayReport.report) {
+      document.getElementById('report-input').value = todayReport.report;
+    }
+  } else {
+    // 恢复草稿
+    const draft = S('draft_' + today());
+    if (draft) document.getElementById('report-input').value = draft;
+  }
+
+  // 定时更新倒计时
+  setInterval(renderCountdown, 60000);
+
+  // 自动保存草稿
+  document.getElementById('report-input').addEventListener('input', function() {
+    saveDraft(this.value);
+  });
+
+  // 自动初始化月份选择器
+  updateMonthSelect();
+
+  // 加载当月缓存总结
+  const now = new Date();
+  const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  const cachedMonthly = S('monthly_' + thisMonth);
+  if (cachedMonthly) {
+    showMonthlySummary(cachedMonthly);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
