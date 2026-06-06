@@ -260,6 +260,88 @@ h2 { font-size: 13px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
   100% { opacity: 0; }
 }
 
+/* ---- 页面入场 ---- */
+.card {
+  animation: cardIn 0.5s ease both;
+}
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.10s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.20s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+.card:nth-child(6) { animation-delay: 0.30s; }
+.card:nth-child(7) { animation-delay: 0.35s; }
+.card:nth-child(8) { animation-delay: 0.40s; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 卡片悬浮 ---- */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 20px rgba(201,169,110,0.04);
+  }
+}
+
+/* ---- 倒计时微动 ---- */
+.countdown-strip .num {
+  animation: numPulse 3s ease-in-out infinite;
+}
+@keyframes numPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.78; }
+}
+
+/* ---- 按钮触感 ---- */
+.btn {
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.btn:active { transform: scale(0.96); }
+
+/* ---- 资源链接滑入 ---- */
+.resource-link {
+  transition: all 0.2s ease;
+}
+.resource-link:hover {
+  transform: translateX(4px);
+}
+
+/* ---- 评分圈弹入 ---- */
+.score-card.show {
+  animation: scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+@keyframes scoreReveal {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---- 月度总结淡入 ---- */
+.monthly-summary.show {
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 进度条缓动 ---- */
+.progress-fill {
+  transition: width 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ---- 背景呼吸 ---- */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.03) 0%, transparent 70%);
+  animation: bgBreathe 8s ease-in-out infinite;
+}
+@keyframes bgBreathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .quote-block { text-align: center; padding: 16px 0; }
 .quote-block .quote { font-size: 15px; font-style: italic; color: var(--ink-dim); line-height: 1.8; }
 .quote-block .quote em { color: var(--gold); font-style: normal; }
