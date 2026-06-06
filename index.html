@@ -946,6 +946,14 @@ body::before {
     </div>
   </div>
 
+  <!-- 各科进度 · AI 自动估算 -->
+  <div class="card section">
+    <h2>📊 各科进度 <span style="font-size:10px;color:var(--ink-dim);">（AI 根据汇报自动估算）</span></h2>
+    <div id="progress-ai">
+      <div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">提交汇报后 AI 自动更新进度</div>
+    </div>
+  </div>
+
   <!-- 月度总结 -->
   <div class="card section">
     <h2>📅 月度总结</h2>
@@ -997,13 +1005,6 @@ body::before {
   📚<span class="drawer-badge" id="drawer-badge" style="display:none"></span>
 </button>
 
-<!-- 各科进度 · AI 自动估算 -->
-<div class="card section">
-  <h2>📊 各科进度 <span style="font-size:10px;color:var(--ink-dim);">（AI 根据汇报自动估算）</span></h2>
-  <div id="progress-ai">
-    <div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">提交汇报后 AI 自动更新进度</div>
-  </div>
-</div>
 </div>
 
 <!-- 每日金句 -->
@@ -2167,7 +2168,7 @@ function switchTab(name) {
   if (btn) btn.classList.add('active');
   const panel = document.getElementById('tab-' + name);
   if (panel) panel.classList.add('active');
-  if (name === 'stats') { renderStats(); }
+  if (name === 'stats') { renderStats(); renderProgress(); }
   if (name === 'resources') { renderResourceTab(); checkStaleLinks(); }
   if (name === 'qa') { renderChatHistory(); }
 }
@@ -2186,7 +2187,7 @@ function renderResourceTab() {
   }
 }
 function refreshStatsIfVisible() {
-  if (document.getElementById('tab-stats').classList.contains('active')) { renderStats(); }
+  if (document.getElementById('tab-stats').classList.contains('active')) { renderStats(); renderProgress(); }
 }
 
 // ── 抽屉开关 ───────────────────────────
@@ -2479,7 +2480,6 @@ function init() {
   // 渲染
   renderCountdown();
   renderChecklist();
-  renderProgress();
   renderQuote();
   renderHistory();
 
