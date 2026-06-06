@@ -1199,7 +1199,7 @@ async function submitReport() {
   toast('正在提交 DeepSeek 评分...');
 
   try {
-    const systemPrompt = `你是一位严厉但公正的考研督学导师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供每日评分。目标分数：380分。考试日期：2027年12月25日。
+    const systemPrompt = `你是一位严厉但公正的考研督学导师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供每日评分。目标分数：380分。考试日期：2027年12月25日。学生每天学习8小时。
 
 学生每天提交学习汇报，你需要：
 1. 综合打卡完成度和汇报内容质量打分（0-100）
@@ -1207,8 +1207,9 @@ async function submitReport() {
 3. 写一段鼓励但犀利的评语（2-3句话）
 4. 指出今天做得好的1-2个点
 5. 指出需要改进的1-2个点
-6. 给出明天最优先做的一件事
-7. 对各科给出简短建议
+6. 给出明天的8小时学习时间分配方案
+7. 推荐明天应该看的网课老师（每科1位，结合今天的薄弱点）
+8. 对各科给出简短建议
 
 评分权重：打卡完成度 40% + 学习时长 30% + 复盘反思质量 30%
 
@@ -1219,7 +1220,19 @@ async function submitReport() {
   "comment": "评语",
   "highlights": ["亮点1", "亮点2"],
   "problems": ["问题1"],
-  "tomorrow_priority": "明天优先事项",
+  "tomorrow_schedule": {
+    "total": "8小时",
+    "math": "3小时 · 张宇基础30讲",
+    "cs": "3小时 · 王道数据结构+计组",
+    "eng": "1.5小时 · 唐迟阅读方法论",
+    "pol": "0.5小时 · 今日不安排政治"
+  },
+  "tomorrow_courses": {
+    "math": "张宇 · 基础30讲第7-8讲",
+    "cs": "王道咸鱼 · 数据结构树与图",
+    "eng": "唐迟 · 阅读方法论04-05",
+    "pol": "徐涛 · 马原强化班第3讲"
+  },
   "subject_feedback": {
     "math": "数学建议",
     "cs": "408建议",
@@ -1228,7 +1241,14 @@ async function submitReport() {
   }
 }`;
 
-    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【学习汇报】\n${reportText}`;
+    // 收集网课点击历史
+    const resClicks = S('res_clicks') || {};
+    const recentClicks = Object.entries(resClicks)
+      .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 7)
+      .map(([k, v]) => `${k}: ${v.count}次点击`)
+      .join(', ') || '暂无网课观看记录';
+
+    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【近7天网课观看记录】\n${recentClicks}\n\n【学习汇报】\n${reportText}`;
 
     const result = await callDeepSeek(systemPrompt, userMessage);
 
@@ -1244,6 +1264,8 @@ async function submitReport() {
       highlights: result.highlights || [],
       problems: result.problems || [],
       tomorrow_priority: result.tomorrow_priority || '',
+      tomorrow_schedule: result.tomorrow_schedule || {},
+      tomorrow_courses: result.tomorrow_courses || {},
       subject_feedback: result.subject_feedback || {},
     };
     saveReport(today(), reportData);
@@ -1291,6 +1313,32 @@ function showScore(data) {
   comment.textContent = data.comment;
 
   let detailHTML = '';
+
+  // 明日8小时时间表
+  if (data.tomorrow_schedule) {
+    detailHTML += '<div style="margin-top:4px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;">';
+    detailHTML += '<div style="font-size:12px;color:var(--gold);letter-spacing:0.06em;margin-bottom:8px;">⏰ 明日8小时学习计划</div>';
+    const s = data.tomorrow_schedule;
+    const labels = { math:'∫ 数学', cs:'◇ 408', eng:'🌐 英语', pol:'📜 政治' };
+    Object.entries(s).forEach(([k, v]) => {
+      if (k === 'total') return;
+      if (v && v !== '0小时') detailHTML += `<div style="font-size:12px;color:var(--ink-dim);padding:3px 0;">${labels[k] || k}：<span style="color:var(--ink);">${v}</span></div>`;
+    });
+    detailHTML += `<div style="font-size:11px;color:var(--gold-burn);margin-top:6px;">总计：${s.total || '8小时'}</div>`;
+    detailHTML += '</div>';
+  }
+
+  // 明日推荐网课
+  if (data.tomorrow_courses) {
+    detailHTML += '<div style="margin-top:8px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;">';
+    detailHTML += '<div style="font-size:12px;color:var(--gold);letter-spacing:0.06em;margin-bottom:6px;">📺 明天推荐看的网课</div>';
+    const cLabels = { math:'∫ 数学', cs:'◇ 408', eng:'🌐 英语', pol:'📜 政治' };
+    Object.entries(data.tomorrow_courses).forEach(([k, v]) => {
+      if (v) detailHTML += `<div style="font-size:12px;color:var(--ink-dim);padding:2px 0;">${cLabels[k] || k}：<span style="color:var(--ink);">${v}</span></div>`;
+    });
+    detailHTML += '</div>';
+  }
+
   if (data.highlights && data.highlights.length) {
     detailHTML += '<div style="margin-top:8px;">✨ 做得好的：</div>';
     data.highlights.forEach(h => { detailHTML += `<div class="hl">+ ${h}</div>`; });
