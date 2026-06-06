@@ -181,31 +181,106 @@ h2 { font-size: 15px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink
 .monthly-summary .stat-lbl { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 4px; }
 
 /* ---- 历史 ---- */
-/* ---- 学习资源 ---- */
-.resource-subject { margin-bottom: 18px; }
+/* ---- 学习资源抽屉 ---- */
+.drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 500;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 380px; max-width: 92vw;
+  background: var(--paper); z-index: 501;
+  transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  display: flex; flex-direction: column;
+  border-left: 1px solid var(--line);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.drawer-header h2 { margin-bottom: 0; font-size: 15px; color: var(--gold); }
+.drawer-close {
+  background: none; border: 1px solid var(--line); color: var(--ink-dim);
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.drawer-close:hover { border-color: var(--gold); color: var(--gold); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 20px; -webkit-overflow-scrolling: touch; }
+.drawer-footer {
+  padding: 10px 20px; border-top: 1px solid var(--line);
+  text-align: center; flex-shrink: 0;
+}
+
+/* 抽屉触发按钮 */
+.drawer-toggle {
+  position: fixed; right: 16px; bottom: 100px; z-index: 499;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--paper-lift); border: 1px solid var(--gold);
+  color: var(--gold); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.drawer-toggle:hover { background: var(--gold); color: var(--paper); transform: scale(1.05); }
+.drawer-toggle:active { transform: scale(0.94); }
+.drawer-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--rust); color: #fff; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+}
+
+/* 资源链接 (抽屉内) */
+.resource-subject { margin-bottom: 16px; }
 .resource-subject-label {
-  font-size: 15px; font-weight: 400; letter-spacing: 0.04em;
-  color: var(--gold); padding: 10px 0 8px;
-  border-bottom: 1px solid var(--line); margin-bottom: 6px;
+  font-size: 14px; font-weight: 400; letter-spacing: 0.04em;
+  color: var(--gold); padding: 8px 0 6px;
+  border-bottom: 1px solid var(--line); margin-bottom: 4px;
 }
 .resource-link {
-  display: flex; align-items: center; gap: 10px; padding: 9px 0 9px 12px;
-  font-size: 13px; color: var(--ink-dim); text-decoration: none;
-  border-bottom: 1px solid rgba(240,236,228,0.03); transition: color 0.2s;
+  display: flex; align-items: center; gap: 8px; padding: 8px 0 8px 10px;
+  font-size: 12px; color: var(--ink-dim); text-decoration: none;
+  border-bottom: 1px solid rgba(240,236,228,0.03); transition: all 0.2s;
+  cursor: pointer;
 }
-.resource-link:hover { color: var(--gold); }
+.resource-link:hover { color: var(--gold); transform: translateX(3px); }
+.resource-link.stale { opacity: 0.45; }
+.resource-link.stale::after {
+  content: '久未观看'; font-size: 9px; color: var(--rust);
+  margin-left: auto; padding: 1px 5px; border: 1px solid var(--rust);
+  border-radius: 3px; opacity: 0.7;
+}
 .resource-link .r-num {
-  width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line);
+  width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line);
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; flex-shrink: 0; font-family: var(--mono);
+  font-size: 10px; flex-shrink: 0; font-family: var(--mono);
 }
 .resource-link:hover .r-num { border-color: var(--gold); color: var(--gold); }
 .resource-link .r-tag {
-  font-size: 10px; padding: 2px 7px; border-radius: 3px;
+  font-size: 9px; padding: 1px 5px; border-radius: 3px;
   border: 1px solid var(--line); flex-shrink: 0;
 }
 .resource-link .r-tag.bilibili { border-color: #fb7299; color: #fb7299; }
 .resource-link .r-tag.mooc { border-color: #5cb85c; color: #5cb85c; }
+.resource-link .r-views {
+  font-size: 9px; color: var(--ink-dim); margin-left: auto; opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* 抽屉响应式 */
+@media (max-width: 479px) {
+  .drawer { width: 100vw; max-width: 100vw; }
+  .drawer-toggle { right: 10px; bottom: 90px; width: 42px; height: 42px; font-size: 16px; }
+  .resource-link { font-size: 11px; padding: 6px 0 6px 6px; }
+  .resource-subject-label { font-size: 13px; }
+}
+@media (min-width: 480px) and (max-width: 768px) {
+  .drawer { width: 340px; }
+  .resource-link { font-size: 11px; }
+}
 
 .history-list { max-height: 200px; overflow-y: auto; }
 .history-row {
@@ -357,6 +432,45 @@ body::before {
 .quote-block .quote em { color: var(--gold); font-style: normal; }
 
 .section { margin-top: 20px; }
+
+/* ---- 顶部标签导航 ---- */
+.tab-nav {
+  display: flex; gap: 0; justify-content: center; margin: 24px 0 0;
+  border-bottom: 1px solid var(--line);
+}
+.tab-btn {
+  padding: 10px 22px; font-size: 13px; font-family: var(--font);
+  background: none; border: none; color: var(--ink-dim);
+  cursor: pointer; letter-spacing: 0.04em;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- 统计图表 ---- */
+.chart-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.chart-box {
+  flex: 1; min-width: 200px; background: var(--paper-lift);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 18px;
+}
+.chart-box h3 { font-size: 13px; color: var(--ink-dim); letter-spacing: 0.06em; margin-bottom: 12px; font-weight: 400; }
+.chart-box canvas { width: 100% !important; height: auto !important; }
+.stat-big-num { font-size: 42px; font-family: var(--mono); color: var(--gold); text-align: center; }
+.stat-big-label { font-size: 11px; color: var(--ink-dim); text-align: center; letter-spacing: 0.06em; margin-top: 4px; }
+.stat-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(240,236,228,0.03); }
+.stat-line .sl-label { color: var(--ink-dim); }
+.stat-line .sl-val { font-family: var(--mono); color: var(--ink); }
+
+@media (max-width: 479px) {
+  .tab-btn { padding: 8px 14px; font-size: 12px; }
+  .chart-row { flex-direction: column; gap: 10px; }
+  .chart-box { min-width: auto; }
+  .stat-big-num { font-size: 34px; }
+}
 
 /* ═══════════════════════════════════════════
    响应式 · 自动适配设备
@@ -560,6 +674,15 @@ body::before {
 
 <div class="countdown-strip" id="countdown"></div>
 
+<!-- 顶部标签导航 -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('dashboard')">📊 督学面板</button>
+  <button class="tab-btn" onclick="switchTab('stats')">📈 数据统计</button>
+</div>
+
+<!-- Tab 1: 督学面板 -->
+<div class="tab-panel active" id="tab-dashboard">
+
 <!-- API 设置 -->
 <div class="settings-toggle" onclick="toggleSettings()">⚙ API 设置</div>
 <div class="settings-panel" id="settings-panel">
@@ -605,59 +728,136 @@ body::before {
   </div>
 </div>
 
-<!-- 学习资源 -->
-<div class="card section">
-  <h2>免费网课资源 · 点击直接跳转</h2>
-
-  <!-- 数学一 -->
-  <div class="resource-subject">
-    <div class="resource-subject-label">∫ 数学一</div>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=武忠祥 高等数学 0基础" target="_blank"><span class="r-num">1</span> 武忠祥 · 高数0基础课（B站 2454万播放）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1Zvw5eAExX/" target="_blank"><span class="r-num">2</span> 张宇 · 2027基础30讲 书课包<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=汤家凤 考研数学 零基础 完整版" target="_blank"><span class="r-num">3</span> 汤家凤 · 零基础完整版（2195万播放）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1Yx4y197kp/" target="_blank"><span class="r-num">4</span> 李永乐 · 线代全程班 基础+强化<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=周洋鑫 2027 考研数学" target="_blank"><span class="r-num">5</span> 周洋鑫 · 笑过全程班<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=2027考研数学一 全程班 免费" target="_blank"><span class="r-num">6</span> 更多B站数学一免费资源汇总<span class="r-tag bilibili">B站</span></a>
+<!-- 学习资源 - 抽屉式 -->
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="drawer" class="drawer">
+  <div class="drawer-header">
+    <h2>📚 免费网课资源</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
+  <div class="drawer-body">
+    <div id="drawer-stale-alert" style="display:none;padding:10px 14px;margin-bottom:10px;border:1px solid var(--rust);border-radius:6px;font-size:12px;color:var(--rust);line-height:1.6;"></div>
 
-  <!-- 408专业课 -->
-  <div class="resource-subject">
-    <div class="resource-subject-label">◇ 408 计算机专业课</div>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1RoSRBiETj/" target="_blank"><span class="r-num">1</span> 王道 · 2027 408领学班（数据结构+计组+OS+网络）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1nh411U71K/" target="_blank"><span class="r-num">2</span> 湖科大教书匠 · 计算机网络（计网救星）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.icourse163.org/course/HIT-1001527001" target="_blank"><span class="r-num">3</span> 哈工大刘宏伟 · 计算机组成原理 Mooc<span class="r-tag mooc">Mooc</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1bAF6zCEUG/" target="_blank"><span class="r-num">4</span> 王道 · 数据结构精讲（咸鱼学长）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=王道 操作系统 2027" target="_blank"><span class="r-num">5</span> 王道 · 操作系统完整课程<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=B姐 bok 408 计算机 强化" target="_blank"><span class="r-num">6</span> B姐(bok) · 408四科思维导图串联强化课<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.icourse163.org/course/USTC-1002531006" target="_blank"><span class="r-num">7</span> 中国科大 · 操作系统原理 Mooc<span class="r-tag mooc">Mooc</span></a>
+    <!-- 数学一 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">∫ 数学一</div>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=武忠祥 高等数学 0基础" target="_blank" data-res="math_wu" onclick="trackClick(this)"><span class="r-num">1</span> 武忠祥 · 高数0基础课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Zvw5eAExX/" target="_blank" data-res="math_zhang30" onclick="trackClick(this)"><span class="r-num">2</span> 张宇 · 2027基础30讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=汤家凤 考研数学 零基础 完整版" target="_blank" data-res="math_tang" onclick="trackClick(this)"><span class="r-num">3</span> 汤家凤 · 零基础完整版<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Yx4y197kp/" target="_blank" data-res="math_li" onclick="trackClick(this)"><span class="r-num">4</span> 李永乐 · 线代全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=周洋鑫 2027 考研数学" target="_blank" data-res="math_zhou" onclick="trackClick(this)"><span class="r-num">5</span> 周洋鑫 · 笑过全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=宋浩 线性代数 完整版" target="_blank" data-res="math_song_linear" onclick="trackClick(this)"><span class="r-num">6</span> 宋浩 · 线性代数精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=方浩 概率统计 基础班 2026" target="_blank" data-res="math_fang_prob" onclick="trackClick(this)"><span class="r-num">7</span> 方浩 · 概率统计基础+强化<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=余炳森 概率论 考研" target="_blank" data-res="math_yu_prob" onclick="trackClick(this)"><span class="r-num">8</span> 余炳森 · 概率论精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=张宇 1000题 逐题精讲 2027" target="_blank" data-res="math_zhang1000" onclick="trackClick(this)"><span class="r-num">9</span> 张宇 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=2027考研数学一 全程班 免费" target="_blank" data-res="math_more" onclick="trackClick(this)"><span class="r-num">10</span> 更多B站数学一资源汇总<span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 408专业课 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">◇ 408 计算机专业课</div>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1RoSRBiETj/" target="_blank" data-res="cs_wd_all" onclick="trackClick(this)"><span class="r-num">1</span> 王道 · 408领学班 四科全<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1nh411U71K/" target="_blank" data-res="cs_hkd_net" onclick="trackClick(this)"><span class="r-num">2</span> 湖科大教书匠 · 计算机网络<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/HIT-1001527001" target="_blank" data-res="cs_hit_cpu" onclick="trackClick(this)"><span class="r-num">3</span> 哈工大刘宏伟 · 计组原理<span class="r-tag mooc">Mooc</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1bAF6zCEUG/" target="_blank" data-res="cs_wd_ds" onclick="trackClick(this)"><span class="r-num">4</span> 王道 · 数据结构精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=王道 操作系统 2027" target="_blank" data-res="cs_wd_os" onclick="trackClick(this)"><span class="r-num">5</span> 王道 · 操作系统完整课程<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=B姐 bok 408 计算机 强化" target="_blank" data-res="cs_bok" onclick="trackClick(this)"><span class="r-num">6</span> B姐(bok) · 408思维导图强化<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/USTC-1002531006" target="_blank" data-res="cs_ustc_os" onclick="trackClick(this)"><span class="r-num">7</span> 中国科大 · 操作系统原理<span class="r-tag mooc">Mooc</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=率辉 天勤 数据结构 2027" target="_blank" data-res="cs_tianqin" onclick="trackClick(this)"><span class="r-num">8</span> 天勤率辉 · 数据结构精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=青岛大学 王卓 数据结构" target="_blank" data-res="cs_wangzhuo" onclick="trackClick(this)"><span class="r-num">9</span> 青岛大学王卓 · 数据结构<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=408 计组 王道 咸鱼 2027" target="_blank" data-res="cs_wd_cpu" onclick="trackClick(this)"><span class="r-num">10</span> 王道咸鱼 · 计组精讲<span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 英语一 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">🌐 英语一</div>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1aT411n7wG/" target="_blank" data-res="eng_tangchi" onclick="trackClick(this)"><span class="r-num">1</span> 唐迟 · 阅读方法论<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=颉斌斌 66句 长难句 完整版" target="_blank" data-res="eng_jie66" onclick="trackClick(this)"><span class="r-num">2</span> 颉斌斌 · 66句长难句精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ShSoBwEAL/" target="_blank" data-res="eng_grammar3" onclick="trackClick(this)"><span class="r-num">3</span> 田静+刘晓艳+颉斌斌 语法课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=Monkey老师 百句实战 长难句" target="_blank" data-res="eng_monkey" onclick="trackClick(this)"><span class="r-num">4</span> Monkey · 长难句百句实战<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=石雷鹏 考研作文 免费" target="_blank" data-res="eng_shilei" onclick="trackClick(this)"><span class="r-num">5</span> 石雷鹏 · 作文功能句<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=唐静 考研翻译 免费课" target="_blank" data-res="eng_tangjing" onclick="trackClick(this)"><span class="r-num">6</span> 唐静 · 翻译精讲课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=易熙人 完形填空 真题讲解" target="_blank" data-res="eng_yixiren" onclick="trackClick(this)"><span class="r-num">7</span> 易熙人 · 完形真题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=刘琦 新题型 英一" target="_blank" data-res="eng_liuqi" onclick="trackClick(this)"><span class="r-num">8</span> 刘琦 · 新题型方法论<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=潘赟 作文 九宫格" target="_blank" data-res="eng_panyun" onclick="trackClick(this)"><span class="r-num">9</span> 潘赟 · 九宫格作文法<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=柴荣 考研英语 阅读 真题" target="_blank" data-res="eng_chairong" onclick="trackClick(this)"><span class="r-num">10</span> 柴荣 · 阅读真题精讲<span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 政治 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">📜 政治</div>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=徐涛 考研政治 强化班 完整版" target="_blank" data-res="pol_xutao" onclick="trackClick(this)"><span class="r-num">1</span> 徐涛 · 强化班完整版<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=腿姐 2027 考研政治 技巧班" target="_blank" data-res="pol_tuijie" onclick="trackClick(this)"><span class="r-num">2</span> 腿姐 · 选择题技巧班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=肖秀荣 1000题 精讲 逐题" target="_blank" data-res="pol_xiao1000" onclick="trackClick(this)"><span class="r-num">3</span> 肖秀荣 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=苏一 肖1000 带背 2027" target="_blank" data-res="pol_suyi" onclick="trackClick(this)"><span class="r-num">4</span> 苏一 · 肖1000带刷+背诵<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=张修齐 考研政治 肖1000 使用" target="_blank" data-res="pol_zhangxiu" onclick="trackClick(this)"><span class="r-num">5</span> 张修齐 · 肖1000使用指南<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV11r5p6CEgr/" target="_blank" data-res="pol_3in1" onclick="trackClick(this)"><span class="r-num">6</span> 徐涛+腿姐+肖秀荣 三合一<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ZCnfegEHX/" target="_blank" data-res="pol_80plan" onclick="trackClick(this)"><span class="r-num">7</span> 政治80+ · 全程复习规划<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=米鹏 考研政治 全程班" target="_blank" data-res="pol_mipeng" onclick="trackClick(this)"><span class="r-num">8</span> 米鹏 · 有道全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=空卡 考研政治 带背" target="_blank" data-res="pol_kongka" onclick="trackClick(this)"><span class="r-num">9</span> 空卡 · 政治带背速记<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=大牙 考研政治 选择题 技巧" target="_blank" data-res="pol_daya" onclick="trackClick(this)"><span class="r-num">10</span> 大牙 · 选择题速成技巧<span class="r-tag bilibili">B站</span></a>
+    </div>
   </div>
-
-  <!-- 英语一 -->
-  <div class="resource-subject">
-    <div class="resource-subject-label">🌐 英语一</div>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1aT411n7wG/" target="_blank"><span class="r-num">1</span> 唐迟 · 阅读方法论（18年经典版，B站免费）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=颉斌斌 66句 长难句 完整版" target="_blank"><span class="r-num">2</span> 颉斌斌 · 66句长难句精讲<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1ShSoBwEAL/" target="_blank"><span class="r-num">3</span> 田静+刘晓艳+颉斌斌 · 三合一语法课<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=Monkey老师 百句实战 长难句" target="_blank"><span class="r-num">4</span> Monkey(边明锐) · 长难句百句实战<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=石雷鹏 考研作文 免费" target="_blank"><span class="r-num">5</span> 石雷鹏 · 作文功能句/实训班<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=唐静 考研翻译 免费课" target="_blank"><span class="r-num">6</span> 唐静 · 翻译精讲课<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=考研英语 单词 红宝书 免费" target="_blank"><span class="r-num">7</span> 单词 · 红宝书/墨墨背单词APP推荐<span class="r-tag bilibili">B站</span></a>
+  <div class="drawer-footer">
+    <span style="font-size:10px;color:var(--ink-dim);">全部免费公开 · 点击跳转 · B站搜"最新发布"</span>
   </div>
-
-  <!-- 政治 -->
-  <div class="resource-subject">
-    <div class="resource-subject-label">📜 政治</div>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=徐涛 考研政治 强化班 完整版" target="_blank"><span class="r-num">1</span> 徐涛 · 强化班完整版（打基础首选）<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=腿姐 2027 考研政治 技巧班" target="_blank"><span class="r-num">2</span> 腿姐(陆寓丰) · 选择题技巧班<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=肖秀荣 1000题 精讲 逐题" target="_blank"><span class="r-num">3</span> 肖秀荣 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=苏一 肖1000 带背 2027" target="_blank"><span class="r-num">4</span> 苏一 · 肖1000带刷+背诵手册<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://search.bilibili.com/all?keyword=张修齐 考研政治 肖1000 使用" target="_blank"><span class="r-num">5</span> 张修齐 · 肖1000使用指南+避坑<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV11r5p6CEgr/" target="_blank"><span class="r-num">6</span> 徐涛+腿姐+肖秀荣 · 三合一笔记+出题拆解<span class="r-tag bilibili">B站</span></a>
-    <a class="resource-link" href="https://www.bilibili.com/video/BV1ZCnfegEHX/" target="_blank"><span class="r-num">7</span> 政治80+ · 全程复习规划保70冲80<span class="r-tag bilibili">B站</span></a>
-  </div>
-
-  <div style="font-size:11px;color:var(--ink-dim);text-align:center;padding-top:10px;">全部免费公开资源 · 点击直接跳转 · B站搜索建议按"最新发布"排序</div>
 </div>
+
+</div><!-- /tab-dashboard -->
+
+<!-- Tab 2: 数据统计 -->
+<div class="tab-panel" id="tab-stats">
+  <div class="card section">
+    <h2>学习数据总览</h2>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📅 本月打卡率</h3>
+        <div class="stat-big-num" id="stat-checkin-rate">--%</div>
+        <div class="stat-big-label">本月打卡天数 / 自然天数</div>
+      </div>
+      <div class="chart-box">
+        <h3>⭐ 本月平均分</h3>
+        <div class="stat-big-num" id="stat-avg-score">--</div>
+        <div class="stat-big-label">DeepSeek AI 评分均值</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📊 近7天评分趋势</h3>
+        <canvas id="chart-weekly" height="160"></canvas>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>🎯 各科投入分布（本月）</h3>
+        <canvas id="chart-subject" height="180"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>📈 累计统计</h3>
+        <div id="stat-totals"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2>网课观看统计</h2>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📺 各科点击占比</h3>
+        <canvas id="chart-resource" height="180"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>⚠ 超过30天未看的资源</h3>
+        <div id="stat-stale-resources" style="font-size:12px;color:var(--ink-dim);line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-stats -->
+
+<!-- 网课抽屉触发按钮 -->
+<button class="drawer-toggle" id="drawer-toggle" onclick="toggleDrawer()">
+  📚<span class="drawer-badge" id="drawer-badge" style="display:none"></span>
+</button>
 
 <!-- 各科进度 -->
 <div class="card section">
@@ -1038,10 +1238,19 @@ async function submitReport() {
     };
     saveReport(today(), reportData);
 
-    // 显示评分
+    // 显示评分 + 动画反馈
     showScore(reportData);
     renderHistory();
     toast(`评分完成：${result.score} 分 · ${result.grade}`);
+
+    // 自动弹出总结卡片
+    const card = document.getElementById('score-card');
+    card.classList.add('show');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+
+    // 更新统计图表
+    refreshStatsIfVisible();
   } catch (err) {
     console.error(err);
     toast('评分失败：' + err.message);
@@ -1316,6 +1525,293 @@ function showMonthlySummary(data) {
 
   div.innerHTML = html;
   div.classList.add('show');
+}
+
+// ── 标签切换 ───────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick*="${name}"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'stats') { renderStats(); }
+}
+function refreshStatsIfVisible() {
+  if (document.getElementById('tab-stats').classList.contains('active')) { renderStats(); }
+}
+
+// ── 抽屉开关 ───────────────────────────
+function toggleDrawer() { openDrawer(); }
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer-badge').style.display = 'none';
+  checkStaleLinks();
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+// ── 点击追踪 ───────────────────────────
+function trackClick(el) {
+  const id = el.getAttribute('data-res');
+  if (!id) return;
+  const clicks = S('res_clicks') || {};
+  clicks[id] = { count: (clicks[id]?.count || 0) + 1, last: today() };
+  S('res_clicks', clicks);
+}
+
+// ── 检测久未观看的链接 ──────────────────
+function checkStaleLinks() {
+  const clicks = S('res_clicks') || {};
+  const now = new Date();
+  let staleCount = 0;
+  document.querySelectorAll('.resource-link[data-res]').forEach(el => {
+    const id = el.getAttribute('data-res');
+    const data = clicks[id];
+    const isStale = !data || (now - new Date(data.last)) / 86400000 > 30;
+    el.classList.toggle('stale', isStale);
+    if (isStale) staleCount++;
+  });
+  // 更新侧边栏催促提示
+  const alert = document.getElementById('drawer-stale-alert');
+  if (staleCount > 5) {
+    alert.style.display = 'block';
+    alert.textContent = `⚠ 有 ${staleCount} 个资源超过30天未观看。本月建议抽出时间看看网课，别让收藏吃灰。`;
+  } else {
+    alert.style.display = 'none';
+  }
+  // 按钮角标
+  const badge = document.getElementById('drawer-badge');
+  if (staleCount > 5) {
+    badge.style.display = 'flex';
+    badge.textContent = staleCount;
+  }
+}
+
+// ── 渲染统计图表 ────────────────────────
+function renderStats() {
+  const reports = getReports();
+  const dates = Object.keys(reports).sort();
+  const now = new Date();
+  const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  const monthReports = dates.filter(d => d.startsWith(thisMonth));
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const elapsedDays = Math.min(now.getDate(), daysInMonth);
+
+  // 打卡率
+  const checkinRate = elapsedDays > 0 ? Math.round(monthReports.length / elapsedDays * 100) : 0;
+  document.getElementById('stat-checkin-rate').textContent = checkinRate + '%';
+
+  // 平均分
+  const scores = monthReports.map(d => reports[d].score).filter(s => s != null);
+  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  document.getElementById('stat-avg-score').textContent = avgScore || '--';
+
+  // 近7天趋势图
+  drawWeeklyChart(reports, dates);
+
+  // 各科投入
+  drawSubjectChart(reports, dates, thisMonth);
+
+  // 累计统计
+  document.getElementById('stat-totals').innerHTML = `
+    <div class="stat-line"><span class="sl-label">总汇报天数</span><span class="sl-val">${dates.length} 天</span></div>
+    <div class="stat-line"><span class="sl-label">总平均分</span><span class="sl-val">${dates.length ? Math.round(dates.reduce((s,d) => s + (reports[d].score||0), 0) / dates.length) : '--'} 分</span></div>
+    <div class="stat-line"><span class="sl-label">最高分</span><span class="sl-val">${scores.length ? Math.max(...scores) : '--'} 分</span></div>
+    <div class="stat-line"><span class="sl-label">本月优秀天数</span><span class="sl-val">${scores.filter(s => s >= 85).length} 天</span></div>
+    <div class="stat-line"><span class="sl-label">本月需改进天数</span><span class="sl-val">${scores.filter(s => s < 65).length} 天</span></div>
+  `;
+
+  // 网课点击统计
+  drawResourceChart();
+
+  // 久未观看资源
+  renderStaleResourceList();
+}
+
+// ── 7天趋势折线图 ────────────────────────
+function drawWeeklyChart(reports, dates) {
+  const canvas = document.getElementById('chart-weekly');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 160 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 160;
+  ctx.clearRect(0, 0, w, h);
+
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  const scores7 = days.map(d => reports[d]?.score ?? null);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(240,236,228,0.05)'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(40, 20 + i * 30); ctx.lineTo(w - 10, 20 + i * 30); ctx.stroke(); }
+
+  // 折线
+  const validScores = scores7.filter(s => s !== null);
+  if (validScores.length >= 2) {
+    const maxS = Math.max(100, ...validScores);
+    const minS = Math.min(0, ...validScores);
+    const px = i => 50 + (w - 70) * i / 6;
+    const py = s => 140 - (s - minS) / (maxS - minS || 1) * 110;
+
+    // 渐变填充
+    const grad = ctx.createLinearGradient(0, 20, 0, 140);
+    grad.addColorStop(0, 'rgba(201,169,110,0.15)'); grad.addColorStop(1, 'rgba(201,169,110,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.moveTo(50, 140);
+    let first = true, hasPrev = false, prevX, prevY;
+    scores7.forEach((s, i) => {
+      if (s === null) { first = true; return; }
+      const x = px(i), y = py(s);
+      if (first) { ctx.lineTo(x, y); first = false; } else { ctx.lineTo(x, y); }
+      prevX = x; prevY = y; hasPrev = true;
+    });
+    if (hasPrev) { ctx.lineTo(prevX, 140); ctx.closePath(); ctx.fill(); }
+
+    // 线
+    ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 2; ctx.beginPath();
+    first = true;
+    scores7.forEach((s, i) => {
+      if (s === null) { first = true; return; }
+      const x = px(i), y = py(s);
+      if (first) { ctx.moveTo(x, y); first = false; } else { ctx.lineTo(x, y); }
+    });
+    ctx.stroke();
+
+    // 点 + 数值
+    scores7.forEach((s, i) => {
+      if (s === null) return;
+      const x = px(i), y = py(s);
+      ctx.fillStyle = '#0d0d12'; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#c9a96e'; ctx.font = '9px SF Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(s, x, y - 9);
+    });
+  }
+
+  // 日期标签
+  ctx.fillStyle = '#8b887e'; ctx.font = '9px Georgia, PingFang SC, serif';
+  days.forEach((d, i) => { ctx.fillText(d.slice(5), px(i), 155); });
+}
+
+// ── 各科投入饼图 ─────────────────────────
+function drawSubjectChart(reports, dates, thisMonth) {
+  const canvas = document.getElementById('chart-subject');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 180;
+  ctx.clearRect(0, 0, w, h);
+
+  const colors = { math: '#c9a96e', cs: '#b15533', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const labels = { math: '数学', cs: '408', eng: '英语', pol: '政治' };
+
+  // 从进度条取本月平均 (简化：取当前值)
+  const vals = PROGRESS_ITEMS.map(p => ({ key: p.key, val: S('prog_' + p.key) || 0 }));
+  const total = vals.reduce((s, v) => s + v.val, 0);
+
+  const cx = w * 0.38, cy = h / 2, r = Math.min(60, w * 0.22);
+  let angle = -Math.PI / 2;
+
+  if (total > 0) {
+    vals.forEach(v => {
+      const slice = (v.val / total) * Math.PI * 2;
+      ctx.fillStyle = colors[v.key]; ctx.beginPath();
+      ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, angle, angle + slice);
+      ctx.closePath(); ctx.fill();
+      // 标签
+      const mid = angle + slice / 2;
+      const lx = cx + Math.cos(mid) * (r + 18);
+      const ly = cy + Math.sin(mid) * (r + 18);
+      ctx.fillStyle = '#8b887e'; ctx.font = '10px Georgia, PingFang SC, serif';
+      ctx.textAlign = 'center'; ctx.fillText(labels[v.key], lx, ly + 3);
+      angle += slice;
+    });
+  }
+
+  // 图例
+  let ly = 28;
+  vals.forEach(v => {
+    ctx.fillStyle = colors[v.key]; ctx.fillRect(w * 0.65, ly, 10, 10);
+    ctx.fillStyle = '#f0ece4'; ctx.font = '12px Georgia, PingFang SC, serif'; ctx.textAlign = 'left';
+    ctx.fillText(`${labels[v.key]} ${v.val}%`, w * 0.65 + 16, ly + 9);
+    ly += 24;
+  });
+}
+
+// ── 网课点击统计图 ──────────────────────
+function drawResourceChart() {
+  const canvas = document.getElementById('chart-resource');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 180;
+  ctx.clearRect(0, 0, w, h);
+
+  const clicks = S('res_clicks') || {};
+  const subjects = { math: 0, cs: 0, eng: 0, pol: 0 };
+  Object.entries(clicks).forEach(([k, v]) => {
+    if (k.startsWith('math_')) subjects.math += v.count;
+    else if (k.startsWith('cs_')) subjects.cs += v.count;
+    else if (k.startsWith('eng_')) subjects.eng += v.count;
+    else if (k.startsWith('pol_')) subjects.pol += v.count;
+  });
+
+  const colors = { math: '#c9a96e', cs: '#b15533', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const labels = { math: '数学', cs: '408', eng: '英语', pol: '政治' };
+  const entries = Object.entries(subjects);
+  const maxVal = Math.max(1, ...entries.map(e => e[1]));
+
+  const barW = Math.min(50, (w - 100) / 4 - 12);
+  entries.forEach(([k, v], i) => {
+    const x = 70 + i * (barW + 18);
+    const barH = Math.max(4, (v / maxVal) * 100);
+    // 条形
+    ctx.fillStyle = colors[k]; ctx.fillRect(x, h - 40 - barH, barW, barH);
+    // 数值
+    ctx.fillStyle = '#f0ece4'; ctx.font = '11px SF Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText(v, x + barW / 2, h - 44 - barH);
+    // 标签
+    ctx.fillStyle = '#8b887e'; ctx.font = '10px Georgia, PingFang SC, serif';
+    ctx.fillText(labels[k], x + barW / 2, h - 20);
+  });
+}
+
+// ── 久未观看资源列表 ────────────────────
+function renderStaleResourceList() {
+  const clicks = S('res_clicks') || {};
+  const now = new Date();
+  const stale = [];
+  document.querySelectorAll('.resource-link[data-res]').forEach(el => {
+    const id = el.getAttribute('data-res');
+    const data = clicks[id];
+    if (!data || (now - new Date(data.last)) / 86400000 > 30) {
+      stale.push(el.textContent.trim().slice(2, 30));
+    }
+  });
+  const div = document.getElementById('stat-stale-resources');
+  if (stale.length === 0) {
+    div.innerHTML = '<span style="color:#7a9e7e;">✓ 所有资源近期都有观看</span>';
+  } else {
+    div.innerHTML = stale.slice(0, 8).map(s => `<div>⚠ ${s}...</div>`).join('')
+      + (stale.length > 8 ? `<div style="color:var(--ink-dim);">...还有 ${stale.length - 8} 个</div>` : '');
+  }
 }
 
 // ── 初始化 ──────────────────────────────
