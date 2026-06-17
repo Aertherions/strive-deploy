@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="考研督学">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0d12">
+<meta name="color-scheme" content="dark">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a0f'/><text x='50' y='68' font-size='58' text-anchor='middle'>⏳</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0a0f'/><text x='50' y='68' font-size='58' text-anchor='middle'>⏳</text></svg>">
+<title>考研督学 · 天大×港理工 · 380+</title>
+<style>
+/* ============================================================
+   Strive · Art Direction · 暗金墨色
+   后续所有网页设计按此风格执行（永久锁定）
+   ============================================================ */
+:root {
+  --ink: #f0ece4;
+  --ink-dim: #8b887e;
+  --paper: #0d0d12;
+  --paper-lift: #15151d;
+  --gold: #c9a96e;
+  --gold-burn: #e8c97a;
+  --rust: #b15533;
+  --line: rgba(240,236,228,0.08);
+  --radius: 10px;
+  --font: 'Georgia', 'Times New Roman', 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', serif;
+  --mono: 'SF Mono', 'Menlo', 'Monaco', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---- 粒子画布 ---- */
+#particles {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.7;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  min-height: 100vh;
+  padding: 32px 24px 140px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(177,85,51,0.03) 0%, transparent 50%);
+}
+
+h1 { font-size: 34px; font-weight: 400; letter-spacing: 0.04em; color: var(--ink); }
+h2 { font-size: 15px; font-weight: 400; letter-spacing: 0.08em; color: var(--ink-dim); margin-bottom: 20px; }
+.numeral { font-family: var(--mono); font-feature-settings: "tnum"; }
+
+.header { text-align: center; padding: 50px 0 16px; }
+.header h1 { margin-bottom: 6px; }
+.header .tagline { font-size: 13px; color: var(--ink-dim); letter-spacing: 0.06em; }
+
+.countdown-strip {
+  display: flex; gap: 1px; justify-content: center; margin: 28px 0 36px;
+  background: var(--line); border-radius: var(--radius); overflow: hidden;
+}
+.countdown-strip .cell {
+  background: var(--paper-lift); padding: 20px 24px; text-align: center; min-width: 76px;
+}
+.countdown-strip .num { font-size: 40px; font-weight: 400; color: var(--gold); font-family: var(--mono); line-height: 1; }
+.countdown-strip .lbl { font-size: 12px; color: var(--ink-dim); letter-spacing: 0.08em; margin-top: 6px; }
+
+.card {
+  background: var(--paper-lift); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 28px; margin-bottom: 20px;
+}
+
+/* ---- 打卡 ---- */
+.check-row {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  border-bottom: 1px solid var(--line); cursor: pointer; transition: all 0.2s;
+}
+.check-row:last-child { border-bottom: none; }
+.check-row.done { opacity: 0.4; }
+.check-row.done .check-mark { border-color: var(--gold); background: var(--gold); }
+.check-mark {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: all 0.2s;
+}
+.check-icon { font-size: 22px; width: 30px; text-align: center; flex-shrink: 0; }
+.check-label { flex: 1; font-size: 15px; }
+.check-target { font-size: 12px; color: var(--ink-dim); font-family: var(--mono); }
+
+/* ---- 汇报 + 评分 ---- */
+.report-area {
+  width: 100%; min-height: 140px; background: transparent;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px; color: var(--ink); font-size: 15px;
+  font-family: var(--font); resize: vertical; outline: none;
+  line-height: 1.8; margin-bottom: 14px;
+}
+.report-area:focus { border-color: var(--gold); }
+.report-area::placeholder { color: var(--ink-dim); opacity: 0.5; }
+
+.score-card {
+  margin-top: 18px; padding: 24px; border-radius: 8px;
+  border: 1px solid var(--line); display: none;
+}
+.score-card.show { display: block; animation: fadeUp 0.4s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
+
+.score-header {
+  display: flex; align-items: center; gap: 18px; margin-bottom: 16px;
+}
+.score-circle {
+  width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-family: var(--mono); color: var(--gold); flex-shrink: 0;
+}
+.score-circle.high { border-color: #7a9e7e; color: #7a9e7e; }
+.score-circle.mid { border-color: var(--gold); color: var(--gold); }
+.score-circle.low { border-color: var(--rust); color: var(--rust); }
+.score-meta { flex: 1; }
+.score-grade { font-size: 18px; font-family: var(--mono); }
+.score-comment { font-size: 14px; color: var(--ink-dim); margin-top: 4px; line-height: 1.6; }
+
+.score-detail { font-size: 13px; color: var(--ink-dim); line-height: 1.8; }
+.score-detail .hl { color: #7a9e7e; }
+.score-detail .prob { color: var(--rust); }
+.score-detail .prio { color: var(--gold-burn); }
+.score-detail .subject-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 12px; margin: 3px 6px 3px 0;
+  border: 1px solid var(--line); color: var(--ink-dim);
+}
+
+/* ---- 按钮 ---- */
+.btn {
+  padding: 10px 20px; border: 1px solid var(--gold); border-radius: 6px;
+  background: transparent; color: var(--gold); font-size: 13px;
+  font-family: var(--font); cursor: pointer; letter-spacing: 0.04em;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn:hover, .btn:active { background: var(--gold); color: var(--paper); }
+.btn.primary { background: var(--gold); color: var(--paper); border-color: var(--gold); }
+.btn.primary:hover { background: var(--gold-burn); }
+.btn.small { padding: 6px 14px; font-size: 12px; }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+.btn.loading {
+  position: relative; color: transparent;
+}
+.btn.loading::after {
+  content: ''; position: absolute; inset: 0;
+  margin: auto; width: 14px; height: 14px;
+  border: 2px solid var(--gold); border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- 月度总结 ---- */
+.monthly-summary {
+  display: none; margin-top: 12px; padding: 16px;
+  border-radius: 8px; border: 1px solid var(--line);
+  animation: fadeUp 0.4s ease;
+}
+.monthly-summary.show { display: block; }
+.monthly-summary h3 {
+  font-size: 15px; font-weight: 400; color: var(--gold);
+  letter-spacing: 0.04em; margin-bottom: 14px;
+}
+.monthly-summary .summary-text {
+  font-size: 14px; line-height: 1.9; color: var(--ink-dim);
+}
+.monthly-summary .stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0;
+}
+.monthly-summary .stat-item {
+  padding: 10px; border: 1px solid var(--line); border-radius: 6px; text-align: center;
+}
+.monthly-summary .stat-num { font-size: 26px; font-family: var(--mono); color: var(--gold); }
+.monthly-summary .stat-lbl { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 4px; }
+
+/* ---- 历史 ---- */
+/* ---- 学习资源抽屉 ---- */
+.drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 500;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 380px; max-width: 92vw;
+  background: var(--paper); z-index: 501;
+  transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  display: flex; flex-direction: column;
+  border-left: 1px solid var(--line);
+}
+.drawer.open { transform: translateX(0); }
+.drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.drawer-header h2 { margin-bottom: 0; font-size: 15px; color: var(--gold); }
+.drawer-close {
+  background: none; border: 1px solid var(--line); color: var(--ink-dim);
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.drawer-close:hover { border-color: var(--gold); color: var(--gold); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 20px; -webkit-overflow-scrolling: touch; }
+.drawer-footer {
+  padding: 10px 20px; border-top: 1px solid var(--line);
+  text-align: center; flex-shrink: 0;
+}
+
+/* 抽屉触发按钮 */
+.drawer-toggle {
+  position: fixed; right: 16px; bottom: 100px; z-index: 499;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--paper-lift); border: 1px solid var(--gold);
+  color: var(--gold); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.drawer-toggle:hover { background: var(--gold); color: var(--paper); transform: scale(1.05); }
+.drawer-toggle:active { transform: scale(0.94); }
+.drawer-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--rust); color: #fff; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+}
+
+/* 资源链接 (抽屉内) */
+.resource-subject { margin-bottom: 16px; }
+.resource-subject-label {
+  font-size: 14px; font-weight: 400; letter-spacing: 0.04em;
+  color: var(--gold); padding: 8px 0 6px;
+  border-bottom: 1px solid var(--line); margin-bottom: 4px;
+}
+.resource-link {
+  display: flex; align-items: center; gap: 8px; padding: 8px 0 8px 10px;
+  font-size: 12px; color: var(--ink-dim); text-decoration: none;
+  border-bottom: 1px solid rgba(240,236,228,0.03); transition: all 0.2s;
+  cursor: pointer;
+}
+.resource-link:hover { color: var(--gold); transform: translateX(3px); }
+.resource-link.stale { opacity: 0.45; }
+.resource-link.stale::after {
+  content: '久未观看'; font-size: 9px; color: var(--rust);
+  margin-left: auto; padding: 1px 5px; border: 1px solid var(--rust);
+  border-radius: 3px; opacity: 0.7;
+}
+.resource-link .r-num {
+  width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; flex-shrink: 0; font-family: var(--mono);
+}
+.resource-link:hover .r-num { border-color: var(--gold); color: var(--gold); }
+.resource-link .r-tag {
+  font-size: 9px; padding: 1px 5px; border-radius: 3px;
+  border: 1px solid var(--line); flex-shrink: 0;
+}
+.resource-link .r-tag.bilibili { border-color: #fb7299; color: #fb7299; }
+.resource-link .r-tag.mooc { border-color: #5cb85c; color: #5cb85c; }
+.resource-link .r-views {
+  font-size: 9px; color: var(--ink-dim); margin-left: auto; opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* 抽屉响应式 */
+@media (max-width: 479px) {
+  .drawer { width: 100vw; max-width: 100vw; }
+  .drawer-toggle { right: 10px; bottom: 90px; width: 42px; height: 42px; font-size: 16px; }
+  .resource-link { font-size: 11px; padding: 6px 0 6px 6px; }
+  .resource-subject-label { font-size: 13px; }
+}
+@media (min-width: 480px) and (max-width: 768px) {
+  .drawer { width: 340px; }
+  .resource-link { font-size: 11px; }
+}
+
+.history-list { max-height: 200px; overflow-y: auto; }
+.history-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid var(--line); font-size: 13px; cursor: pointer;
+}
+.history-row:last-child { border-bottom: none; }
+.history-row .h-date { color: var(--ink-dim); font-family: var(--mono); min-width: 90px; }
+.history-row .h-score { font-family: var(--mono); color: var(--gold); min-width: 40px; }
+.history-row .h-preview { flex: 1; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- 设置 ---- */
+.settings-toggle {
+  font-size: 12px; color: var(--ink-dim); cursor: pointer;
+  text-align: center; padding: 8px; letter-spacing: 0.06em; opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.settings-toggle:hover { opacity: 1; }
+.settings-panel {
+  display: none; padding: 14px; border: 1px solid var(--line);
+  border-radius: var(--radius); margin-bottom: 10px;
+}
+.settings-panel.show { display: block; }
+.settings-panel input {
+  width: 100%; background: transparent; border: 1px solid var(--line);
+  border-radius: 6px; padding: 10px 14px; color: var(--ink); font-size: 14px;
+  font-family: var(--mono); outline: none; margin-bottom: 10px;
+}
+.settings-panel input:focus { border-color: var(--gold); }
+
+/* ---- 进度条 ---- */
+.progress-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.progress-label { font-size: 12px; min-width: 80px; letter-spacing: 0.06em; color: var(--ink-dim); }
+.progress-track { flex: 1; height: 2px; background: var(--line); position: relative; }
+.progress-fill { height: 100%; position: absolute; left: 0; top: 0; transition: width 0.5s; }
+.progress-fill.math { background: var(--gold); }
+.progress-fill.cs { background: var(--rust); }
+.progress-fill.eng { background: #7a9e7e; }
+.progress-fill.pol { background: #8b6b5a; }
+.progress-val { font-size: 12px; font-family: var(--mono); color: var(--ink-dim); min-width: 36px; text-align: right; }
+
+/* ---- 底部 ---- */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--paper); border-top: 1px solid var(--line);
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 12px));
+  display: flex; gap: 8px; justify-content: center; z-index: 100;
+}
+.bottom-bar .btn { flex: 1; max-width: 240px; text-align: center; }
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--paper); padding: 8px 18px;
+  border-radius: 20px; font-size: 13px; letter-spacing: 0.04em; z-index: 999;
+  animation: toastAnim 2s forwards; pointer-events: none;
+}
+@keyframes toastAnim {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- 页面入场 ---- */
+.card {
+  animation: cardIn 0.5s ease both;
+}
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.10s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.20s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+.card:nth-child(6) { animation-delay: 0.30s; }
+.card:nth-child(7) { animation-delay: 0.35s; }
+.card:nth-child(8) { animation-delay: 0.40s; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 卡片悬浮 ---- */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 20px rgba(201,169,110,0.04);
+  }
+}
+
+/* ---- 倒计时微动 ---- */
+.countdown-strip .num {
+  animation: numPulse 3s ease-in-out infinite;
+}
+@keyframes numPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.78; }
+}
+
+/* ---- 按钮触感 ---- */
+.btn {
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.btn:active { transform: scale(0.96); }
+
+/* ---- 资源链接滑入 ---- */
+.resource-link {
+  transition: all 0.2s ease;
+}
+.resource-link:hover {
+  transform: translateX(4px);
+}
+
+/* ---- 评分圈弹入 ---- */
+.score-card.show {
+  animation: scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+@keyframes scoreReveal {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---- 月度总结淡入 ---- */
+.monthly-summary.show {
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 进度条缓动 ---- */
+.progress-fill {
+  transition: width 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ---- 背景呼吸 ---- */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,169,110,0.03) 0%, transparent 70%);
+  animation: bgBreathe 8s ease-in-out infinite;
+}
+@keyframes bgBreathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.quote-block { text-align: center; padding: 16px 0; }
+.quote-block .quote { font-size: 17px; font-style: italic; color: var(--ink-dim); line-height: 2.0; }
+.quote-block .quote em { color: var(--gold); font-style: normal; }
+
+/* ---- AI答疑聊天 ---- */
+.chat-container {
+  display: flex; flex-direction: column; height: calc(100vh - 280px); min-height: 400px;
+}
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 8px 0; -webkit-overflow-scrolling: touch;
+}
+.chat-msg {
+  margin-bottom: 12px; max-width: 88%; animation: fadeUp 0.3s ease;
+}
+.chat-msg.user { margin-left: auto; }
+.chat-msg.user .chat-bubble {
+  background: rgba(201,169,110,0.15); border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 14px 14px 4px 14px; padding: 10px 14px;
+  color: var(--ink); font-size: 13px; line-height: 1.6;
+}
+.chat-msg.ai .chat-bubble {
+  background: var(--paper-lift); border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px; padding: 10px 14px;
+  color: var(--ink-dim); font-size: 13px; line-height: 1.7;
+}
+.chat-msg.ai .chat-bubble code {
+  background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px;
+  font-family: var(--mono); font-size: 11px; color: var(--gold);
+}
+.chat-msg.ai .chat-bubble pre {
+  background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 6px;
+  overflow-x: auto; font-size: 11px; margin: 6px 0;
+}
+.chat-msg-label {
+  font-size: 10px; color: var(--ink-dim); margin-bottom: 3px; letter-spacing: 0.06em;
+}
+.chat-msg.user .chat-msg-label { text-align: right; }
+.chat-input-row {
+  display: flex; gap: 8px; padding: 10px 0; border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.chat-input {
+  flex: 1; background: transparent; border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 14px; color: var(--ink);
+  font-size: 13px; font-family: var(--font); outline: none; resize: none;
+  min-height: 42px; max-height: 100px; line-height: 1.5;
+}
+.chat-input:focus { border-color: var(--gold); }
+.chat-input::placeholder { color: var(--ink-dim); opacity: 0.4; }
+.chat-send {
+  padding: 10px 16px; background: var(--gold); color: var(--paper);
+  border: none; border-radius: 8px; font-size: 13px; font-family: var(--font);
+  cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+}
+.chat-send:hover { background: var(--gold-burn); }
+.chat-send:disabled { opacity: 0.4; pointer-events: none; }
+.chat-send.loading {
+  position: relative; color: transparent;
+}
+.chat-send.loading::after {
+  content: ''; position: absolute; inset: 0; margin: auto;
+  width: 14px; height: 14px; border: 2px solid var(--paper);
+  border-top-color: transparent; border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+.chat-typing {
+  display: none; padding: 8px 14px; color: var(--ink-dim); font-size: 11px;
+}
+.chat-typing.show { display: block; animation: fadeUp 0.3s ease; }
+.chat-clear {
+  text-align: center; padding: 6px;
+}
+.chat-clear button {
+  background: none; border: none; color: var(--ink-dim); font-size: 10px;
+  cursor: pointer; opacity: 0.5; letter-spacing: 0.04em;
+}
+.chat-clear button:hover { opacity: 1; color: var(--rust); }
+
+@media (max-width: 479px) {
+  .chat-container { height: calc(100vh - 240px); min-height: 300px; }
+  .chat-msg { max-width: 94%; }
+  .chat-msg .chat-bubble { font-size: 12px; padding: 8px 12px; }
+}
+
+/* ---- AI答疑浮动窗口 ---- */
+.chat-float-btn {
+  position: fixed; left: 16px; bottom: 100px; z-index: 498;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--paper-lift); border: 1px solid var(--gold);
+  color: var(--gold); font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.chat-float-btn:hover { background: var(--gold); color: var(--paper); transform: scale(1.05); }
+.chat-float-btn:active { transform: scale(0.94); }
+
+.chat-popup {
+  position: fixed; left: 20px; bottom: 160px; z-index: 502;
+  width: 380px; max-width: calc(100vw - 32px); height: 480px; max-height: 60vh;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+  display: none; flex-direction: column;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  animation: fadeUp 0.25s ease;
+}
+.chat-popup.open { display: flex; }
+.chat-popup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.chat-popup-header span { font-size: 13px; color: var(--gold); letter-spacing: 0.04em; }
+.chat-popup-close {
+  background: none; border: 1px solid var(--line); color: var(--ink-dim);
+  width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+}
+.chat-popup-close:hover { border-color: var(--gold); color: var(--gold); }
+.chat-popup .chat-messages { flex: 1; overflow-y: auto; padding: 12px 14px; }
+.chat-popup .chat-msg { max-width: 95%; margin-bottom: 8px; }
+.chat-popup .chat-bubble { font-size: 12px; padding: 8px 12px; }
+.chat-popup .chat-input-row { padding: 8px 12px; }
+.chat-popup .chat-input { font-size: 12px; padding: 8px 10px; }
+.chat-popup .chat-send { font-size: 12px; padding: 8px 12px; }
+.chat-popup .chat-typing { padding: 4px 14px; font-size: 10px; }
+.chat-popup .chat-clear { padding: 4px; }
+.chat-popup .chat-clear button { font-size: 9px; }
+
+@media (max-width: 479px) {
+  .chat-popup { left: 8px; right: 8px; bottom: 140px; width: auto; max-width: none; height: 400px; }
+  .chat-float-btn { left: 10px; bottom: 90px; width: 42px; height: 42px; font-size: 18px; }
+}
+
+.section { margin-top: 20px; }
+
+/* ---- 顶部标签导航 ---- */
+.tab-nav {
+  display: flex; gap: 0; justify-content: center; margin: 24px 0 0;
+  border-bottom: 1px solid var(--line);
+}
+.tab-btn {
+  padding: 10px 22px; font-size: 13px; font-family: var(--font);
+  background: none; border: none; color: var(--ink-dim);
+  cursor: pointer; letter-spacing: 0.04em;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ---- 统计图表 ---- */
+.chart-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.chart-box {
+  flex: 1; min-width: 200px; background: var(--paper-lift);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 18px;
+}
+.chart-box h3 { font-size: 13px; color: var(--ink-dim); letter-spacing: 0.06em; margin-bottom: 12px; font-weight: 400; }
+.chart-box canvas { width: 100% !important; height: auto !important; }
+.stat-big-num { font-size: 42px; font-family: var(--mono); color: var(--gold); text-align: center; }
+.stat-big-label { font-size: 11px; color: var(--ink-dim); text-align: center; letter-spacing: 0.06em; margin-top: 4px; }
+.stat-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(240,236,228,0.03); }
+.stat-line .sl-label { color: var(--ink-dim); }
+.stat-line .sl-val { font-family: var(--mono); color: var(--ink); }
+
+@media (max-width: 479px) {
+  .tab-btn { padding: 8px 14px; font-size: 12px; }
+  .chart-row { flex-direction: column; gap: 10px; }
+  .chart-box { min-width: auto; }
+  .stat-big-num { font-size: 34px; }
+}
+
+/* ═══════════════════════════════════════════
+   响应式 · 自动适配设备
+   ═══════════════════════════════════════════ */
+
+/* ── 手机竖屏 < 480px ── */
+@media (max-width: 479px) {
+  body { padding: 16px 12px 110px; }
+  h1 { font-size: 24px; }
+  h2 { font-size: 13px; margin-bottom: 14px; }
+  .header { padding: 30px 0 10px; }
+  .header .tagline { font-size: 11px; }
+  .card { padding: 16px; margin-bottom: 12px; }
+  .countdown-strip {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    margin: 16px 0 20px;
+  }
+  .countdown-strip .cell { padding: 12px 10px; min-width: auto; }
+  .countdown-strip .num { font-size: 28px; }
+  .countdown-strip .lbl { font-size: 10px; }
+  .check-row { padding: 12px 10px; gap: 10px; }
+  .check-mark { width: 22px; height: 22px; font-size: 10px; }
+  .check-icon { font-size: 18px; width: 24px; }
+  .check-label { font-size: 13px; }
+  .check-target { font-size: 10px; }
+  .report-area { min-height: 110px; padding: 12px; font-size: 13px; line-height: 1.7; }
+  .btn { padding: 8px 14px; font-size: 11px; }
+  .btn.small { padding: 5px 10px; font-size: 10px; }
+  .score-header { gap: 12px; }
+  .score-circle { width: 48px; height: 48px; font-size: 20px; }
+  .score-grade { font-size: 15px; }
+  .score-comment { font-size: 12px; }
+  .score-detail { font-size: 11px; }
+  .score-card { padding: 16px; margin-top: 12px; }
+  .monthly-summary .stat-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .monthly-summary .stat-num { font-size: 22px; }
+  .monthly-summary .stat-lbl { font-size: 10px; }
+  .resource-subject-label { font-size: 13px; }
+  .resource-link { font-size: 11px; padding: 7px 0 7px 8px; }
+  .resource-link .r-num { width: 18px; height: 18px; font-size: 9px; }
+  .resource-link .r-tag { font-size: 9px; padding: 1px 4px; }
+  .history-row { font-size: 11px; }
+  .history-row .h-date { min-width: 70px; }
+  .bottom-bar {
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 10px));
+    gap: 6px;
+  }
+  .bottom-bar .btn { max-width: none; font-size: 11px; padding: 8px 12px; }
+  .quote-block .quote { font-size: 14px; line-height: 1.8; }
+  .progress-label { font-size: 10px; min-width: 60px; }
+  .progress-val { font-size: 10px; min-width: 28px; }
+  .settings-panel { padding: 10px; }
+  .settings-panel input { padding: 8px 10px; font-size: 12px; }
+  .section { margin-top: 12px; }
+  /* 减少粒子数 */
+  #particles { opacity: 0.4; }
+}
+
+/* ── 平板 480px-768px ── */
+@media (min-width: 480px) and (max-width: 768px) {
+  body { padding: 24px 20px 130px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 14px; }
+  .header { padding: 40px 0 12px; }
+  .card { padding: 22px; margin-bottom: 16px; }
+  .countdown-strip { margin: 22px 0 28px; }
+  .countdown-strip .cell { padding: 16px 18px; min-width: 68px; }
+  .countdown-strip .num { font-size: 34px; }
+  .countdown-strip .lbl { font-size: 11px; }
+  .report-area { min-height: 120px; padding: 15px; font-size: 14px; }
+  .btn { padding: 9px 17px; font-size: 12px; }
+  .score-circle { width: 56px; height: 56px; font-size: 23px; }
+  .score-grade { font-size: 16px; }
+  .score-comment { font-size: 13px; }
+  .score-detail { font-size: 12px; }
+  .quote-block .quote { font-size: 16px; }
+  .resource-link { font-size: 12px; }
+  .resource-link .r-num { width: 20px; height: 20px; font-size: 10px; }
+  .section { margin-top: 16px; }
+}
+
+/* ── 小屏笔记本 768px-1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body { padding: 28px 40px 140px; }
+  .card { padding: 26px; }
+}
+
+/* ── 桌面大屏 > 1024px ── */
+@media (min-width: 1025px) {
+  body {
+    padding: 40px 0 150px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .header, .countdown-strip, .card, .settings-panel, .bottom-bar {
+    width: 100%; max-width: 720px;
+  }
+  .card { padding: 34px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 16px; }
+  .report-area { min-height: 160px; font-size: 16px; padding: 22px; }
+  .countdown-strip .cell { padding: 22px 30px; min-width: 84px; }
+  .countdown-strip .num { font-size: 44px; }
+  .countdown-strip .lbl { font-size: 13px; }
+  .check-row { padding: 18px 22px; }
+  .check-label { font-size: 16px; }
+  .btn { padding: 12px 24px; font-size: 14px; }
+  .score-circle { width: 72px; height: 72px; font-size: 30px; }
+  .score-grade { font-size: 20px; }
+  .score-comment { font-size: 15px; }
+  .score-detail { font-size: 14px; }
+  .quote-block .quote { font-size: 19px; }
+  .resource-link { font-size: 14px; padding: 10px 0 10px 14px; }
+  .resource-link .r-num { width: 24px; height: 24px; font-size: 12px; }
+  .resource-subject-label { font-size: 16px; }
+  .history-row { font-size: 14px; }
+  .monthly-summary .stat-num { font-size: 30px; }
+  .monthly-summary .stat-lbl { font-size: 12px; }
+  .monthly-summary .summary-text { font-size: 15px; }
+  .progress-label { font-size: 13px; }
+  .progress-val { font-size: 13px; }
+  .settings-panel input { font-size: 15px; padding: 12px 16px; }
+  .section { margin-top: 24px; }
+  /* 底部栏跟随居中 */
+  .bottom-bar {
+    left: 50%; transform: translateX(-50%);
+    max-width: 720px; border-radius: var(--radius) var(--radius) 0 0;
+  }
+}
+
+/* ── 横屏手机 / 短屏幕 ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  body { padding: 10px 20px 80px; }
+  .header { padding: 10px 0; }
+  .header h1 { font-size: 22px; }
+  .countdown-strip { margin: 8px 0 12px; }
+  .countdown-strip .cell { padding: 8px 12px; }
+  .countdown-strip .num { font-size: 24px; }
+  .card { padding: 12px 16px; margin-bottom: 8px; }
+  .section { margin-top: 6px; }
+  .bottom-bar { padding: 6px 12px; }
+}
+
+/* ── 触屏设备（手机/平板）── */
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .check-row { min-height: 48px; }
+  .resource-link { min-height: 40px; padding: 10px 0 10px 12px; }
+  .history-row { min-height: 40px; }
+  .toggle { min-width: 44px; min-height: 26px; }
+  /* 触屏禁止 hover 粘滞 */
+  .card:hover { transform: none; box-shadow: none; }
+  .resource-link:hover { transform: none; }
+}
+
+/* ── 鼠标设备 ── */
+@media (pointer: fine) {
+  .check-row:hover { background: rgba(201,169,110,0.03); }
+  .history-row:hover { background: rgba(201,169,110,0.03); }
+}
+
+/* ── Retina / 高分屏 ── */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .card { border-width: 0.5px; }
+  .countdown-strip { -webkit-font-smoothing: antialiased; }
+}
+
+/* ── 系统暗色模式（确保一致）── */
+@media (prefers-color-scheme: dark) {
+  /* 页面已为暗色，无需调整 */
+}
+@media (prefers-color-scheme: light) {
+  /* 页面强制暗色，不跟随亮色模式 */
+  :root {
+    --paper: #0d0d12;
+    --paper-lift: #15151d;
+    --ink: #f0ece4;
+  }
+}
+
+/* ── 减少动画偏好 ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  #particles { display: none; }
+}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+
+<div class="header">
+  <h1>考研督学</h1>
+  <div class="tagline">天大 × 港理工 · 深圳未来技术学院 · 目标 380 · 2027.12.25</div>
+</div>
+
+<div class="countdown-strip" id="countdown"></div>
+
+<!-- 顶部标签导航 -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('dashboard')">📊 督学面板</button>
+  <button class="tab-btn" onclick="switchTab('stats')">📈 数据统计</button>
+  <button class="tab-btn" onclick="switchTab('resources')">📚 网课资源</button>
+  <button class="tab-btn" onclick="switchTab('qa')">💬 AI答疑</button>
+</div>
+
+<!-- Tab 1: 督学面板 -->
+<div class="tab-panel active" id="tab-dashboard">
+
+<!-- 今日建议 · 快速反馈（置顶） -->
+<div class="card" id="advice-card" style="border-color:rgba(201,169,110,0.25);">
+  <h2>💡 今日学习建议 <span style="font-size:10px;color:var(--ink-dim);">（点击课程名直接跳转网课）</span></h2>
+  <div id="advice-content">
+    <div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">
+      提交每日汇报后，AI 将自动生成个性化建议
+    </div>
+  </div>
+</div>
+
+<!-- API 设置 -->
+<div class="settings-toggle" onclick="toggleSettings()">⚙ API 设置</div>
+<div class="settings-panel" id="settings-panel">
+  <input type="password" id="api-key" placeholder="DeepSeek API Key（sk-...）" oninput="saveApiKey()">
+  <input type="text" id="api-model" placeholder="模型名称（默认 deepseek-chat）" value="deepseek-chat" oninput="saveApiKey()">
+  <div style="font-size:12px;color:var(--ink-dim);margin-top:6px;">Key 仅存储在浏览器本地，不会上传到任何第三方。</div>
+</div>
+
+<!-- 每日打卡 -->
+<div class="card">
+  <h2>今日打卡 · <span id="today-str" style="font-weight:400;letter-spacing:0.02em;"></span></h2>
+  <div id="checklist"></div>
+</div>
+
+<!-- 每日汇报 + AI 评分 -->
+<div class="card section">
+  <h2>每日汇报 · AI 评分 <span style="font-size:11px;color:var(--ink-dim);">（DeepSeek）</span></h2>
+  <textarea class="report-area" id="report-input"
+    placeholder="写下今天学了什么、有什么收获、遇到什么困难...&#10;&#10;AI 会根据你的打卡完成度 + 汇报内容综合打分。"></textarea>
+  <div style="display:flex;gap:8px;">
+    <button class="btn primary" id="submit-btn" onclick="submitReport()">提交汇报 · AI 评分</button>
+    <button class="btn" id="auto-report-btn" onclick="autoGenerateReport()">🤖 AI 自动写汇报</button>
+    <button class="btn small" onclick="loadTodayDraft()">恢复草稿</button>
+  </div>
+
+  <!-- 评分结果 -->
+  <div class="score-card" id="score-card">
+    <div class="score-header">
+      <div class="score-circle" id="score-circle">--</div>
+      <div class="score-meta">
+        <div class="score-grade" id="score-grade"></div>
+        <div class="score-comment" id="score-comment"></div>
+      </div>
+    </div>
+    <div class="score-detail" id="score-detail"></div>
+  </div>
+</div>
+
+<!-- 历史记录 -->
+<div class="card section">
+  <h2>近期汇报记录</h2>
+  <div class="history-list" id="history-list">
+    <div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>
+  </div>
+</div>
+
+<!-- 学习资源 - 抽屉式 -->
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="drawer" class="drawer">
+  <div class="drawer-header">
+    <h2>📚 免费网课资源</h2>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div id="drawer-stale-alert" style="display:none;padding:10px 14px;margin-bottom:10px;border:1px solid var(--rust);border-radius:6px;font-size:12px;color:var(--rust);line-height:1.6;"></div>
+
+    <!-- 数学一 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">∫ 数学一</div>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=武忠祥 高等数学 0基础" target="_blank" data-res="math_wu" onclick="trackClick(this)"><span class="r-num">1</span> 武忠祥 · 高数0基础<span class="r-views">2454万播放</span><span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Zvw5eAExX/" target="_blank" data-res="math_zhang30" onclick="trackClick(this)"><span class="r-num">2</span> 张宇 · 2027基础30讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=汤家凤 考研数学 零基础 完整版" target="_blank" data-res="math_tang" onclick="trackClick(this)"><span class="r-num">3</span> 汤家凤 · 零基础完整版<span class="r-views">2195万播放</span><span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1Yx4y197kp/" target="_blank" data-res="math_li" onclick="trackClick(this)"><span class="r-num">4</span> 李永乐 · 线代全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=周洋鑫 2027 考研数学" target="_blank" data-res="math_zhou" onclick="trackClick(this)"><span class="r-num">5</span> 周洋鑫 · 笑过全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=宋浩 线性代数 完整版" target="_blank" data-res="math_song_linear" onclick="trackClick(this)"><span class="r-num">6</span> 宋浩 · 线性代数精讲<span class="r-views">千万播放</span><span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=方浩 概率统计 基础班" target="_blank" data-res="math_fang_prob" onclick="trackClick(this)"><span class="r-num">7</span> 方浩 · 概率统计基础+强化<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=余炳森 概率论 考研" target="_blank" data-res="math_yu_prob" onclick="trackClick(this)"><span class="r-num">8</span> 余炳森 · 概率论精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=张宇 1000题 逐题精讲" target="_blank" data-res="math_zhang1000" onclick="trackClick(this)"><span class="r-num">9</span> 张宇 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=宋浩 概率论 完整版" target="_blank" data-res="math_song_prob" onclick="trackClick(this)"><span class="r-num">10</span> 宋浩 · 概率论精讲<span class="r-views">千万播放</span><span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 408专业课 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">◇ 408 计算机专业课</div>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1RoSRBiETj/" target="_blank" data-res="cs_wd_all" onclick="trackClick(this)"><span class="r-num">1</span> 王道 · 408领学班 四科全<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1nh411U71K/" target="_blank" data-res="cs_hkd_net" onclick="trackClick(this)"><span class="r-num">2</span> 湖科大教书匠 · 计算机网络<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/HIT-1001527001" target="_blank" data-res="cs_hit_cpu" onclick="trackClick(this)"><span class="r-num">3</span> 哈工大刘宏伟 · 计组原理<span class="r-tag mooc">Mooc</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1bAF6zCEUG/" target="_blank" data-res="cs_wd_ds" onclick="trackClick(this)"><span class="r-num">4</span> 王道 · 数据结构精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=王道 操作系统 2027" target="_blank" data-res="cs_wd_os" onclick="trackClick(this)"><span class="r-num">5</span> 王道 · 操作系统完整课程<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=B姐 bok 408 计算机 强化" target="_blank" data-res="cs_bok" onclick="trackClick(this)"><span class="r-num">6</span> B姐(bok) · 408思维导图强化<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.icourse163.org/course/USTC-1002531006" target="_blank" data-res="cs_ustc_os" onclick="trackClick(this)"><span class="r-num">7</span> 中国科大 · 操作系统原理<span class="r-tag mooc">Mooc</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=率辉 天勤 数据结构 2027" target="_blank" data-res="cs_tianqin" onclick="trackClick(this)"><span class="r-num">8</span> 天勤率辉 · 数据结构精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=青岛大学 王卓 数据结构" target="_blank" data-res="cs_wangzhuo" onclick="trackClick(this)"><span class="r-num">9</span> 青岛大学王卓 · 数据结构<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=408 计组 王道 咸鱼 2027" target="_blank" data-res="cs_wd_cpu" onclick="trackClick(this)"><span class="r-num">10</span> 王道咸鱼 · 计组精讲<span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 英语一 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">🌐 英语一</div>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1aT411n7wG/" target="_blank" data-res="eng_tangchi" onclick="trackClick(this)"><span class="r-num">1</span> 唐迟 · 阅读方法论<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=颉斌斌 66句 长难句 完整版" target="_blank" data-res="eng_jie66" onclick="trackClick(this)"><span class="r-num">2</span> 颉斌斌 · 66句长难句精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ShSoBwEAL/" target="_blank" data-res="eng_grammar3" onclick="trackClick(this)"><span class="r-num">3</span> 田静+刘晓艳+颉斌斌 语法课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=Monkey老师 百句实战 长难句" target="_blank" data-res="eng_monkey" onclick="trackClick(this)"><span class="r-num">4</span> Monkey · 长难句百句实战<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=石雷鹏 考研作文 免费" target="_blank" data-res="eng_shilei" onclick="trackClick(this)"><span class="r-num">5</span> 石雷鹏 · 作文功能句<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=唐静 考研翻译 免费课" target="_blank" data-res="eng_tangjing" onclick="trackClick(this)"><span class="r-num">6</span> 唐静 · 翻译精讲课<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=易熙人 完形填空 真题讲解" target="_blank" data-res="eng_yixiren" onclick="trackClick(this)"><span class="r-num">7</span> 易熙人 · 完形真题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=刘琦 新题型 英一" target="_blank" data-res="eng_liuqi" onclick="trackClick(this)"><span class="r-num">8</span> 刘琦 · 新题型方法论<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=潘赟 作文 九宫格" target="_blank" data-res="eng_panyun" onclick="trackClick(this)"><span class="r-num">9</span> 潘赟 · 九宫格作文法<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=柴荣 考研英语 阅读 真题" target="_blank" data-res="eng_chairong" onclick="trackClick(this)"><span class="r-num">10</span> 柴荣 · 阅读真题精讲<span class="r-tag bilibili">B站</span></a>
+    </div>
+
+    <!-- 政治 -->
+    <div class="resource-subject">
+      <div class="resource-subject-label">📜 政治</div>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=徐涛 考研政治 强化班 完整版" target="_blank" data-res="pol_xutao" onclick="trackClick(this)"><span class="r-num">1</span> 徐涛 · 强化班完整版<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=腿姐 2027 考研政治 技巧班" target="_blank" data-res="pol_tuijie" onclick="trackClick(this)"><span class="r-num">2</span> 腿姐 · 选择题技巧班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=肖秀荣 1000题 精讲 逐题" target="_blank" data-res="pol_xiao1000" onclick="trackClick(this)"><span class="r-num">3</span> 肖秀荣 · 1000题逐题精讲<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=苏一 肖1000 带背 2027" target="_blank" data-res="pol_suyi" onclick="trackClick(this)"><span class="r-num">4</span> 苏一 · 肖1000带刷+背诵<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=张修齐 考研政治 肖1000 使用" target="_blank" data-res="pol_zhangxiu" onclick="trackClick(this)"><span class="r-num">5</span> 张修齐 · 肖1000使用指南<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV11r5p6CEgr/" target="_blank" data-res="pol_3in1" onclick="trackClick(this)"><span class="r-num">6</span> 徐涛+腿姐+肖秀荣 三合一<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://www.bilibili.com/video/BV1ZCnfegEHX/" target="_blank" data-res="pol_80plan" onclick="trackClick(this)"><span class="r-num">7</span> 政治80+ · 全程复习规划<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=米鹏 考研政治 全程班" target="_blank" data-res="pol_mipeng" onclick="trackClick(this)"><span class="r-num">8</span> 米鹏 · 有道全程班<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=空卡 考研政治 带背" target="_blank" data-res="pol_kongka" onclick="trackClick(this)"><span class="r-num">9</span> 空卡 · 政治带背速记<span class="r-tag bilibili">B站</span></a>
+      <a class="resource-link" href="https://search.bilibili.com/all?keyword=大牙 考研政治 选择题 技巧" target="_blank" data-res="pol_daya" onclick="trackClick(this)"><span class="r-num">10</span> 大牙 · 选择题速成技巧<span class="r-tag bilibili">B站</span></a>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <span style="font-size:10px;color:var(--ink-dim);">全部免费公开 · 点击跳转 · B站搜"最新发布"</span>
+  </div>
+</div>
+
+</div><!-- /tab-dashboard -->
+
+<!-- Tab 2: 数据统计 -->
+<div class="tab-panel" id="tab-stats">
+  <div class="card section">
+    <h2>学习数据总览</h2>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📅 本月打卡率</h3>
+        <div class="stat-big-num" id="stat-checkin-rate">--%</div>
+        <div class="stat-big-label">本月打卡天数 / 自然天数</div>
+      </div>
+      <div class="chart-box">
+        <h3>⭐ 本月平均分</h3>
+        <div class="stat-big-num" id="stat-avg-score">--</div>
+        <div class="stat-big-label">DeepSeek AI 评分均值</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📊 近7天评分趋势</h3>
+        <canvas id="chart-weekly" height="160"></canvas>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>🎯 各科投入分布（本月）</h3>
+        <canvas id="chart-subject" height="180"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>📈 累计统计</h3>
+        <div id="stat-totals"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2>网课观看统计</h2>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h3>📺 各科点击占比</h3>
+        <canvas id="chart-resource" height="180"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>⚠ 超过30天未看的资源</h3>
+        <div id="stat-stale-resources" style="font-size:12px;color:var(--ink-dim);line-height:1.8;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 各科进度 · AI 自动估算 -->
+  <div class="card section">
+    <h2>📊 各科进度 <span style="font-size:10px;color:var(--ink-dim);">（AI 根据汇报自动估算）</span></h2>
+    <div id="progress-ai">
+      <div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">提交汇报后 AI 自动更新进度</div>
+    </div>
+  </div>
+
+  <!-- 月度总结 -->
+  <div class="card section">
+    <h2>📅 月度总结</h2>
+    <div style="font-size:13px;color:var(--ink-dim);margin-bottom:12px;">
+      选择月份，AI 自动汇总该月所有汇报，生成学习成果总结。
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <select id="month-select" style="background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--ink);font-size:13px;font-family:var(--font);outline:none;" onchange="onMonthChange()"></select>
+      <button class="btn primary" id="monthly-btn" onclick="generateMonthly()">生成 AI 月度总结</button>
+    </div>
+    <div class="monthly-summary" id="monthly-summary"></div>
+  </div>
+</div><!-- /tab-stats -->
+
+<!-- Tab 3: 网课资源（直接展示） -->
+<div class="tab-panel" id="tab-resources">
+  <div class="card section">
+    <h2>📚 免费网课资源 · 点击直接跳转</h2>
+    <div id="tab-resource-content"></div>
+    <div style="font-size:11px;color:var(--ink-dim);text-align:center;padding-top:12px;">全部免费公开 · 点击跳转B站 · 播放量标注仅供参考</div>
+  </div>
+</div>
+
+<!-- Tab 4: AI 答疑 -->
+<div class="tab-panel" id="tab-qa">
+  <div class="card section">
+    <h2>💬 AI 考研答疑 <span style="font-size:10px;color:var(--ink-dim);">（DeepSeek · 数一/408/英一/政治）</span></h2>
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg ai">
+          <div class="chat-msg-label">🤖 AI 导师</div>
+          <div class="chat-bubble">你好！我是你的考研AI导师。数学一、408专业课、英语一、政治，任何问题都可以问我。<br><br>试试问：<br>• "求极限的常用方法有哪些？"<br>• "KMP算法 next 数组怎么求？"<br>• "英语阅读理解怎么提高正确率？"<br>• "马原的剩余价值率怎么算？"</div>
+        </div>
+      </div>
+      <div class="chat-typing" id="chat-typing">⏳ AI 正在思考...</div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat-input" placeholder="输入你的学习问题..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">发送</button>
+      </div>
+      <div class="chat-clear">
+        <button onclick="clearChat()">清除对话</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI答疑浮动按钮 -->
+<button class="chat-float-btn" id="chat-float-btn" onclick="toggleChatPopup()">💬</button>
+
+<!-- AI答疑浮动窗口 -->
+<div class="chat-popup" id="chat-popup">
+  <div class="chat-popup-header">
+    <span>💬 AI 考研答疑</span>
+    <button class="chat-popup-close" onclick="toggleChatPopup()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-popup-messages">
+    <div class="chat-msg ai">
+      <div class="chat-msg-label">🤖 AI 导师</div>
+      <div class="chat-bubble">有什么学习问题尽管问！<br>数学/408/英语/政治都可以。</div>
+    </div>
+  </div>
+  <div class="chat-typing" id="chat-popup-typing">⏳ AI 思考中...</div>
+  <div class="chat-input-row">
+    <textarea class="chat-input" id="chat-popup-input" placeholder="输入问题，Enter 发送..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatPopup();}"></textarea>
+    <button class="chat-send" id="chat-popup-send-btn" onclick="sendChatPopup()">发送</button>
+  </div>
+  <div class="chat-clear"><button onclick="clearChatPopup()">清除对话</button></div>
+</div>
+
+<!-- 网课抽屉触发按钮 -->
+<button class="drawer-toggle" id="drawer-toggle" onclick="toggleDrawer()">
+  📚<span class="drawer-badge" id="drawer-badge" style="display:none"></span>
+</button>
+
+</div>
+
+<!-- 每日金句 -->
+<div class="card section">
+  <div class="quote-block">
+    <div class="quote" id="quote"></div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <button class="btn primary" onclick="submitReport()">提交今日汇报</button>
+  <button class="btn" onclick="generateMonthly()">生成本月总结</button>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// 粒子系统 · 暗金星尘
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: -999, y: -999 };
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+  resize();
+  const newWidth = window.innerWidth;
+  if ((lastWidth < 480 && newWidth >= 480) ||
+      (lastWidth < 768 && newWidth >= 768) ||
+      (lastWidth >= 768 && newWidth < 768) ||
+      (lastWidth >= 480 && newWidth < 480)) {
+    initParticles(newWidth < 480 ? 40 : newWidth < 768 ? 60 : 80);
+  }
+  lastWidth = newWidth;
+});
+resize();
+
+document.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+class Particle {
+  constructor() {
+    this.reset(true);
+  }
+  reset(init) {
+    this.x = Math.random() * w;
+    this.y = init ? Math.random() * h : h + 20;
+    this.size = Math.random() * 2.5 + 0.8;
+    this.speedY = -(Math.random() * 0.4 + 0.15);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.6 + 0.1;
+    this.flickerSpeed = Math.random() * 0.02 + 0.005;
+    this.flickerOffset = Math.random() * Math.PI * 2;
+    this.golden = Math.random() < 0.15; // 15% 金色粒子
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    // 鼠标引力
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 120) {
+      const force = (120 - dist) / 120;
+      this.x += (dx / dist) * force * 0.6;
+      this.y += (dy / dist) * force * 0.6;
+    }
+    // 边界重置
+    if (this.y < -20 || this.x < -20 || this.x > w + 20) {
+      this.reset(false);
+    }
+    this.opacity += Math.sin(Date.now() * this.flickerSpeed + this.flickerOffset) * 0.003;
+    this.opacity = Math.max(0.05, Math.min(0.7, this.opacity));
+  }
+  draw() {
+    const alpha = this.opacity;
+    if (this.golden) {
+      ctx.fillStyle = `rgba(201,169,110,${alpha})`;
+      ctx.shadowColor = `rgba(201,169,110,${alpha * 0.8})`;
+      ctx.shadowBlur = this.size * 3;
+    } else {
+      ctx.fillStyle = `rgba(240,236,228,${alpha * 0.35})`;
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function initParticles(count) {
+  particles = [];
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle());
+  }
+}
+initParticles(window.innerWidth < 480 ? 40 : window.innerWidth < 768 ? 60 : 80);
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  // 偶尔生成新粒子在鼠标附近
+  if (mouse.x > 0 && Math.random() < 0.3) {
+    const spark = new Particle();
+    spark.x = mouse.x + (Math.random() - 0.5) * 40;
+    spark.y = mouse.y + (Math.random() - 0.5) * 40;
+    spark.size = Math.random() * 1.5 + 0.5;
+    spark.speedY = -(Math.random() * 0.6 + 0.2);
+    spark.speedX = (Math.random() - 0.5) * 0.8;
+    spark.golden = true;
+    spark.opacity = 0.8;
+    particles.push(spark);
+    if (particles.length > 150) particles.shift();
+  }
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ═══════════════════════════════════════════
+
+const EXAM = new Date(2027, 11, 25, 8, 30, 0);
+
+const CHECK_ITEMS = [
+  { id:'words', icon:'📖', label:'背单词', target:'200+ 词' },
+  { id:'math', icon:'∫', label:'数学', target:'4 小时' },
+  { id:'cs', icon:'◇', label:'408 专业课', target:'4 小时' },
+  { id:'eng', icon:'🌐', label:'英语', target:'2 小时' },
+  { id:'review', icon:'◎', label:'复盘 + 列计划', target:'30 分钟' },
+];
+
+const PROGRESS_ITEMS = [
+  { key:'math', label:'数学一', cls:'math' },
+  { key:'cs', label:'408 专业课', cls:'cs' },
+  { key:'eng', label:'英语一', cls:'eng' },
+  { key:'pol', label:'政治', cls:'pol' },
+];
+
+const QUOTES = [
+  '双非二本四级没过。<em>这是你的起点，不是终点。</em>',
+  '和你竞争的人，<em>现在正在刷数学一。</em>',
+  '四级没过的人考研英语一 65+，<em>你做得到吗？你敢做吗？</em>',
+  '一张考研卷，两个学位。<em>机会就在那里，拿不拿得到看你自己。</em>',
+  '深圳未来技术学院第一届硕士，<em>不卷你卷谁？</em>',
+  '408 四本书，<em>每一页都是你翻盘的武器。</em>',
+  '忍受自律的痛苦，<em>还是忍受后悔的痛苦？</em>',
+  '你现在的对手是 370 分，<em>不是身边的任何人。</em>',
+  '四门课，十八个月。<em>一次机会。把它攥紧。</em>',
+  '别人在刷抖音，你在刷张宇。<em>一年后，差距就是 985 双证。</em>',
+];
+
+// ── 工具 ──────────────────────────────
+function S(k, v) {
+  const key = 'strive_' + k;
+  if (v !== undefined) { localStorage.setItem(key, JSON.stringify(v)); return v; }
+  try { return JSON.parse(localStorage.getItem(key)); } catch { return undefined; }
+}
+function today() { return new Date().toISOString().slice(0,10); }
+function toast(msg) {
+  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+  document.getElementById('toasts').appendChild(el); setTimeout(() => el.remove(), 2100);
+}
+
+// ── API Key ────────────────────────────
+function getApiKey() { return S('api_key') || ''; }
+function getApiModel() { return S('api_model') || 'deepseek-chat'; }
+function saveApiKey() {
+  S('api_key', document.getElementById('api-key').value.trim());
+  S('api_model', document.getElementById('api-model').value.trim() || 'deepseek-chat');
+}
+function toggleSettings() {
+  document.getElementById('settings-panel').classList.toggle('show');
+}
+
+// ── 倒计时 ─────────────────────────────
+function renderCountdown() {
+  const d = Math.max(0, Math.ceil((EXAM - new Date()) / 86400000));
+  document.getElementById('countdown').innerHTML = `
+    <div class="cell"><div class="num">${d}</div><div class="lbl">天</div></div>
+    <div class="cell"><div class="num">380</div><div class="lbl">目标分</div></div>
+    <div class="cell"><div class="num">18</div><div class="lbl">个月</div></div>
+    <div class="cell"><div class="num">双证</div><div class="lbl">天大+港理工</div></div>
+  `;
+}
+
+// ── 打卡 ───────────────────────────────
+function getChecks() { return S('check_' + today()) || {}; }
+function saveCheck(id, v) { const c = getChecks(); c[id] = v; S('check_' + today(), c); }
+function renderChecklist() {
+  document.getElementById('today-str').textContent = today();
+  const checks = getChecks();
+  document.getElementById('checklist').innerHTML = CHECK_ITEMS.map(item => {
+    const done = checks[item.id];
+    return `
+      <div class="check-row ${done ? 'done' : ''}" onclick="toggleCheck('${item.id}')">
+        <div class="check-mark">${done ? '✓' : ''}</div>
+        <div class="check-icon">${item.icon}</div>
+        <div class="check-label">${item.label}</div>
+        <div class="check-target">${item.target}</div>
+      </div>
+    `;
+  }).join('');
+}
+function toggleCheck(id) { saveCheck(id, !getChecks()[id]); renderChecklist(); }
+
+// ── 进度 ───────────────────────────────
+// AI 估算进度 + 渲染
+function renderProgress() {
+  const container = document.getElementById('progress-ai');
+  if (!container) return;
+  const cached = S('prog_ai_estimate');
+  if (cached && cached.date === today()) {
+    renderProgressBars(cached.data, container);
+  } else {
+    container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--ink-dim);font-size:12px;">⏳ AI 正在估算各科进度...</div>';
+    estimateProgressWithAI().then(data => {
+      S('prog_ai_estimate', { date: today(), data });
+      renderProgressBars(data, container);
+    }).catch(() => {
+      // 降级：从 localStorage 读取旧进度
+      const fallback = {};
+      PROGRESS_ITEMS.forEach(p => { fallback[p.key] = S('prog_' + p.key) || 0; });
+      renderProgressBars(fallback, container);
+    });
+  }
+}
+
+function renderProgressBars(data, container) {
+  const labels = { math: '数学一', cs: '408专业课', eng: '英语一', pol: '政治' };
+  const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+  container.innerHTML = Object.entries(data).map(([k, v]) => {
+    const pct = Math.min(100, Math.max(0, parseInt(v) || 0));
+    return `
+      <div class="progress-row">
+        <div class="progress-label">${labels[k] || k}</div>
+        <div class="progress-track">
+          <div class="progress-fill ${k}" style="width:${pct}%;background:${colors[k]||'var(--gold)'};"></div>
+        </div>
+        <div class="progress-val">${pct}%</div>
+      </div>
+      <div style="font-size:10px;color:var(--ink-dim);margin:-4px 0 8px 80px;">${data[k+'_note'] || ''}</div>
+    `;
+  }).join('');
+  // 同步写入 localStorage
+  Object.entries(data).forEach(([k, v]) => {
+    if (!k.endsWith('_note')) S('prog_' + k, parseInt(v) || 0);
+  });
+}
+
+async function estimateProgressWithAI() {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('No key');
+
+  const reports = getReports();
+  const allDates = Object.keys(reports).sort();
+  const recentReports = allDates.slice(-14).map(d => ({
+    date: d, score: reports[d].score, grade: reports[d].grade,
+    feedback: JSON.stringify(reports[d].subject_feedback || {}),
+    comment: reports[d].comment || '',
+  }));
+
+  const currentProg = {};
+  PROGRESS_ITEMS.forEach(p => { currentProg[p.key] = S('prog_' + p.key) || 0; });
+
+  const prompt = `你是考研进度分析师。学生目标380分（天大×港理工），考试2027.12.25。
+
+当前手动记录的进度：${JSON.stringify(currentProg)}
+最近14天汇报数据：${JSON.stringify(recentReports).slice(0, 2000)}
+
+请根据汇报频率、评分趋势、各科反馈，估算当前各科真实进度(0-100%)，返回严格JSON：
+{
+  "math": 25, "math_note": "基础阶段，高数上册过半",
+  "cs": 15, "cs_note": "数据结构刚起步，计组未开始",
+  "eng": 30, "eng_note": "单词积累中，阅读刚开始",
+  "pol": 0, "pol_note": "未开始，7月后启动"
+}`;
+
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: getApiModel(),
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.5, max_tokens: 400,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) throw new Error('API error');
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ── 金句 ───────────────────────────────
+function renderQuote() {
+  document.getElementById('quote').innerHTML = QUOTES[new Date().getDate() % QUOTES.length];
+}
+
+// ── 汇报草稿 ───────────────────────────
+function saveDraft(text) { S('draft_' + today(), text); }
+function loadTodayDraft() {
+  const draft = S('draft_' + today()) || '';
+  document.getElementById('report-input').value = draft;
+  if (draft) toast('已恢复今日草稿'); else toast('今日暂无草稿');
+}
+
+// ── 汇报存储 ───────────────────────────
+function getReports() { return S('reports') || {}; }
+function saveReport(date, data) {
+  const reports = getReports();
+  reports[date] = data;
+  S('reports', reports);
+}
+
+// ── DeepSeek API 调用 ────────────────────
+async function callDeepSeek(systemPrompt, userMessage) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('settings-panel').classList.add('show');
+    toast('请先填写 DeepSeek API Key');
+    throw new Error('API Key 未配置');
+  }
+  const model = getApiModel();
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey,
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`API 错误 (${resp.status}): ${err}`);
+  }
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ── 提交每日汇报 ────────────────────────
+// ── AI 自动生成汇报 ────────────────────
+async function autoGenerateReport() {
+  const btn = document.getElementById('auto-report-btn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 撰写中...';
+  toast('AI 正在分析今日数据...');
+
+  try {
+    // 收集数据
+    const checks = getChecks();
+    const checkSummary = CHECK_ITEMS.map(i => {
+      const done = checks[i.id] ? '已完成' : '未完成';
+      return `${i.icon} ${i.label}：${done}`;
+    }).join('；');
+    const doneCount = CHECK_ITEMS.filter(i => checks[i.id]).length;
+
+    const aiProg = S('prog_ai_estimate');
+    const progData = (aiProg && aiProg.data) || {};
+    const progressSummary = Object.entries(progData)
+      .filter(([k]) => !k.endsWith('_note'))
+      .map(([k, v]) => `${k}: ${v}%`)
+      .join('；') || '暂无AI进度估算';
+
+    const resClicks = S('res_clicks') || {};
+    const recentClicks = Object.entries(resClicks)
+      .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 7)
+      .map(([k, v]) => `${k}: ${v.count}次`)
+      .join(', ') || '今日尚未观看网课';
+
+    const genPrompt = `你是一位考研备考生。根据以下今日学习数据，用第一人称写一段200字左右的每日学习汇报。
+
+要求：
+- 语气真诚、有反思、不浮夸
+- 如实描述完成情况，没完成的诚实说
+- 提到具体学了什么内容、用了谁的网课
+- 最后写一两句明天的改进方向
+
+【今日打卡】${checkSummary}（共完成${doneCount}/${CHECK_ITEMS.length}项）
+【各科进度】${progressSummary}
+【网课观看】${recentClicks}
+
+请直接返回汇报文本，不要JSON，不要引号包裹。`;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      document.getElementById('settings-panel').classList.add('show');
+      toast('请先填写 DeepSeek API Key');
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.textContent = '🤖 AI 自动写汇报';
+      return;
+    }
+
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey,
+      },
+      body: JSON.stringify({
+        model: getApiModel(),
+        messages: [
+          { role: 'system', content: '你是一个诚实的考研学生，写每日学习汇报。用第一人称，语气真诚。' },
+          { role: 'user', content: genPrompt },
+        ],
+        temperature: 0.8,
+        max_tokens: 600,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(`API 错误 (${resp.status})`);
+    }
+
+    const data = await resp.json();
+    const generatedText = data.choices[0].message.content.trim();
+
+    // 填入文本框
+    document.getElementById('report-input').value = generatedText;
+    saveDraft(generatedText);
+    toast('AI 汇报已生成，检查后可提交评分');
+  } catch (err) {
+    console.error(err);
+    toast('生成失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '🤖 AI 自动写汇报';
+  }
+}
+
+async function submitReport() {
+  const btn = document.getElementById('submit-btn');
+  const reportText = document.getElementById('report-input').value.trim();
+  if (!reportText) { toast('请先写今日汇报'); return; }
+
+  // 保存草稿
+  saveDraft(reportText);
+
+  // 收集打卡数据
+  const checks = getChecks();
+  const checkSummary = CHECK_ITEMS.map(i => {
+    const done = checks[i.id] ? '✅' : '⬜';
+    return `${done} ${i.icon} ${i.label}（${i.target}）`;
+  }).join('\n');
+  const doneCount = CHECK_ITEMS.filter(i => checks[i.id]).length;
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 评分中...';
+  toast('正在提交 DeepSeek 评分...');
+
+  try {
+    const systemPrompt = `你是一位严厉但公正的考研督学导师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供每日评分。目标分数：380分。考试日期：2027年12月25日。学生每天学习8小时。
+
+学生每天提交学习汇报，你需要：
+1. 综合打卡完成度和汇报内容质量打分（0-100）
+2. 给出等级：S(95+)/A(85-94)/B(75-84)/C(65-74)/D(<65)
+3. 写一段鼓励但犀利的评语（2-3句话）
+4. 指出今天做得好的1-2个点
+5. 指出需要改进的1-2个点
+6. 给出明天的8小时学习时间分配方案
+7. 推荐明天应该看的网课老师（每科1位，结合今天的薄弱点）
+8. 对各科给出简短建议
+
+评分权重：打卡完成度 40% + 学习时长 30% + 复盘反思质量 30%
+
+请返回严格JSON：
+{
+  "score": 85,
+  "grade": "A",
+  "comment": "评语",
+  "highlights": ["亮点1", "亮点2"],
+  "problems": ["问题1"],
+  "tomorrow_schedule": {
+    "total": "8小时",
+    "math": "3小时 · 张宇基础30讲",
+    "cs": "3小时 · 王道数据结构+计组",
+    "eng": "1.5小时 · 唐迟阅读方法论",
+    "pol": "0.5小时 · 今日不安排政治"
+  },
+  "tomorrow_courses": {
+    "math": "张宇 · 基础30讲第7-8讲",
+    "cs": "王道咸鱼 · 数据结构树与图",
+    "eng": "唐迟 · 阅读方法论04-05",
+    "pol": "徐涛 · 马原强化班第3讲"
+  },
+  "subject_feedback": {
+    "math": "数学建议",
+    "cs": "408建议",
+    "eng": "英语建议",
+    "pol": "政治建议"
+  }
+}`;
+
+    // 收集网课点击历史
+    const resClicks = S('res_clicks') || {};
+    const recentClicks = Object.entries(resClicks)
+      .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 7)
+      .map(([k, v]) => `${k}: ${v.count}次点击`)
+      .join(', ') || '暂无网课观看记录';
+
+    // 收集最近答疑
+    const recentQA = getChatHistory().slice(-6).map(m => `[${m.role === 'user' ? '问' : '答'}] ${m.content.slice(0, 100)}`).join('\n');
+
+    const userMessage = `【今日打卡情况】\n${checkSummary}\n完成项：${doneCount}/${CHECK_ITEMS.length}\n\n【近7天网课观看记录】\n${recentClicks}\n\n【近期答疑记录】\n${recentQA || '无'}\n\n【学习汇报】\n${reportText}`;
+
+    const result = await callDeepSeek(systemPrompt, userMessage);
+
+    // 保存结果
+    const reportData = {
+      date: today(),
+      checks: checks,
+      doneCount: doneCount,
+      report: reportText,
+      score: result.score,
+      grade: result.grade,
+      comment: result.comment,
+      highlights: result.highlights || [],
+      problems: result.problems || [],
+      tomorrow_priority: result.tomorrow_priority || '',
+      tomorrow_schedule: result.tomorrow_schedule || {},
+      tomorrow_courses: result.tomorrow_courses || {},
+      subject_feedback: result.subject_feedback || {},
+    };
+    saveReport(today(), reportData);
+
+    // 显示评分 + 动画反馈
+    showScore(reportData);
+    renderHistory();
+    toast(`评分完成：${result.score} 分 · ${result.grade}`);
+
+    // 自动弹出总结卡片
+    const card = document.getElementById('score-card');
+    card.classList.add('show');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'scoreReveal 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)';
+
+    // 清除进度缓存触发AI重估
+    S('prog_ai_estimate', null);
+    // 刷新建议卡片
+    renderAdvice();
+    // 更新统计图表
+    refreshStatsIfVisible();
+  } catch (err) {
+    console.error(err);
+    toast('评分失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '提交汇报 · AI 评分';
+  }
+}
+
+// ── 显示评分 ───────────────────────────
+function showScore(data) {
+  const card = document.getElementById('score-card');
+  const circle = document.getElementById('score-circle');
+  const grade = document.getElementById('score-grade');
+  const comment = document.getElementById('score-comment');
+  const detail = document.getElementById('score-detail');
+
+  circle.textContent = data.score;
+
+  // 颜色
+  circle.className = 'score-circle';
+  if (data.score >= 85) circle.classList.add('high');
+  else if (data.score >= 65) circle.classList.add('mid');
+  else circle.classList.add('low');
+
+  grade.innerHTML = `等级 <strong>${data.grade}</strong> · ${data.date}`;
+  comment.textContent = data.comment;
+
+  let detailHTML = '';
+
+  // 明日8小时时间表
+  if (data.tomorrow_schedule) {
+    detailHTML += '<div style="margin-top:4px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;">';
+    detailHTML += '<div style="font-size:12px;color:var(--gold);letter-spacing:0.06em;margin-bottom:8px;">⏰ 明日8小时学习计划</div>';
+    const s = data.tomorrow_schedule;
+    const labels = { math:'∫ 数学', cs:'◇ 408', eng:'🌐 英语', pol:'📜 政治' };
+    Object.entries(s).forEach(([k, v]) => {
+      if (k === 'total') return;
+      if (v && v !== '0小时') detailHTML += `<div style="font-size:12px;color:var(--ink-dim);padding:3px 0;">${labels[k] || k}：<span style="color:var(--ink);">${v}</span></div>`;
+    });
+    detailHTML += `<div style="font-size:11px;color:var(--gold-burn);margin-top:6px;">总计：${s.total || '8小时'}</div>`;
+    detailHTML += '</div>';
+  }
+
+  // 明日推荐网课
+  if (data.tomorrow_courses) {
+    detailHTML += '<div style="margin-top:8px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;">';
+    detailHTML += '<div style="font-size:12px;color:var(--gold);letter-spacing:0.06em;margin-bottom:6px;">📺 明天推荐看的网课</div>';
+    const cLabels = { math:'∫ 数学', cs:'◇ 408', eng:'🌐 英语', pol:'📜 政治' };
+    Object.entries(data.tomorrow_courses).forEach(([k, v]) => {
+      if (v) detailHTML += `<div style="font-size:12px;color:var(--ink-dim);padding:2px 0;">${cLabels[k] || k}：<span style="color:var(--ink);">${v}</span></div>`;
+    });
+    detailHTML += '</div>';
+  }
+
+  if (data.highlights && data.highlights.length) {
+    detailHTML += '<div style="margin-top:8px;">✨ 做得好的：</div>';
+    data.highlights.forEach(h => { detailHTML += `<div class="hl">+ ${h}</div>`; });
+  }
+  if (data.problems && data.problems.length) {
+    detailHTML += '<div style="margin-top:8px;">⚠ 需要改进：</div>';
+    data.problems.forEach(p => { detailHTML += `<div class="prob">- ${p}</div>`; });
+  }
+  if (data.tomorrow_priority) {
+    detailHTML += `<div style="margin-top:8px;">🎯 明天优先：<span class="prio">${data.tomorrow_priority}</span></div>`;
+  }
+  if (data.subject_feedback && Object.keys(data.subject_feedback).length) {
+    detailHTML += '<div style="margin-top:8px;">📚 各科建议：</div>';
+    const labels = { math:'数学', cs:'408专业课', eng:'英语', pol:'政治' };
+    Object.entries(data.subject_feedback).forEach(([k, v]) => {
+      if (v) detailHTML += `<span class="subject-tag">${labels[k] || k}: ${v}</span>`;
+    });
+  }
+
+  detail.innerHTML = detailHTML;
+  card.classList.add('show');
+}
+
+// ── 历史记录 ───────────────────────────
+function renderHistory() {
+  const reports = getReports();
+  const dates = Object.keys(reports).sort().reverse().slice(0, 14);
+  const list = document.getElementById('history-list');
+
+  if (!dates.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">暂无记录，开始写第一条吧</div>';
+    return;
+  }
+
+  list.innerHTML = dates.map(d => {
+    const r = reports[d];
+    const score = r.score != null ? r.score : '?';
+    const preview = (r.report || '').slice(0, 40) + '...';
+    return `
+      <div class="history-row" onclick="loadHistoryReport('${d}')">
+        <span class="h-date">${d}</span>
+        <span class="h-score">${score}分</span>
+        <span class="h-preview">${preview}</span>
+        <span style="color:var(--gold);font-size:11px;">查看→</span>
+      </div>
+    `;
+  }).join('');
+
+  // 更新月份选择器
+  updateMonthSelect(dates);
+}
+
+function loadHistoryReport(date) {
+  const reports = getReports();
+  const r = reports[date];
+  if (!r) { toast('无此日期记录'); return; }
+
+  // 显示评分
+  showScore(r);
+
+  // 回填汇报内容
+  if (r.report) {
+    document.getElementById('report-input').value = r.report;
+  }
+
+  toast(`已加载 ${date} 的汇报`);
+}
+
+// ── 月度总结 ───────────────────────────
+function updateMonthSelect(dates) {
+  const months = new Set();
+  (dates || Object.keys(getReports())).forEach(d => {
+    months.add(d.slice(0, 7)); // YYYY-MM
+  });
+
+  const select = document.getElementById('month-select');
+  const sorted = Array.from(months).sort().reverse();
+
+  if (!sorted.length) {
+    // 至少有当前月份
+    const now = new Date();
+    const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    sorted.push(thisMonth);
+  }
+
+  select.innerHTML = sorted.map(m => {
+    const [y, mo] = m.split('-');
+    return `<option value="${m}">${y}年${mo}月</option>`;
+  }).join('');
+
+  onMonthChange();
+}
+
+function onMonthChange() {
+  const month = document.getElementById('month-select').value;
+  const reports = getReports();
+  const daysInMonth = Object.keys(reports).filter(d => d.startsWith(month));
+
+  const summaryDiv = document.getElementById('monthly-summary');
+  if (!daysInMonth.length) {
+    summaryDiv.innerHTML = '<div style="font-size:13px;color:var(--ink-dim);text-align:center;padding:16px;">该月暂无汇报记录</div>';
+    summaryDiv.classList.add('show');
+    return;
+  }
+
+  // 显示本地统计
+  const scores = daysInMonth.map(d => reports[d].score).filter(s => s != null);
+  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+
+  summaryDiv.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-num">${daysInMonth.length}</div>
+        <div class="stat-lbl">汇报天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${avgScore}</div>
+        <div class="stat-lbl">平均分</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${scores.filter(s => s >= 85).length}</div>
+        <div class="stat-lbl">优秀天数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">${scores.filter(s => s < 65).length}</div>
+        <div class="stat-lbl">需改进天数</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--ink-dim);text-align:center;margin-top:8px;">点击"生成 AI 月度总结"获取深度分析</div>
+  `;
+  summaryDiv.classList.add('show');
+}
+
+async function generateMonthly() {
+  const month = document.getElementById('month-select').value;
+  const btn = document.getElementById('monthly-btn');
+  const reports = getReports();
+  const monthReports = Object.keys(reports)
+    .filter(d => d.startsWith(month))
+    .sort()
+    .map(d => reports[d]);
+
+  if (!monthReports.length) {
+    toast('该月暂无汇报记录，无法生成总结');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'AI 分析中...';
+  toast('正在生成月度总结...');
+
+  try {
+    const systemPrompt = `你是一位考研战略分析师，专门为备考"天津大学×香港理工 深圳未来技术学院"的学生提供月度分析。目标分数：380分（数学一+英语一+408计算机专业基础+政治）。考试日期：2027年12月25日。
+
+请根据学生一个月的每日学习数据，生成深度月度总结报告。
+
+分析维度：
+1. 本月总体完成率、学习趋势（上升/下降/波动）
+2. 各科投入时间分布是否合理（数学40% + 408 35% + 英语15% + 政治10%为理想比例）
+3. 学习习惯分析：是否有规律？是否有明显断档？
+4. 与目标380分的距离评估和学习节奏建议
+5. 下月具体战略：哪科加码、哪科调整方法
+6. 写一段有煽动力的月度总评（2-3句）
+
+请返回严格JSON：
+{
+  "overall_score": 82,
+  "total_days_reported": 25,
+  "avg_daily_score": 82,
+  "trend": "稳中有升",
+  "subject_analysis": {
+    "math": "数学一分析...",
+    "cs": "408专业课分析...",
+    "eng": "英语一分析...",
+    "pol": "政治分析..."
+  },
+  "strengths": ["优势1", "优势2"],
+  "weaknesses": ["短板1", "短板2"],
+  "next_month_strategy": "下月核心策略...",
+  "summary": "完整月度总结（200字左右，有煽动力）"
+}`;
+
+    const userMessage = monthReports.map((r, i) => {
+      return `【第${i+1}天 · ${r.date}】\n打卡完成：${r.doneCount}/${CHECK_ITEMS.length}\n评分：${r.score}分 · ${r.grade}\n汇报：${r.report}\n评语：${r.comment}`;
+    }).join('\n\n---\n\n');
+
+    const result = await callDeepSeek(systemPrompt, userMessage);
+
+    // 保存月度总结
+    const monthlyData = {
+      month: month,
+      generatedAt: today(),
+      ...result,
+    };
+    S('monthly_' + month, monthlyData);
+
+    // 显示
+    showMonthlySummary(monthlyData);
+    toast('月度总结生成完成');
+  } catch (err) {
+    console.error(err);
+    toast('月度总结生成失败：' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.textContent = '生成 AI 月度总结';
+  }
+}
+
+function showMonthlySummary(data) {
+  const div = document.getElementById('monthly-summary');
+  const trendIcon = { '上升':'📈', '下降':'📉', '波动':'📊', '稳中有升':'📈', '平稳':'➡️' };
+  const icon = trendIcon[data.trend] || '📊';
+
+  let html = `<h3>${data.month} 月度总结</h3>`;
+  html += `<div class="stat-grid">
+    <div class="stat-item"><div class="stat-num">${data.total_days_reported}</div><div class="stat-lbl">汇报天数</div></div>
+    <div class="stat-item"><div class="stat-num">${data.avg_daily_score || data.overall_score}</div><div class="stat-lbl">综合评分</div></div>
+    <div class="stat-item"><div class="stat-num">${data.overall_score}</div><div class="stat-lbl">月度总分</div></div>
+    <div class="stat-item"><div class="stat-num">${icon} ${data.trend}</div><div class="stat-lbl">学习趋势</div></div>
+  </div>`;
+
+  html += `<div class="summary-text">${data.summary}</div>`;
+
+  if (data.strengths && data.strengths.length) {
+    html += '<div style="margin-top:10px;font-size:12px;">✅ 优势：' + data.strengths.map(s => `<span class="hl">${s}</span>`).join(' · ') + '</div>';
+  }
+  if (data.weaknesses && data.weaknesses.length) {
+    html += '<div style="margin-top:4px;font-size:12px;">⚠ 短板：' + data.weaknesses.map(s => `<span class="prob">${s}</span>`).join(' · ') + '</div>';
+  }
+  if (data.next_month_strategy) {
+    html += `<div style="margin-top:8px;font-size:12px;">🎯 下月战略：<span style="color:var(--gold-burn);">${data.next_month_strategy}</span></div>`;
+  }
+  if (data.subject_analysis) {
+    html += '<div style="margin-top:10px;font-size:12px;color:var(--ink-dim);">';
+    Object.entries(data.subject_analysis).forEach(([k, v]) => {
+      if (v) html += `<span class="subject-tag">${k}: ${v}</span> `;
+    });
+    html += '</div>';
+  }
+
+  div.innerHTML = html;
+  div.classList.add('show');
+}
+
+// ── 课程名 → B站链接映射 ──────────────────
+function getCourseLink(courseName, subject) {
+  // 提取关键词搜索
+  const keywordMap = {
+    '张宇': '张宇 2027 基础30讲',
+    '武忠祥': '武忠祥 高数 0基础',
+    '汤家凤': '汤家凤 零基础 完整版',
+    '李永乐': '李永乐 线代 全程班',
+    '周洋鑫': '周洋鑫 2027 考研数学',
+    '宋浩': '宋浩 线性代数 完整版',
+    '方浩': '方浩 概率统计 基础班',
+    '余炳森': '余炳森 概率论 考研',
+    '王道': '王道 408 ' + (subject === 'cs' ? '领学班' : ''),
+    '咸鱼': '王道 408 数据结构 咸鱼',
+    '湖科大': '湖科大教书匠 计算机网络',
+    'B姐': 'B姐 bok 408 强化',
+    '天勤': '率辉 天勤 数据结构',
+    '唐迟': '唐迟 阅读方法论',
+    '颉斌斌': '颉斌斌 66句 长难句',
+    '田静': '田静 考研英语 长难句',
+    'Monkey': 'Monkey老师 百句实战 长难句',
+    '石雷鹏': '石雷鹏 考研作文 功能句',
+    '唐静': '唐静 考研翻译',
+    '易熙人': '易熙人 完形填空 真题',
+    '刘琦': '刘琦 新题型 英一',
+    '潘赟': '潘赟 作文 九宫格',
+    '柴荣': '柴荣 考研英语 阅读',
+    '徐涛': '徐涛 考研政治 强化班',
+    '腿姐': '腿姐 2027 考研政治 技巧班',
+    '肖秀荣': '肖秀荣 1000题 精讲',
+    '苏一': '苏一 肖1000 带背',
+    '张修齐': '张修齐 考研政治',
+    '米鹏': '米鹏 考研政治 全程班',
+    '空卡': '空卡 考研政治 带背',
+    '大牙': '大牙 考研政治 选择题',
+    '刘宏伟': '哈工大 刘宏伟 计组',
+  };
+  let keyword = courseName;
+  for (const [k, v] of Object.entries(keywordMap)) {
+    if (courseName.includes(k)) { keyword = v; break; }
+  }
+  return `https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}`;
+}
+
+// ── 今日建议卡片 ────────────────────────
+function renderAdvice() {
+  const reports = getReports();
+  const todayReport = reports[today()];
+  const content = document.getElementById('advice-content');
+
+  if (todayReport && todayReport.score != null) {
+    // 有今日汇报 → 显示 AI 生成的个性化建议
+    renderAdviceFromReport(todayReport, content);
+  } else {
+    // 无今日汇报 → 先显示缓存建议，无则自动生成
+    const cached = S('advice_' + today());
+    if (cached) {
+      renderAdviceData(cached, content);
+    } else {
+      content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">⏳ DeepSeek 正在生成今日学习建议...</div>';
+      generateDailyAdvice().then(data => {
+        S('advice_' + today(), data);
+        renderAdviceData(data, content);
+      }).catch(() => {
+        // 降级：硬编码默认
+        const fallback = getFallbackAdvice();
+        S('advice_' + today(), fallback);
+        renderAdviceData(fallback, content);
+      });
+    }
+  }
+}
+
+function renderAdviceFromReport(report, content) {
+  const s = report.tomorrow_schedule || {};
+  const c = report.tomorrow_courses || {};
+  let html = '<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">';
+  html += `<div style="font-size:40px;font-family:var(--mono);color:var(--gold);">${report.score}</div>`;
+  html += `<div><div style="font-size:14px;color:var(--ink);">今日评分 · ${report.grade || '--'} 级</div>`;
+  html += `<div style="font-size:12px;color:var(--ink-dim);">${report.comment || ''}</div></div></div>`;
+  html += buildAdviceGrid(s, c);
+  html += `<div style="font-size:10px;color:var(--gold-burn);text-align:right;margin-top:8px;">每日学习 ${s.total || '8小时'}</div>`;
+  html += '<div style="text-align:center;margin-top:8px;"><button class="btn small" onclick="regenerateAdvice()">🔄 DeepSeek 刷新建议</button></div>';
+  content.innerHTML = html;
+}
+
+function renderAdviceData(data, content) {
+  let html = '<div style="text-align:center;margin-bottom:10px;">';
+  html += '<div style="font-size:24px;font-family:var(--mono);color:var(--gold);">8h</div>';
+  html += '<div style="font-size:12px;color:var(--ink-dim);">每日学习时长目标</div></div>';
+  if (data.painPoints) {
+    html += `<div style="padding:8px 12px;margin-bottom:10px;border:1px solid rgba(201,169,110,0.3);border-radius:6px;font-size:11px;color:var(--gold-burn);text-align:center;">🎯 诊断薄弱点：${data.painPoints}</div>`;
+  }
+  if (data.tip) {
+    html += `<div style="font-size:12px;color:var(--ink);text-align:center;margin-bottom:10px;font-style:italic;">"${data.tip}"</div>`;
+  }
+  html += buildAdviceGrid(data.schedule || {}, data.courses || {}, data.weakSubjects || []);
+  html += '<div style="text-align:center;margin-top:10px;"><button class="btn small" onclick="regenerateAdvice()">🔄 DeepSeek 刷新建议</button></div>';
+  content.innerHTML = html;
+}
+
+function buildAdviceGrid(schedule, courses, weakSubjects) {
+  const labels = { math: '∫ 数学', cs: '◇ 408', eng: '🌐 英语', pol: '📜 政治' };
+  const colors = { math: 'var(--gold)', cs: 'var(--rust)', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const defaults = {
+    math: { hrs: '3小时', course: '张宇基础30讲' },
+    cs: { hrs: '3小时', course: '王道数据结构+计组' },
+    eng: { hrs: '1.5小时', course: '唐迟阅读方法论' },
+    pol: { hrs: '0.5小时', course: '今日暂不安排政治' },
+  };
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">';
+  ['math', 'cs', 'eng', 'pol'].forEach(k => {
+    const hrs = (schedule && schedule[k]) ? schedule[k] : defaults[k].hrs;
+    const course = (courses && courses[k]) ? courses[k] : defaults[k].course;
+    const isWeak = weakSubjects && weakSubjects.includes(k);
+    html += `<div style="padding:10px;border:1px solid var(--line);border-radius:6px;${isWeak ? 'border-color:var(--gold);' : ''}">`;
+    html += `<div style="font-size:11px;color:${colors[k]};letter-spacing:0.04em;">${labels[k]} ${isWeak ? '⚠ 薄弱' : ''}</div>`;
+    html += `<div style="font-size:14px;color:var(--ink);margin-top:2px;">${hrs}</div>`;
+    html += `<a href="${getCourseLink(course, k)}" target="_blank" style="font-size:10px;color:var(--gold);margin-top:2px;text-decoration:none;display:block;">📺 ${course} →</a>`;
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function getFallbackAdvice() {
+  return {
+    schedule: { math: '3小时', cs: '3小时', eng: '1.5小时', pol: '0.5小时' },
+    courses: { math: '张宇基础30讲', cs: '王道数据结构+计组', eng: '唐迟阅读方法论', pol: '徐涛马原强化' },
+    weakSubjects: [],
+  };
+}
+
+// ── DeepSeek 自动生成每日学习建议 ──────────
+async function generateDailyAdvice() {
+  const apiKey = getApiKey();
+  if (!apiKey) return getFallbackAdvice();
+
+  const aiProg = S('prog_ai_estimate');
+  const prog = (aiProg && aiProg.data) || {};
+  if (!prog.math) { PROGRESS_ITEMS.forEach(p => { prog[p.key] = S('prog_' + p.key) || 0; }); }
+  const weak = Object.entries(prog).filter(([k]) => !k.endsWith('_note')).sort((a, b) => (a[1]||0) - (b[1]||0)).map(e => e[0]);
+  const resClicks = S('res_clicks') || {};
+  const recentClicks = Object.entries(resClicks)
+    .filter(([k, v]) => v.last && (new Date() - new Date(v.last)) / 86400000 <= 14)
+    .map(([k]) => k).join(', ') || '无记录';
+  const reports = getReports();
+  const dates = Object.keys(reports).sort();
+  const last3 = dates.slice(-3).map(d => reports[d].score || 0);
+  const avgRecent = last3.length ? Math.round(last3.reduce((a,b)=>a+b,0)/last3.length) : 0;
+
+  // 收集最近的答疑问题，分析薄弱点
+  const chatHistory = getChatHistory();
+  const recentQuestions = chatHistory
+    .filter(m => m.role === 'user')
+    .slice(-10)
+    .map(m => m.content.slice(0, 80))
+    .join(' | ');
+  const recentAnswers = chatHistory
+    .filter(m => m.role === 'assistant')
+    .slice(-5)
+    .map(m => m.content.slice(0, 100))
+    .join(' | ');
+
+  const prompt = `你是一位考研督学AI。学生目标：天大×港理工 380分。每日学习8小时。
+
+当前数据：
+- 各科AI估算进度：${JSON.stringify(prog)}
+- 近14天网课观看：${recentClicks}
+- 近3天平均分：${avgRecent}
+- 学生最近提问的问题：${recentQuestions || '暂无'}
+- AI最近回答摘要：${recentAnswers || '暂无'}
+
+请分析学生最近在问什么类型的题、卡在哪个知识点，然后量身定制今日8小时学习计划，返回严格JSON：
+{
+  "schedule": {"math":"3小时","cs":"3小时","eng":"1.5小时","pol":"0.5小时"},
+  "courses": {"math":"张宇基础30讲第X讲","cs":"王道数据结构第X章","eng":"唐迟阅读方法论第X课","pol":"今日暂不安排"},
+  "weakSubjects": ["cs"],
+  "painPoints": "学生最近卡在极限计算和KMP算法",
+  "tip": "一句话学习建议"
+}
+
+规则：
+- 根据提问内容判断学生卡在哪，优先攻克痛点
+- 薄弱科目（进度最低的）多分配时间
+- 课程名具体到章节，确保能搜到
+- 政治进度<30%时不安排
+- tip 简短有力，有煽动性
+- painPoints 一句话总结学生当前的知识薄弱点`;
+
+  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: getApiModel(),
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7, max_tokens: 500,
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!resp.ok) throw new Error('API error');
+  const data = await resp.json();
+  return JSON.parse(data.choices[0].message.content);
+}
+
+// ── 手动刷新建议 ──────────────────────────
+async function regenerateAdvice() {
+  const content = document.getElementById('advice-content');
+  content.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-dim);font-size:12px;">⏳ DeepSeek 重新生成建议...</div>';
+  try {
+    S('advice_' + today(), null); // 清除缓存
+    const data = await generateDailyAdvice();
+    S('advice_' + today(), data);
+    renderAdviceData(data, content);
+    toast('建议已刷新');
+  } catch {
+    const fallback = getFallbackAdvice();
+    renderAdviceData(fallback, content);
+    toast('生成失败，使用默认计划');
+  }
+}
+// ── AI 答疑聊天 ────────────────────────
+function getChatHistory() { return S('chat_history') || []; }
+function saveChatHistory(h) { S('chat_history', h.slice(-40)); }
+function clearChat() {
+  S('chat_history', []);
+  document.getElementById('chat-messages').innerHTML = `
+    <div class="chat-msg ai">
+      <div class="chat-msg-label">🤖 AI 导师</div>
+      <div class="chat-bubble">对话已清除。有什么学习问题尽管问！</div>
+    </div>`;
+  toast('对话已清除');
+}
+
+function renderChatHistory() {
+  const msgs = document.getElementById('chat-messages');
+  const history = getChatHistory();
+  if (!history.length) return;
+  msgs.innerHTML = history.map(m => `
+    <div class="chat-msg ${m.role === 'user' ? 'user' : 'ai'}">
+      <div class="chat-msg-label">${m.role === 'user' ? '👤 你' : '🤖 AI 导师'}</div>
+      <div class="chat-bubble">${m.role === 'user' ? m.content.replace(/</g,'&lt;').replace(/\n/g,'<br>') : m.content.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div>
+    </div>
+  `).join('');
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const btn = document.getElementById('chat-send-btn');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    document.getElementById('settings-panel').classList.add('show');
+    toast('请先填写 DeepSeek API Key');
+    return;
+  }
+
+  input.disabled = true; btn.disabled = true;
+  btn.classList.add('loading'); btn.textContent = '';
+  document.getElementById('chat-typing').classList.add('show');
+
+  const history = getChatHistory();
+  history.push({ role: 'user', content: question });
+
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg user"><div class="chat-msg-label">👤 你</div><div class="chat-bubble">${question.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const contextMessages = [
+      { role: 'system', content: '你是考研AI导师。学生目标：天大×港理工 380分（数一+408+英一+政治），考试2027.12.25。回答简洁准确，数学给步骤，408结合王道教材，英语给技巧+例句，政治结合肖秀荣/徐涛。用中文回答，专业术语保留英文。' },
+      ...history.slice(-10).map(m => ({ role: m.role, content: m.content })),
+    ];
+
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: getApiModel(), messages: contextMessages, temperature: 0.7, max_tokens: 1000 }),
+    });
+
+    if (!resp.ok) throw new Error('API error: ' + resp.status);
+    const data = await resp.json();
+    const answer = data.choices[0].message.content.trim();
+
+    history.push({ role: 'assistant', content: answer });
+    saveChatHistory(history);
+
+    document.getElementById('chat-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble">${answer.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch (err) {
+    document.getElementById('chat-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble" style="color:var(--rust);">抱歉出错了：${err.message}</div></div>`;
+  } finally {
+    input.disabled = false; btn.disabled = false;
+    btn.classList.remove('loading'); btn.textContent = '发送';
+    input.value = ''; input.focus();
+  }
+}
+
+// 自适应输入框高度
+document.addEventListener('DOMContentLoaded', function() {
+  const ta = document.getElementById('chat-input');
+  if (ta) {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+  }
+});
+
+// ── 浮动聊天窗口 ──────────────────────
+function toggleChatPopup() {
+  document.getElementById('chat-popup').classList.toggle('open');
+}
+function clearChatPopup() {
+  S('chat_history', []);
+  const msg1 = '<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble">对话已清除，问吧！</div></div>';
+  document.getElementById('chat-popup-messages').innerHTML = msg1;
+  document.getElementById('chat-messages').innerHTML = msg1;
+}
+
+async function sendChatPopup() {
+  const input = document.getElementById('chat-popup-input');
+  const btn = document.getElementById('chat-popup-send-btn');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const apiKey = getApiKey();
+  if (!apiKey) { document.getElementById('settings-panel').classList.add('show'); toast('请先填写 API Key'); return; }
+
+  input.disabled = true; btn.disabled = true;
+  btn.classList.add('loading'); btn.textContent = '';
+  document.getElementById('chat-popup-typing').classList.add('show');
+
+  const history = getChatHistory();
+  history.push({ role: 'user', content: question });
+
+  const msgs = document.getElementById('chat-popup-messages');
+  msgs.innerHTML += `<div class="chat-msg user"><div class="chat-msg-label">👤 你</div><div class="chat-bubble">${question.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const contextMessages = [
+      { role: 'system', content: '你是考研AI导师。学生目标：天大×港理工 380分（数一+408+英一+政治），考试2027.12.25。回答简洁准确，数学给步骤，408结合王道教材，英语给技巧+例句，政治结合肖秀荣/徐涛。中文回答。' },
+      ...history.slice(-10).map(m => ({ role: m.role, content: m.content })),
+    ];
+
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: getApiModel(), messages: contextMessages, temperature: 0.7, max_tokens: 1000 }),
+    });
+
+    if (!resp.ok) throw new Error('API error: ' + resp.status);
+    const data = await resp.json();
+    const answer = data.choices[0].message.content.trim();
+
+    history.push({ role: 'assistant', content: answer });
+    saveChatHistory(history);
+
+    document.getElementById('chat-popup-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble">${answer.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch (err) {
+    document.getElementById('chat-popup-typing').classList.remove('show');
+    msgs.innerHTML += `<div class="chat-msg ai"><div class="chat-msg-label">🤖 AI 导师</div><div class="chat-bubble" style="color:var(--rust);">出错了：${err.message}</div></div>`;
+  } finally {
+    input.disabled = false; btn.disabled = false;
+    btn.classList.remove('loading'); btn.textContent = '发送';
+    input.value = ''; input.focus();
+  }
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.tab-btn[onclick*="${name}"]`);
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('tab-' + name);
+  if (panel) panel.classList.add('active');
+  if (name === 'stats') { renderStats(); renderProgress(); }
+  if (name === 'resources') { renderResourceTab(); checkStaleLinks(); }
+  if (name === 'qa') { renderChatHistory(); }
+}
+
+// ── 渲染网课资源到标签页 ──────────────────
+function renderResourceTab() {
+  const container = document.getElementById('tab-resource-content');
+  if (!container || container.innerHTML) return; // 只渲染一次
+  const drawerBody = document.querySelector('.drawer-body');
+  if (drawerBody) {
+    container.innerHTML = drawerBody.innerHTML;
+    // 重新绑定点击事件
+    container.querySelectorAll('.resource-link[data-res]').forEach(el => {
+      el.addEventListener('click', function() { trackClick(this); });
+    });
+  }
+}
+function refreshStatsIfVisible() {
+  if (document.getElementById('tab-stats').classList.contains('active')) { renderStats(); renderProgress(); }
+}
+
+// ── 抽屉开关 ───────────────────────────
+function toggleDrawer() { openDrawer(); }
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer-badge').style.display = 'none';
+  checkStaleLinks();
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+// ── 点击追踪 ───────────────────────────
+function trackClick(el) {
+  const id = el.getAttribute('data-res');
+  if (!id) return;
+  const clicks = S('res_clicks') || {};
+  clicks[id] = { count: (clicks[id]?.count || 0) + 1, last: today() };
+  S('res_clicks', clicks);
+}
+
+// ── 检测久未观看的链接 ──────────────────
+function checkStaleLinks() {
+  const clicks = S('res_clicks') || {};
+  const now = new Date();
+  let staleCount = 0;
+  document.querySelectorAll('.resource-link[data-res]').forEach(el => {
+    const id = el.getAttribute('data-res');
+    const data = clicks[id];
+    const isStale = !data || (now - new Date(data.last)) / 86400000 > 30;
+    el.classList.toggle('stale', isStale);
+    if (isStale) staleCount++;
+  });
+  // 更新侧边栏催促提示
+  const alert = document.getElementById('drawer-stale-alert');
+  if (staleCount > 5) {
+    alert.style.display = 'block';
+    alert.textContent = `⚠ 有 ${staleCount} 个资源超过30天未观看。本月建议抽出时间看看网课，别让收藏吃灰。`;
+  } else {
+    alert.style.display = 'none';
+  }
+  // 按钮角标
+  const badge = document.getElementById('drawer-badge');
+  if (staleCount > 5) {
+    badge.style.display = 'flex';
+    badge.textContent = staleCount;
+  }
+}
+
+// ── 渲染统计图表 ────────────────────────
+function renderStats() {
+  const reports = getReports();
+  const dates = Object.keys(reports).sort();
+  const now = new Date();
+  const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  const monthReports = dates.filter(d => d.startsWith(thisMonth));
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const elapsedDays = Math.min(now.getDate(), daysInMonth);
+
+  // 打卡率
+  const checkinRate = elapsedDays > 0 ? Math.round(monthReports.length / elapsedDays * 100) : 0;
+  document.getElementById('stat-checkin-rate').textContent = checkinRate + '%';
+
+  // 平均分
+  const scores = monthReports.map(d => reports[d].score).filter(s => s != null);
+  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  document.getElementById('stat-avg-score').textContent = avgScore || '--';
+
+  // 近7天趋势图
+  drawWeeklyChart(reports, dates);
+
+  // 各科投入
+  drawSubjectChart(reports, dates, thisMonth);
+
+  // 累计统计
+  document.getElementById('stat-totals').innerHTML = `
+    <div class="stat-line"><span class="sl-label">总汇报天数</span><span class="sl-val">${dates.length} 天</span></div>
+    <div class="stat-line"><span class="sl-label">总平均分</span><span class="sl-val">${dates.length ? Math.round(dates.reduce((s,d) => s + (reports[d].score||0), 0) / dates.length) : '--'} 分</span></div>
+    <div class="stat-line"><span class="sl-label">最高分</span><span class="sl-val">${scores.length ? Math.max(...scores) : '--'} 分</span></div>
+    <div class="stat-line"><span class="sl-label">本月优秀天数</span><span class="sl-val">${scores.filter(s => s >= 85).length} 天</span></div>
+    <div class="stat-line"><span class="sl-label">本月需改进天数</span><span class="sl-val">${scores.filter(s => s < 65).length} 天</span></div>
+  `;
+
+  // 网课点击统计
+  drawResourceChart();
+
+  // 久未观看资源
+  renderStaleResourceList();
+}
+
+// ── 7天趋势折线图 ────────────────────────
+function drawWeeklyChart(reports, dates) {
+  const canvas = document.getElementById('chart-weekly');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 160 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 160;
+  ctx.clearRect(0, 0, w, h);
+
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  const scores7 = days.map(d => reports[d]?.score ?? null);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(240,236,228,0.05)'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(40, 20 + i * 30); ctx.lineTo(w - 10, 20 + i * 30); ctx.stroke(); }
+
+  // 折线
+  const validScores = scores7.filter(s => s !== null);
+  if (validScores.length >= 2) {
+    const maxS = Math.max(100, ...validScores);
+    const minS = Math.min(0, ...validScores);
+    const px = i => 50 + (w - 70) * i / 6;
+    const py = s => 140 - (s - minS) / (maxS - minS || 1) * 110;
+
+    // 渐变填充
+    const grad = ctx.createLinearGradient(0, 20, 0, 140);
+    grad.addColorStop(0, 'rgba(201,169,110,0.15)'); grad.addColorStop(1, 'rgba(201,169,110,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.moveTo(50, 140);
+    let first = true, hasPrev = false, prevX, prevY;
+    scores7.forEach((s, i) => {
+      if (s === null) { first = true; return; }
+      const x = px(i), y = py(s);
+      if (first) { ctx.lineTo(x, y); first = false; } else { ctx.lineTo(x, y); }
+      prevX = x; prevY = y; hasPrev = true;
+    });
+    if (hasPrev) { ctx.lineTo(prevX, 140); ctx.closePath(); ctx.fill(); }
+
+    // 线
+    ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 2; ctx.beginPath();
+    first = true;
+    scores7.forEach((s, i) => {
+      if (s === null) { first = true; return; }
+      const x = px(i), y = py(s);
+      if (first) { ctx.moveTo(x, y); first = false; } else { ctx.lineTo(x, y); }
+    });
+    ctx.stroke();
+
+    // 点 + 数值
+    scores7.forEach((s, i) => {
+      if (s === null) return;
+      const x = px(i), y = py(s);
+      ctx.fillStyle = '#0d0d12'; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#c9a96e'; ctx.font = '9px SF Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(s, x, y - 9);
+    });
+  }
+
+  // 日期标签
+  ctx.fillStyle = '#8b887e'; ctx.font = '9px Georgia, PingFang SC, serif';
+  days.forEach((d, i) => { ctx.fillText(d.slice(5), px(i), 155); });
+}
+
+// ── 各科投入饼图 ─────────────────────────
+function drawSubjectChart(reports, dates, thisMonth) {
+  const canvas = document.getElementById('chart-subject');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 180;
+  ctx.clearRect(0, 0, w, h);
+
+  const colors = { math: '#c9a96e', cs: '#b15533', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const labels = { math: '数学', cs: '408', eng: '英语', pol: '政治' };
+
+  // 从AI估算或本地取进度
+  const aiProg = S('prog_ai_estimate');
+  const progData = (aiProg && aiProg.data) || {};
+  const vals = PROGRESS_ITEMS.map(p => ({
+    key: p.key,
+    val: progData[p.key] || S('prog_' + p.key) || 0
+  }));
+  const total = vals.reduce((s, v) => s + v.val, 0);
+
+  const cx = w * 0.38, cy = h / 2, r = Math.min(60, w * 0.22);
+  let angle = -Math.PI / 2;
+
+  if (total > 0) {
+    vals.forEach(v => {
+      const slice = (v.val / total) * Math.PI * 2;
+      ctx.fillStyle = colors[v.key]; ctx.beginPath();
+      ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, angle, angle + slice);
+      ctx.closePath(); ctx.fill();
+      // 标签
+      const mid = angle + slice / 2;
+      const lx = cx + Math.cos(mid) * (r + 18);
+      const ly = cy + Math.sin(mid) * (r + 18);
+      ctx.fillStyle = '#8b887e'; ctx.font = '10px Georgia, PingFang SC, serif';
+      ctx.textAlign = 'center'; ctx.fillText(labels[v.key], lx, ly + 3);
+      angle += slice;
+    });
+  }
+
+  // 图例
+  let ly = 28;
+  vals.forEach(v => {
+    ctx.fillStyle = colors[v.key]; ctx.fillRect(w * 0.65, ly, 10, 10);
+    ctx.fillStyle = '#f0ece4'; ctx.font = '12px Georgia, PingFang SC, serif'; ctx.textAlign = 'left';
+    ctx.fillText(`${labels[v.key]} ${v.val}%`, w * 0.65 + 16, ly + 9);
+    ly += 24;
+  });
+}
+
+// ── 网课点击统计图 ──────────────────────
+function drawResourceChart() {
+  const canvas = document.getElementById('chart-resource');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 180;
+  ctx.clearRect(0, 0, w, h);
+
+  const clicks = S('res_clicks') || {};
+  const subjects = { math: 0, cs: 0, eng: 0, pol: 0 };
+  Object.entries(clicks).forEach(([k, v]) => {
+    if (k.startsWith('math_')) subjects.math += v.count;
+    else if (k.startsWith('cs_')) subjects.cs += v.count;
+    else if (k.startsWith('eng_')) subjects.eng += v.count;
+    else if (k.startsWith('pol_')) subjects.pol += v.count;
+  });
+
+  const colors = { math: '#c9a96e', cs: '#b15533', eng: '#7a9e7e', pol: '#8b6b5a' };
+  const labels = { math: '数学', cs: '408', eng: '英语', pol: '政治' };
+  const entries = Object.entries(subjects);
+  const maxVal = Math.max(1, ...entries.map(e => e[1]));
+
+  const barW = Math.min(50, (w - 100) / 4 - 12);
+  entries.forEach(([k, v], i) => {
+    const x = 70 + i * (barW + 18);
+    const barH = Math.max(4, (v / maxVal) * 100);
+    // 条形
+    ctx.fillStyle = colors[k]; ctx.fillRect(x, h - 40 - barH, barW, barH);
+    // 数值
+    ctx.fillStyle = '#f0ece4'; ctx.font = '11px SF Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText(v, x + barW / 2, h - 44 - barH);
+    // 标签
+    ctx.fillStyle = '#8b887e'; ctx.font = '10px Georgia, PingFang SC, serif';
+    ctx.fillText(labels[k], x + barW / 2, h - 20);
+  });
+}
+
+// ── 久未观看资源列表 ────────────────────
+function renderStaleResourceList() {
+  const clicks = S('res_clicks') || {};
+  const now = new Date();
+  const stale = [];
+  document.querySelectorAll('.resource-link[data-res]').forEach(el => {
+    const id = el.getAttribute('data-res');
+    const data = clicks[id];
+    if (!data || (now - new Date(data.last)) / 86400000 > 30) {
+      stale.push(el.textContent.trim().slice(2, 30));
+    }
+  });
+  const div = document.getElementById('stat-stale-resources');
+  if (stale.length === 0) {
+    div.innerHTML = '<span style="color:#7a9e7e;">✓ 所有资源近期都有观看</span>';
+  } else {
+    div.innerHTML = stale.slice(0, 8).map(s => `<div>⚠ ${s}...</div>`).join('')
+      + (stale.length > 8 ? `<div style="color:var(--ink-dim);">...还有 ${stale.length - 8} 个</div>` : '');
+  }
+}
+
+// ── 初始化 ──────────────────────────────
+function init() {
+  // 恢复 API 设置
+  const savedKey = S('api_key');
+  document.getElementById('api-key').value = savedKey || '';
+  document.getElementById('api-model').value = getApiModel();
+
+  // 渲染
+  renderCountdown();
+  renderChecklist();
+  renderQuote();
+  renderHistory();
+
+  // 检查今日是否已有评分
+  const reports = getReports();
+  const todayReport = reports[today()];
+  if (todayReport && todayReport.score != null) {
+    showScore(todayReport);
+    if (todayReport.report) {
+      document.getElementById('report-input').value = todayReport.report;
+    }
+  } else {
+    // 恢复草稿
+    const draft = S('draft_' + today());
+    if (draft) document.getElementById('report-input').value = draft;
+  }
+
+  // 定时更新倒计时
+  setInterval(renderCountdown, 60000);
+
+  // 自动保存草稿
+  document.getElementById('report-input').addEventListener('input', function() {
+    saveDraft(this.value);
+  });
+
+  // 自动初始化月份选择器
+  updateMonthSelect();
+
+  // 加载当月缓存总结
+  const now = new Date();
+  const thisMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  const cachedMonthly = S('monthly_' + thisMonth);
+  if (cachedMonthly) {
+    showMonthlySummary(cachedMonthly);
+  }
+
+  // 渲染今日建议
+  renderAdvice();
+}
+
+init();
+</script>
+</body>
+</html>
