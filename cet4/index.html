@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#faf8f3">
+<meta name="color-scheme" content="light">
+<title>英语四级 CET-4 · 学习中心</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   CET-4 · Inkwell & Parchment
+   ═══════════════════════════════════════════ */
+:root {
+  --bg: #faf8f3;
+  --bg-warm: #f5f0e8;
+  --surface: #ffffff;
+  --surface-alt: #f8f6f1;
+  --ink: #1a1814;
+  --ink-secondary: #6b6560;
+  --ink-muted: #a09a94;
+  --accent: #0d7377;
+  --accent-light: #e6f2f2;
+  --accent-bright: #11908f;
+  --success: #2d8a4e;
+  --success-light: #e8f5ed;
+  --warn: #d4772c;
+  --warn-light: #fef3e8;
+  --border: rgba(26,24,20,0.08);
+  --border-strong: rgba(26,24,20,0.14);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.03);
+  --shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.06), 0 16px 48px rgba(0,0,0,0.08);
+  --font-display: 'Fraunces', 'Noto Serif SC', 'PingFang SC', Georgia, serif;
+  --font-body: 'Source Sans 3', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Cascadia Code', monospace;
+  --transition: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 17px; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- 布局 ---- */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+}
+
+/* ---- 顶部导航 ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 0;
+  margin-bottom: 48px;
+}
+.topbar-back {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color var(--transition);
+}
+.topbar-back:hover { color: var(--accent); }
+.topbar-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---- Hero ---- */
+.hero {
+  text-align: center;
+  padding: 20px 0 48px;
+}
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 12px;
+  font-variation-settings: 'opsz' 144;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--ink-secondary);
+  letter-spacing: 0.06em;
+}
+.hero-date {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+
+/* ---- 卡片 ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+.card:hover { box-shadow: var(--shadow); }
+
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+  font-variation-settings: 'opsz' 48;
+}
+
+/* ---- 任务列表 ---- */
+.task-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.task-progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-warm);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.task-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.task-progress-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  min-width: 56px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition);
+  border-radius: 6px;
+}
+.task-row:last-child { border-bottom: none; }
+.task-row:hover { background: var(--surface-alt); }
+.task-row.done { opacity: 0.45; }
+.task-row.done .task-check { background: var(--accent); border-color: var(--accent); color: #fff; }
+.task-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+.task-icon {
+  font-size: 1.3rem;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.task-label { flex: 1; font-size: 1.05rem; color: var(--ink); }
+.task-target {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+/* ---- 单词卡 ---- */
+.vocab-wrapper {
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  text-align: center;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.vocab-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright), var(--accent));
+  opacity: 0.6;
+}
+.vocab-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.vocab-index {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.vocab-word {
+  font-family: var(--font-display);
+  font-size: 3.6rem;
+  font-weight: 300;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  font-variation-settings: 'opsz' 144;
+  transition: opacity 0.2s;
+}
+.vocab-phonetic {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--accent);
+  margin-bottom: 18px;
+  letter-spacing: 0.02em;
+}
+.vocab-meaning {
+  font-size: 1.2rem;
+  color: var(--ink-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.vocab-example {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: 440px;
+  padding: 0 16px;
+  border-left: 3px solid var(--accent-light);
+  margin: 0 auto;
+  padding-left: 16px;
+  text-align: left;
+}
+
+.vocab-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+/* ---- 按钮 ---- */
+.btn {
+  padding: 11px 24px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(13,115,119,0.2);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+.btn-ghost:hover {
+  color: var(--accent);
+  background: var(--accent-light);
+  border-color: transparent;
+}
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+.btn-success:hover {
+  background: #35a05c;
+  border-color: #35a05c;
+  color: #fff;
+}
+
+.btn-warn {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+.btn-warn:hover {
+  background: var(--warn-light);
+}
+
+/* ---- 单词统计 ---- */
+.vocab-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.vocab-stat {
+  text-align: center;
+}
+.vocab-stat-num {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+  font-variation-settings: 'opsz' 48;
+}
+.vocab-stat-num.teal { color: var(--accent); }
+.vocab-stat-num.green { color: var(--success); }
+.vocab-stat-num.orange { color: var(--warn); }
+.vocab-stat-label {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+
+.vocab-mastery {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.mastery-ring {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 10px;
+  position: relative;
+}
+.mastery-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.mastery-ring-bg { fill: none; stroke: var(--bg-warm); stroke-width: 6; }
+.mastery-ring-fill { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+.mastery-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--accent);
+}
+.mastery-label {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+}
+
+/* ---- 网课资源 ---- */
+.course-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.course-cat {
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: box-shadow var(--transition);
+}
+.course-cat:hover { box-shadow: var(--shadow-sm); }
+.course-cat-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent-light);
+  font-variation-settings: 'opsz' 24;
+}
+
+.course-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  color: var(--ink-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: all var(--transition);
+  cursor: pointer;
+}
+.course-link:last-child { border-bottom: none; }
+.course-link:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+.course-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+.course-link:hover .course-dot { background: var(--accent); }
+.course-views {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  margin-left: auto;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.course-footer {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ---- 统计 ---- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-item {
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 20px 12px;
+  text-align: center;
+  transition: box-shadow var(--transition);
+}
+.stat-item:hover { box-shadow: var(--shadow-sm); }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+  font-variation-settings: 'opsz' 48;
+}
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+.chart-box {
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.chart-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.chart-box canvas { width: 100% !important; height: auto !important; }
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  z-index: 999;
+  animation: toastAnim 2.2s forwards;
+  pointer-events: none;
+}
+@keyframes toastAnim {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+}
+
+/* ---- 入场动画 ---- */
+.card {
+  animation: cardIn 0.5s ease both;
+}
+.card:nth-child(1) { animation-delay: 0.04s; }
+.card:nth-child(2) { animation-delay: 0.08s; }
+.card:nth-child(3) { animation-delay: 0.12s; }
+.card:nth-child(4) { animation-delay: 0.16s; }
+.card:nth-child(5) { animation-delay: 0.20s; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- 响应式 ---- */
+@media (max-width: 640px) {
+  html { font-size: 16px; }
+  .container { padding: 24px 16px 60px; }
+  .topbar { margin-bottom: 32px; }
+  .hero { padding: 12px 0 36px; }
+  .hero h1 { font-size: 2.2rem; }
+  .hero-sub { font-size: 0.95rem; }
+  .card { padding: 24px 20px; margin-bottom: 18px; border-radius: 14px; }
+  .card-title { font-size: 1.4rem; margin-bottom: 16px; }
+  .vocab-wrapper { padding: 32px 20px; min-height: 220px; }
+  .vocab-word { font-size: 2.6rem; }
+  .vocab-phonetic { font-size: 0.9rem; }
+  .vocab-meaning { font-size: 1.05rem; }
+  .vocab-example { font-size: 0.95rem; }
+  .vocab-stats { gap: 20px; }
+  .vocab-stat-num { font-size: 1.8rem; }
+  .mastery-ring { width: 80px; height: 80px; }
+  .mastery-ring-text { font-size: 1.2rem; }
+  .course-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
+  .stat-num { font-size: 1.6rem; }
+  .btn { padding: 10px 18px; font-size: 0.88rem; }
+  .task-label { font-size: 0.95rem; }
+}
+
+@media (min-width: 641px) and (max-width: 960px) {
+  .hero h1 { font-size: 2.8rem; }
+  .stat-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+@media (min-width: 961px) {
+  .container { max-width: 860px; padding: 48px 36px 100px; }
+  .hero h1 { font-size: 3.6rem; }
+  .vocab-word { font-size: 4rem; }
+  .stat-num { font-size: 2.2rem; }
+}
+
+/* ---- 触屏 ---- */
+@media (pointer: coarse) {
+  .btn { min-height: 46px; }
+  .task-row { min-height: 52px; }
+  .course-link { min-height: 44px; }
+  .card:hover { box-shadow: var(--shadow-sm); }
+  .vocab-wrapper:hover { transform: none; box-shadow: none; }
+}
+
+/* ---- 减少动画 ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- 打印 ---- */
+@media print {
+  body { background: #fff; }
+  .topbar, .btn, .vocab-actions { display: none; }
+  .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav class="topbar">
+    <a class="topbar-back" href="../">← 返回首页</a>
+    <span class="topbar-label">CET-4 Study</span>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-badge">Learning Center</div>
+    <h1>英语四级 <em>CET-4</em></h1>
+    <div class="hero-sub">词汇 · 听力 · 阅读 · 翻译 · 写作 · 网课资源</div>
+    <div class="hero-date" id="hero-date"></div>
+  </header>
+
+  <!-- 今日任务 -->
+  <div class="card">
+    <div class="card-label">Daily Tasks</div>
+    <div class="card-title">今日四级任务</div>
+    <div class="task-progress">
+      <div class="task-progress-track"><div class="task-progress-fill" id="task-progress-fill" style="width:0%"></div></div>
+      <div class="task-progress-text" id="task-progress-text">0 / 5</div>
+    </div>
+    <div id="task-checklist"></div>
+  </div>
+
+  <!-- 背单词 -->
+  <div class="card">
+    <div class="card-label">Vocabulary</div>
+    <div class="card-title">四级背单词</div>
+
+    <div class="vocab-wrapper" id="vocab-wrapper">
+      <div class="vocab-index" id="vocab-index">1 / 50</div>
+      <div class="vocab-word" id="vocab-word">--</div>
+      <div class="vocab-phonetic" id="vocab-phonetic"></div>
+      <div class="vocab-meaning" id="vocab-meaning"></div>
+      <div class="vocab-example" id="vocab-example"></div>
+    </div>
+
+    <div class="vocab-actions">
+      <button class="btn btn-success" onclick="vocabMark(true)">✓ 认识</button>
+      <button class="btn btn-warn" onclick="vocabMark(false)">✗ 不认识</button>
+      <button class="btn" onclick="vocabNext()">下一个 →</button>
+      <button class="btn btn-ghost" onclick="vocabReset()">重置今日单词</button>
+    </div>
+
+    <div class="vocab-stats">
+      <div class="vocab-stat"><div class="vocab-stat-num teal" id="vs-today">0</div><div class="vocab-stat-label">今日已背</div></div>
+      <div class="vocab-stat"><div class="vocab-stat-num green" id="vs-mastered">0</div><div class="vocab-stat-label">认识</div></div>
+      <div class="vocab-stat"><div class="vocab-stat-num orange" id="vs-review">0</div><div class="vocab-stat-label">不认识</div></div>
+    </div>
+
+    <div class="vocab-mastery">
+      <div class="mastery-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="mastery-ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="mastery-ring-fill" id="mastery-ring-fill" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+        </svg>
+        <div class="mastery-ring-text" id="mastery-rate">0%</div>
+      </div>
+      <div class="mastery-label">总掌握率</div>
+    </div>
+  </div>
+
+  <!-- 网课资源 -->
+  <div class="card">
+    <div class="card-label">Online Courses</div>
+    <div class="card-title">四级网课资源</div>
+    <div class="course-grid">
+
+      <div class="course-cat">
+        <div class="course-cat-title">📖 四级词汇</div>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级高频词汇" target="_blank" data-res="cet4_vocab_high" onclick="trackCourse(this)"><span class="course-dot"></span>四级高频词汇课<span class="course-views" id="cv-cet4_vocab_high"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级核心词根词缀" target="_blank" data-res="cet4_vocab_root" onclick="trackCourse(this)"><span class="course-dot"></span>四级核心词根词缀<span class="course-views" id="cv-cet4_vocab_root"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级考前词汇速刷" target="_blank" data-res="cet4_vocab_quick" onclick="trackCourse(this)"><span class="course-dot"></span>四级考前词汇速刷<span class="course-views" id="cv-cet4_vocab_quick"></span></a>
+      </div>
+
+      <div class="course-cat">
+        <div class="course-cat-title">🎧 四级听力</div>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级听力技巧" target="_blank" data-res="cet4_listen_skill" onclick="trackCourse(this)"><span class="course-dot"></span>四级听力技巧<span class="course-views" id="cv-cet4_listen_skill"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级听力真题精讲" target="_blank" data-res="cet4_listen_real" onclick="trackCourse(this)"><span class="course-dot"></span>四级听力真题精讲<span class="course-views" id="cv-cet4_listen_real"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级新闻听力训练" target="_blank" data-res="cet4_listen_news" onclick="trackCourse(this)"><span class="course-dot"></span>四级新闻听力训练<span class="course-views" id="cv-cet4_listen_news"></span></a>
+      </div>
+
+      <div class="course-cat">
+        <div class="course-cat-title">📕 四级阅读</div>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级阅读方法论" target="_blank" data-res="cet4_read_method" onclick="trackCourse(this)"><span class="course-dot"></span>四级阅读方法论<span class="course-views" id="cv-cet4_read_method"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级仔细阅读精讲" target="_blank" data-res="cet4_read_careful" onclick="trackCourse(this)"><span class="course-dot"></span>四级仔细阅读精讲<span class="course-views" id="cv-cet4_read_careful"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级段落匹配技巧" target="_blank" data-res="cet4_read_match" onclick="trackCourse(this)"><span class="course-dot"></span>四级段落匹配技巧<span class="course-views" id="cv-cet4_read_match"></span></a>
+      </div>
+
+      <div class="course-cat">
+        <div class="course-cat-title">✍️ 四级写作翻译</div>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级作文模板" target="_blank" data-res="cet4_write_template" onclick="trackCourse(this)"><span class="course-dot"></span>四级作文模板<span class="course-views" id="cv-cet4_write_template"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级翻译高频表达" target="_blank" data-res="cet4_trans_expr" onclick="trackCourse(this)"><span class="course-dot"></span>四级翻译高频表达<span class="course-views" id="cv-cet4_trans_expr"></span></a>
+        <a class="course-link" href="https://search.bilibili.com/all?keyword=四级写译冲刺课" target="_blank" data-res="cet4_write_sprint" onclick="trackCourse(this)"><span class="course-dot"></span>四级写译冲刺课<span class="course-views" id="cv-cet4_write_sprint"></span></a>
+      </div>
+
+    </div>
+    <div class="course-footer">全部免费公开 · 点击跳转B站搜索 · 自动记录观看历史</div>
+  </div>
+
+  <!-- 学习统计 -->
+  <div class="card">
+    <div class="card-label">Statistics</div>
+    <div class="card-title">四级学习统计</div>
+    <div class="stat-grid">
+      <div class="stat-item"><div class="stat-num" id="st-today">0</div><div class="stat-label">今日背词</div></div>
+      <div class="stat-item"><div class="stat-num" id="st-mastered">0</div><div class="stat-label">累计掌握</div></div>
+      <div class="stat-item"><div class="stat-num" id="st-review">0</div><div class="stat-label">待复习</div></div>
+      <div class="stat-item"><div class="stat-num" id="st-task-rate">0%</div><div class="stat-label">任务完成率</div></div>
+      <div class="stat-item"><div class="stat-num" id="st-clicks">0</div><div class="stat-label">网课点击</div></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">近 7 天学习趋势</div>
+      <canvas id="chart-weekly" height="180"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<div id="toasts"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// CET-4 Standalone · Core Logic
+// ═══════════════════════════════════════════
+
+const WORDS = [
+  {word:'abandon',phonetic:'/əˈbændən/',meaning:'v. 放弃；遗弃',example:'Never abandon your dreams easily.'},
+  {word:'absorb',phonetic:'/əbˈzɔːrb/',meaning:'v. 吸收；使全神贯注',example:'Plants absorb water through their roots.'},
+  {word:'abundant',phonetic:'/əˈbʌndənt/',meaning:'adj. 丰富的；充裕的',example:'The region has abundant natural resources.'},
+  {word:'accelerate',phonetic:'/əkˈseləreɪt/',meaning:'v. 加速；促进',example:'The car accelerated to 100 mph.'},
+  {word:'accomplish',phonetic:'/əˈkʌmplɪʃ/',meaning:'v. 完成；实现',example:'She accomplished all her goals this year.'},
+  {word:'accumulate',phonetic:'/əˈkjuːmjəleɪt/',meaning:'v. 积累；积聚',example:'He accumulated wealth over many years.'},
+  {word:'adequate',phonetic:'/ˈædɪkwət/',meaning:'adj. 足够的；适当的',example:'We need adequate preparation for the exam.'},
+  {word:'anticipate',phonetic:'/ænˈtɪsɪpeɪt/',meaning:'v. 预期；期望',example:'We anticipate a rise in temperature.'},
+  {word:'apparent',phonetic:'/əˈpærənt/',meaning:'adj. 明显的；表面上的',example:'It was apparent that she was unhappy.'},
+  {word:'appropriate',phonetic:'/əˈproʊpriət/',meaning:'adj. 适当的；v. 拨款',example:'Choose an appropriate time to discuss this.'},
+  {word:'artificial',phonetic:'/ˌɑːrtɪˈfɪʃl/',meaning:'adj. 人工的；人造的',example:'Artificial intelligence is changing our world.'},
+  {word:'available',phonetic:'/əˈveɪləbl/',meaning:'adj. 可获得的；有空的',example:'Is this seat available?'},
+  {word:'barrier',phonetic:'/ˈbæriər/',meaning:'n. 障碍；屏障',example:'Language can be a barrier to communication.'},
+  {word:'benefit',phonetic:'/ˈbenɪfɪt/',meaning:'n. 利益；v. 受益',example:'Exercise benefits both body and mind.'},
+  {word:'budget',phonetic:'/ˈbʌdʒɪt/',meaning:'n. 预算；v. 编预算',example:'We need to plan our monthly budget carefully.'},
+  {word:'capable',phonetic:'/ˈkeɪpəbl/',meaning:'adj. 有能力的；能干的',example:'She is capable of handling any challenge.'},
+  {word:'collapse',phonetic:'/kəˈlæps/',meaning:'v. 倒塌；崩溃',example:'The old building could collapse at any time.'},
+  {word:'commit',phonetic:'/kəˈmɪt/',meaning:'v. 承诺；犯（罪）',example:'He committed himself to the project.'},
+  {word:'communicate',phonetic:'/kəˈmjuːnɪkeɪt/',meaning:'v. 沟通；传达',example:'It is important to communicate clearly.'},
+  {word:'community',phonetic:'/kəˈmjuːnəti/',meaning:'n. 社区；共同体',example:'The local community organized a charity event.'},
+  {word:'comprehensive',phonetic:'/ˌkɑːmprɪˈhensɪv/',meaning:'adj. 全面的；综合的',example:'We need a comprehensive review of the plan.'},
+  {word:'consequence',phonetic:'/ˈkɑːnsɪkwens/',meaning:'n. 结果；后果',example:'Every action has its consequences.'},
+  {word:'considerable',phonetic:'/kənˈsɪdərəbl/',meaning:'adj. 相当大的；重要的',example:'There has been a considerable improvement.'},
+  {word:'consistent',phonetic:'/kənˈsɪstənt/',meaning:'adj. 一致的；始终如一的',example:'Be consistent in your study habits.'},
+  {word:'contribute',phonetic:'/kənˈtrɪbjuːt/',meaning:'v. 贡献；导致',example:'Everyone should contribute to the team effort.'},
+  {word:'controversy',phonetic:'/ˈkɑːntrəvɜːrsi/',meaning:'n. 争论；争议',example:'The policy caused much controversy.'},
+  {word:'conventional',phonetic:'/kənˈvenʃənl/',meaning:'adj. 传统的；常规的',example:'They prefer conventional teaching methods.'},
+  {word:'convince',phonetic:'/kənˈvɪns/',meaning:'v. 说服；使确信',example:'I convinced her to join the team.'},
+  {word:'decent',phonetic:'/ˈdiːsnt/',meaning:'adj. 体面的；正派的',example:'He earns a decent living as a teacher.'},
+  {word:'demonstrate',phonetic:'/ˈdemənstreɪt/',meaning:'v. 展示；证明',example:'The experiment demonstrates the theory.'},
+  {word:'domestic',phonetic:'/dəˈmestɪk/',meaning:'adj. 国内的；家庭的',example:'Domestic flights are cheaper than international ones.'},
+  {word:'efficient',phonetic:'/ɪˈfɪʃnt/',meaning:'adj. 高效的；有效率的',example:'She is a very efficient worker.'},
+  {word:'eliminate',phonetic:'/ɪˈlɪmɪneɪt/',meaning:'v. 消除；淘汰',example:'We must eliminate all errors in the report.'},
+  {word:'emphasis',phonetic:'/ˈemfəsɪs/',meaning:'n. 强调；重点',example:'The emphasis is on quality, not quantity.'},
+  {word:'evaluate',phonetic:'/ɪˈvæljueɪt/',meaning:'v. 评估；评价',example:'We need to evaluate the risks carefully.'},
+  {word:'fundamental',phonetic:'/ˌfʌndəˈmentl/',meaning:'adj. 基本的；根本的',example:'Reading is a fundamental skill.'},
+  {word:'guarantee',phonetic:'/ˌɡærənˈtiː/',meaning:'v./n. 保证；担保',example:'We guarantee the quality of our products.'},
+  {word:'harmony',phonetic:'/ˈhɑːrməni/',meaning:'n. 和谐；协调',example:'They lived in harmony with nature.'},
+  {word:'implement',phonetic:'/ˈɪmplɪment/',meaning:'v. 实施；n. 工具',example:'We need to implement the new policy soon.'},
+  {word:'inevitable',phonetic:'/ɪnˈevɪtəbl/',meaning:'adj. 不可避免的',example:'Change is inevitable in life.'},
+  {word:'maintain',phonetic:'/meɪnˈteɪn/',meaning:'v. 维持；保养',example:'It is important to maintain good health.'},
+  {word:'massive',phonetic:'/ˈmæsɪv/',meaning:'adj. 大量的；巨大的',example:'There was a massive increase in sales.'},
+  {word:'obstacle',phonetic:'/ˈɑːbstəkl/',meaning:'n. 障碍；阻碍',example:'Lack of funding is the main obstacle.'},
+  {word:'permanent',phonetic:'/ˈpɜːrmənənt/',meaning:'adj. 永久的；持久的',example:'This is not a permanent solution.'},
+  {word:'perspective',phonetic:'/pərˈspektɪv/',meaning:'n. 观点；视角',example:'Try to see things from a different perspective.'},
+  {word:'potential',phonetic:'/pəˈtenʃl/',meaning:'adj. 潜在的；n. 潜力',example:'She has great potential as a leader.'},
+  {word:'preserve',phonetic:'/prɪˈzɜːrv/',meaning:'v. 保存；保护',example:'We must preserve the environment for future generations.'},
+  {word:'relevant',phonetic:'/ˈreləvənt/',meaning:'adj. 相关的；切题的',example:'Only include relevant information in the essay.'},
+  {word:'resist',phonetic:'/rɪˈzɪst/',meaning:'v. 抵抗；抵制',example:'It is hard to resist temptation.'},
+  {word:'substantial',phonetic:'/səbˈstænʃl/',meaning:'adj. 大量的；实质的',example:'There has been a substantial improvement recently.'}
+];
+
+const TASKS = [
+  { id:'vocab', icon:'📖', label:'背单词', target:'30 个' },
+  { id:'listen', icon:'🎧', label:'听力练习', target:'1 套或 20 分钟' },
+  { id:'read', icon:'📕', label:'阅读训练', target:'2 篇' },
+  { id:'write', icon:'✍️', label:'翻译 / 写作', target:'任选 1 项' },
+  { id:'course', icon:'📺', label:'网课学习', target:'至少 1 个视频' },
+];
+
+// ── 工具 ────────────────────────────────
+function S(k, v) {
+  const key = 'cet4_' + k;
+  if (v !== undefined) { localStorage.setItem(key, JSON.stringify(v)); return v; }
+  try { return JSON.parse(localStorage.getItem(key)); } catch { return undefined; }
+}
+function today() { return new Date().toISOString().slice(0, 10); }
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 2300);
+}
+
+// ── 日期 ────────────────────────────────
+function renderDate() {
+  const d = new Date();
+  const months = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  const days = ['日','一','二','三','四','五','六'];
+  document.getElementById('hero-date').textContent =
+    d.getFullYear() + ' 年 ' + (d.getMonth()+1) + ' 月 ' + d.getDate() + ' 日 · 星期' + days[d.getDay()];
+}
+
+// ── 任务管理 ────────────────────────────
+function getTasks() { return S('tasks_' + today()) || {}; }
+function saveTask(id, v) { const c = getTasks(); c[id] = v; S('tasks_' + today(), c); }
+function toggleTask(id) { saveTask(id, !getTasks()[id]); renderTasks(); renderStats(); saveSnapshot(); }
+
+function renderTasks() {
+  const checks = getTasks();
+  const done = TASKS.filter(t => checks[t.id]).length;
+  document.getElementById('task-checklist').innerHTML = TASKS.map(item => {
+    const isDone = checks[item.id];
+    return `
+      <div class="task-row ${isDone ? 'done' : ''}" onclick="toggleTask('${item.id}')">
+        <div class="task-check">${isDone ? '✓' : ''}</div>
+        <div class="task-icon">${item.icon}</div>
+        <div class="task-label">${item.label}</div>
+        <div class="task-target">${item.target}</div>
+      </div>`;
+  }).join('');
+
+  const pct = Math.round(done / TASKS.length * 100);
+  document.getElementById('task-progress-fill').style.width = pct + '%';
+  document.getElementById('task-progress-text').textContent = done + ' / ' + TASKS.length;
+}
+
+// ── 背单词 ──────────────────────────────
+let vocabIdx = 0;
+
+function getVocabState() {
+  return S('vocab_' + today()) || { seen:[], mastered:[], review:[], index:0 };
+}
+function saveVocabState(s) { S('vocab_' + today(), s); }
+function getAllMastered() { return S('vocab_all_mastered') || []; }
+function saveAllMastered(l) { S('vocab_all_mastered', l); }
+
+function renderVocab() {
+  const state = getVocabState();
+  vocabIdx = state.index || 0;
+
+  const idxEl = document.getElementById('vocab-index');
+  const wordEl = document.getElementById('vocab-word');
+  const phonEl = document.getElementById('vocab-phonetic');
+  const meanEl = document.getElementById('vocab-meaning');
+  const exEl = document.getElementById('vocab-example');
+
+  if (vocabIdx >= WORDS.length) {
+    idxEl.textContent = 'COMPLETE';
+    wordEl.textContent = '🎉';
+    phonEl.textContent = '';
+    meanEl.textContent = '今日单词已全部背完！';
+    exEl.textContent = '点击"重置今日单词"可以重新开始';
+  } else {
+    const w = WORDS[vocabIdx];
+    idxEl.textContent = (vocabIdx + 1) + ' / ' + WORDS.length;
+    wordEl.textContent = w.word;
+    phonEl.textContent = w.phonetic;
+    meanEl.textContent = w.meaning;
+    exEl.textContent = w.example;
+  }
+
+  document.getElementById('vs-today').textContent = state.seen.length;
+  document.getElementById('vs-mastered').textContent = state.mastered.length;
+  document.getElementById('vs-review').textContent = state.review.length;
+
+  const allM = getAllMastered();
+  const rate = WORDS.length > 0 ? Math.round(allM.length / WORDS.length * 100) : 0;
+  document.getElementById('mastery-rate').textContent = rate + '%';
+
+  // SVG ring
+  const circumference = 2 * Math.PI * 42; // ~263.9
+  const offset = circumference - (rate / 100) * circumference;
+  document.getElementById('mastery-ring-fill').setAttribute('stroke-dashoffset', offset);
+}
+
+function vocabMark(known) {
+  const state = getVocabState();
+  if (vocabIdx >= WORDS.length) return;
+
+  const word = WORDS[vocabIdx].word;
+  if (!state.seen.includes(vocabIdx)) state.seen.push(vocabIdx);
+
+  if (known) {
+    if (!state.mastered.includes(vocabIdx)) state.mastered.push(vocabIdx);
+    const allM = getAllMastered();
+    if (!allM.includes(word)) { allM.push(word); saveAllMastered(allM); }
+    state.review = state.review.filter(i => i !== vocabIdx);
+  } else {
+    if (!state.review.includes(vocabIdx)) state.review.push(vocabIdx);
+    const allM = getAllMastered();
+    const idx = allM.indexOf(word);
+    if (idx > -1) { allM.splice(idx, 1); saveAllMastered(allM); }
+  }
+
+  state.index = Math.min(vocabIdx + 1, WORDS.length);
+  saveVocabState(state);
+  vocabIdx = state.index;
+  renderVocab();
+  renderStats();
+  saveSnapshot();
+}
+
+function vocabNext() {
+  const state = getVocabState();
+  if (vocabIdx < WORDS.length) {
+    if (!state.seen.includes(vocabIdx)) state.seen.push(vocabIdx);
+    state.index = vocabIdx + 1;
+    saveVocabState(state);
+    vocabIdx = state.index;
+    renderVocab();
+  }
+}
+
+function vocabReset() {
+  S('vocab_' + today(), null);
+  vocabIdx = 0;
+  renderVocab();
+  renderStats();
+  toast('今日单词已重置');
+}
+
+// ── 网课追踪 ────────────────────────────
+function trackCourse(el) {
+  const id = el.getAttribute('data-res');
+  if (!id) return;
+  const clicks = S('course_clicks') || {};
+  clicks[id] = { count: (clicks[id]?.count || 0) + 1, last: today() };
+  S('course_clicks', clicks);
+  renderCourseViews();
+  renderStats();
+  saveSnapshot();
+}
+
+function renderCourseViews() {
+  const clicks = S('course_clicks') || {};
+  document.querySelectorAll('[id^="cv-"]').forEach(el => {
+    const id = el.id.replace('cv-', '');
+    const d = clicks[id];
+    if (d) el.textContent = d.count + '次 · ' + d.last;
+  });
+}
+
+// ── 每日快照 ────────────────────────────
+function saveSnapshot() {
+  const vs = getVocabState();
+  const tasks = getTasks();
+  const done = TASKS.filter(t => tasks[t.id]).length;
+  const clicks = S('course_clicks') || {};
+  let totalClicks = 0;
+  Object.values(clicks).forEach(v => { totalClicks += v.count; });
+
+  const snaps = S('daily_snaps') || {};
+  snaps[today()] = {
+    vocabSeen: vs.seen.length,
+    vocabMastered: vs.mastered.length,
+    vocabReview: vs.review.length,
+    taskDone: done,
+    taskTotal: TASKS.length,
+    courseClicks: totalClicks,
+    allMastered: getAllMastered().length,
+  };
+  S('daily_snaps', snaps);
+}
+
+// ── 统计 ────────────────────────────────
+function renderStats() {
+  const vs = getVocabState();
+  const tasks = getTasks();
+  const done = TASKS.filter(t => tasks[t.id]).length;
+  const clicks = S('course_clicks') || {};
+  let totalClicks = 0;
+  Object.values(clicks).forEach(v => { totalClicks += v.count; });
+  const allM = getAllMastered();
+
+  const $ = id => document.getElementById(id);
+  $('st-today').textContent = vs.seen.length;
+  $('st-mastered').textContent = allM.length;
+  $('st-review').textContent = vs.review.length;
+  $('st-task-rate').textContent = Math.round(done / TASKS.length * 100) + '%';
+  $('st-clicks').textContent = totalClicks;
+
+  drawChart();
+}
+
+// ── 7天趋势图 ───────────────────────────
+function drawChart() {
+  const canvas = document.getElementById('chart-weekly');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 180 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 180;
+  ctx.clearRect(0, 0, w, h);
+
+  const snaps = S('daily_snaps') || {};
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  const vocabData = days.map(d => snaps[d]?.vocabSeen || 0);
+  const taskData = days.map(d => snaps[d]?.taskDone || 0);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(26,24,20,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = 24 + i * 28;
+    ctx.beginPath(); ctx.moveTo(48, y); ctx.lineTo(w - 12, y); ctx.stroke();
+  }
+
+  const px = i => 56 + (w - 80) * i / 6;
+  const maxV = Math.max(30, ...vocabData, 1);
+  const py1 = v => 140 - (v / maxV) * 108;
+
+  // 背词渐变
+  const grad = ctx.createLinearGradient(0, 24, 0, 140);
+  grad.addColorStop(0, 'rgba(13,115,119,0.12)');
+  grad.addColorStop(1, 'rgba(13,115,119,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(px(0), 140);
+  vocabData.forEach((v, i) => ctx.lineTo(px(i), py1(v)));
+  ctx.lineTo(px(6), 140);
+  ctx.closePath();
+  ctx.fill();
+
+  // 背词线
+  ctx.strokeStyle = '#0d7377';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  vocabData.forEach((v, i) => { i === 0 ? ctx.moveTo(px(i), py1(v)) : ctx.lineTo(px(i), py1(v)); });
+  ctx.stroke();
+
+  // 任务虚线
+  const maxT = Math.max(5, ...taskData, 1);
+  const py2 = v => 140 - (v / maxT) * 108;
+  ctx.strokeStyle = '#2d8a4e';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  taskData.forEach((v, i) => { i === 0 ? ctx.moveTo(px(i), py2(v)) : ctx.lineTo(px(i), py2(v)); });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 背词点
+  vocabData.forEach((v, i) => {
+    const x = px(i), y = py1(v);
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#0d7377'; ctx.lineWidth = 2; ctx.stroke();
+    if (v > 0) {
+      ctx.fillStyle = '#0d7377';
+      ctx.font = '500 11px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(v + '词', x, y - 12);
+    }
+  });
+
+  // 任务点
+  taskData.forEach((v, i) => {
+    const x = px(i), y = py2(v);
+    ctx.fillStyle = '#2d8a4e';
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+    if (v > 0) {
+      ctx.fillStyle = '#2d8a4e';
+      ctx.font = '500 9px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(v + '/5', x, y - 9);
+    }
+  });
+
+  // 日期
+  ctx.fillStyle = '#a09a94';
+  ctx.font = '11px "Source Sans 3", system-ui, sans-serif';
+  days.forEach((d, i) => { ctx.fillText(d.slice(5), px(i), 168); });
+
+  // 图例
+  ctx.fillStyle = '#0d7377';
+  ctx.fillRect(w - 140, 10, 14, 3);
+  ctx.fillStyle = '#6b6560';
+  ctx.font = '10px "Source Sans 3", system-ui, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('背词数', w - 122, 15);
+  ctx.fillStyle = '#2d8a4e';
+  ctx.fillRect(w - 68, 10, 14, 3);
+  ctx.fillStyle = '#6b6560';
+  ctx.fillText('任务数', w - 50, 15);
+}
+
+// ── 初始化 ──────────────────────────────
+function init() {
+  renderDate();
+  renderTasks();
+  renderVocab();
+  renderCourseViews();
+  renderStats();
+  saveSnapshot();
+
+  // hash 自动滚动
+  if (window.location.hash === '#cet4-section') {
+    const el = document.querySelector('.container');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+init();
+</script>
+</body>
+</html>
