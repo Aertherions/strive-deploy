@@ -3358,6 +3358,10 @@ function initCET4() {
   // URL hash 导航
   if (window.location.hash === '#cet4-section') {
     switchTab('cet4');
+    setTimeout(function() {
+      var el = document.getElementById('cet4-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 }
 
