@@ -790,6 +790,274 @@ body::before {
   }
   #particles { display: none; }
 }
+
+/* ═══════════════════════════════════════════
+   CET-4 四级模块 · 暗金墨色
+   ═══════════════════════════════════════════ */
+
+.cet4-title-card {
+  text-align: center;
+  padding: 24px 28px 20px;
+  border-color: rgba(201,169,110,0.25);
+}
+.cet4-title-card h2 {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.cet4-subtitle {
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 0.08em;
+}
+
+/* CET-4 今日任务 */
+.cet4-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 0 12px;
+}
+.cet4-progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cet4-progress-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.cet4-progress-text {
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--gold);
+  min-width: 60px;
+  text-align: right;
+}
+
+/* CET-4 单词卡 */
+.vocab-card {
+  padding: 28px 24px;
+  text-align: center;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+@media (hover: hover) {
+  .vocab-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 24px rgba(201,169,110,0.06);
+  }
+}
+.vocab-word {
+  font-size: 32px;
+  font-family: var(--mono);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.vocab-phonetic {
+  font-size: 14px;
+  font-family: var(--mono);
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.vocab-meaning {
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.vocab-example {
+  font-size: 13px;
+  color: var(--ink-dim);
+  font-style: italic;
+  line-height: 1.7;
+  max-width: 400px;
+  padding: 0 12px;
+}
+.vocab-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.vocab-actions .btn { min-width: 90px; }
+.vocab-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.vocab-stat {
+  text-align: center;
+  min-width: 56px;
+}
+.vocab-stat-num {
+  font-size: 22px;
+  font-family: var(--mono);
+  color: var(--gold);
+}
+.vocab-stat-num.green { color: #7a9e7e; }
+.vocab-stat-num.rust { color: var(--rust); }
+.vocab-stat-label {
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+.vocab-mastery {
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.vocab-mastery-num {
+  font-size: 28px;
+  font-family: var(--mono);
+  color: var(--gold);
+}
+.vocab-mastery-label {
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* CET-4 网课资源 */
+.cet4-course-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.cet4-course-cat {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+.cet4-course-cat:hover { border-color: rgba(201,169,110,0.2); }
+.cet4-cat-title {
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+.cet4-course-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 12px;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(240,236,228,0.03);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.cet4-course-link:last-child { border-bottom: none; }
+.cet4-course-link:hover {
+  color: var(--gold);
+  transform: translateX(3px);
+}
+.cet4-course-link .c-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.cet4-course-link:hover .c-dot { background: var(--gold); }
+.cet4-course-link .c-views {
+  font-size: 9px;
+  color: var(--ink-dim);
+  margin-left: auto;
+  opacity: 0.6;
+  white-space: nowrap;
+  font-family: var(--mono);
+}
+.cet4-course-footer {
+  text-align: center;
+  padding: 8px;
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  margin-top: 8px;
+}
+
+/* CET-4 统计 */
+.cet4-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.cet4-stat-item {
+  padding: 16px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.cet4-stat-item:hover { border-color: rgba(201,169,110,0.2); }
+.cet4-stat-num {
+  font-size: 28px;
+  font-family: var(--mono);
+  color: var(--gold);
+}
+.cet4-stat-label {
+  font-size: 10px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+
+/* CET-4 响应式 */
+@media (max-width: 479px) {
+  .cet4-title-card h2 { font-size: 17px; }
+  .cet4-subtitle { font-size: 10px; }
+  .vocab-card { padding: 20px 16px; min-height: 180px; }
+  .vocab-word { font-size: 24px; }
+  .vocab-phonetic { font-size: 12px; }
+  .vocab-meaning { font-size: 14px; }
+  .vocab-example { font-size: 12px; }
+  .vocab-actions .btn { min-width: 70px; font-size: 11px; padding: 8px 10px; }
+  .vocab-stats-row { gap: 12px; }
+  .vocab-stat-num { font-size: 18px; }
+  .vocab-mastery-num { font-size: 22px; }
+  .cet4-course-grid { grid-template-columns: 1fr; gap: 10px; }
+  .cet4-cat-title { font-size: 12px; }
+  .cet4-course-link { font-size: 11px; }
+  .cet4-stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cet4-stat-num { font-size: 22px; }
+  .cet4-stat-label { font-size: 9px; }
+}
+
+@media (min-width: 480px) and (max-width: 768px) {
+  .cet4-course-grid { grid-template-columns: 1fr 1fr; }
+  .vocab-word { font-size: 28px; }
+}
+
+@media (min-width: 1025px) {
+  .cet4-title-card h2 { font-size: 22px; }
+  .vocab-card { padding: 32px 28px; min-height: 240px; }
+  .vocab-word { font-size: 36px; }
+  .vocab-meaning { font-size: 18px; }
+  .cet4-stat-num { font-size: 32px; }
+}
 </style>
 </head>
 <body>
@@ -808,6 +1076,7 @@ body::before {
   <button class="tab-btn" onclick="switchTab('stats')">📈 数据统计</button>
   <button class="tab-btn" onclick="switchTab('resources')">📚 网课资源</button>
   <button class="tab-btn" onclick="switchTab('qa')">💬 AI答疑</button>
+  <button class="tab-btn" onclick="switchTab('cet4')">🎓 四级模块</button>
 </div>
 
 <!-- Tab 1: 督学面板 -->
@@ -1047,6 +1316,109 @@ body::before {
     </div>
   </div>
 </div>
+
+<!-- Tab 5: 英语四级 CET-4 -->
+<div class="tab-panel" id="tab-cet4">
+<section id="cet4-section">
+
+<div class="card cet4-title-card">
+  <h2>英语四级 CET-4 学习中心</h2>
+  <div class="cet4-subtitle">词汇 · 听力 · 阅读 · 翻译 · 写作 · 网课资源</div>
+</div>
+
+<!-- 今日四级任务 -->
+<div class="card section">
+  <h2>📋 今日四级任务</h2>
+  <div class="cet4-progress-bar">
+    <div class="cet4-progress-track"><div class="cet4-progress-fill" id="cet4-progress-fill" style="width:0%"></div></div>
+    <div class="cet4-progress-text" id="cet4-progress-text">0 / 5</div>
+  </div>
+  <div id="cet4-checklist"></div>
+</div>
+
+<!-- 背单词模块 -->
+<div class="card section">
+  <h2>📖 四级背单词</h2>
+  <div class="vocab-card" id="vocab-card">
+    <div class="vocab-word" id="vocab-word">--</div>
+    <div class="vocab-phonetic" id="vocab-phonetic"></div>
+    <div class="vocab-meaning" id="vocab-meaning"></div>
+    <div class="vocab-example" id="vocab-example"></div>
+  </div>
+  <div class="vocab-actions">
+    <button class="btn primary" onclick="cet4VocabMark(true)">✓ 认识</button>
+    <button class="btn" onclick="cet4VocabMark(false)">✗ 不认识</button>
+    <button class="btn small" onclick="cet4VocabNext()">下一个 →</button>
+    <button class="btn small" onclick="cet4VocabReset()">重置今日单词</button>
+  </div>
+  <div class="vocab-stats-row">
+    <div class="vocab-stat"><div class="vocab-stat-num" id="vocab-today-count">0</div><div class="vocab-stat-label">今日已背</div></div>
+    <div class="vocab-stat"><div class="vocab-stat-num green" id="vocab-mastered-count">0</div><div class="vocab-stat-label">认识</div></div>
+    <div class="vocab-stat"><div class="vocab-stat-num rust" id="vocab-review-count">0</div><div class="vocab-stat-label">不认识</div></div>
+  </div>
+  <div class="vocab-mastery">
+    <div class="vocab-mastery-num" id="vocab-mastery-rate">0%</div>
+    <div class="vocab-mastery-label">总掌握率</div>
+  </div>
+</div>
+
+<!-- 四级网课资源 -->
+<div class="card section">
+  <h2>📚 四级网课资源</h2>
+  <div class="cet4-course-grid">
+
+    <div class="cet4-course-cat">
+      <div class="cet4-cat-title">📖 四级词汇</div>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级高频词汇" target="_blank" data-cet4res="cet4_vocab_high" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级高频词汇课<span class="c-views" id="cet4-views-cet4_vocab_high"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级核心词根词缀" target="_blank" data-cet4res="cet4_vocab_root" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级核心词根词缀<span class="c-views" id="cet4-views-cet4_vocab_root"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级考前词汇速刷" target="_blank" data-cet4res="cet4_vocab_quick" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级考前词汇速刷<span class="c-views" id="cet4-views-cet4_vocab_quick"></span></a>
+    </div>
+
+    <div class="cet4-course-cat">
+      <div class="cet4-cat-title">🎧 四级听力</div>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级听力技巧" target="_blank" data-cet4res="cet4_listen_skill" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级听力技巧<span class="c-views" id="cet4-views-cet4_listen_skill"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级听力真题精讲" target="_blank" data-cet4res="cet4_listen_real" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级听力真题精讲<span class="c-views" id="cet4-views-cet4_listen_real"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级新闻听力训练" target="_blank" data-cet4res="cet4_listen_news" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级新闻听力训练<span class="c-views" id="cet4-views-cet4_listen_news"></span></a>
+    </div>
+
+    <div class="cet4-course-cat">
+      <div class="cet4-cat-title">📕 四级阅读</div>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级阅读方法论" target="_blank" data-cet4res="cet4_read_method" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级阅读方法论<span class="c-views" id="cet4-views-cet4_read_method"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级仔细阅读精讲" target="_blank" data-cet4res="cet4_read_careful" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级仔细阅读精讲<span class="c-views" id="cet4-views-cet4_read_careful"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级段落匹配技巧" target="_blank" data-cet4res="cet4_read_match" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级段落匹配技巧<span class="c-views" id="cet4-views-cet4_read_match"></span></a>
+    </div>
+
+    <div class="cet4-course-cat">
+      <div class="cet4-cat-title">✍️ 四级写作翻译</div>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级作文模板" target="_blank" data-cet4res="cet4_write_template" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级作文模板<span class="c-views" id="cet4-views-cet4_write_template"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级翻译高频表达" target="_blank" data-cet4res="cet4_trans_expr" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级翻译高频表达<span class="c-views" id="cet4-views-cet4_trans_expr"></span></a>
+      <a class="cet4-course-link" href="https://search.bilibili.com/all?keyword=四级写译冲刺课" target="_blank" data-cet4res="cet4_write_sprint" onclick="cet4TrackCourse(this)"><span class="c-dot"></span>四级写译冲刺课<span class="c-views" id="cet4-views-cet4_write_sprint"></span></a>
+    </div>
+
+  </div>
+  <div class="cet4-course-footer">全部免费公开 · 点击跳转B站搜索 · 自动记录观看历史</div>
+</div>
+
+<!-- 四级学习统计 -->
+<div class="card section">
+  <h2>📊 四级学习统计</h2>
+  <div class="cet4-stat-grid" id="cet4-stat-grid">
+    <div class="cet4-stat-item"><div class="cet4-stat-num" id="cet4-stat-vocab-today">0</div><div class="cet4-stat-label">今日背词</div></div>
+    <div class="cet4-stat-item"><div class="cet4-stat-num" id="cet4-stat-vocab-mastered">0</div><div class="cet4-stat-label">累计掌握</div></div>
+    <div class="cet4-stat-item"><div class="cet4-stat-num" id="cet4-stat-vocab-review">0</div><div class="cet4-stat-label">待复习</div></div>
+    <div class="cet4-stat-item"><div class="cet4-stat-num" id="cet4-stat-task-rate">0%</div><div class="cet4-stat-label">任务完成率</div></div>
+    <div class="cet4-stat-item"><div class="cet4-stat-num" id="cet4-stat-course-clicks">0</div><div class="cet4-stat-label">网课点击</div></div>
+  </div>
+  <div class="chart-row">
+    <div class="chart-box">
+      <h3>📈 近7天四级学习趋势</h3>
+      <canvas id="cet4-chart-weekly" height="160"></canvas>
+    </div>
+  </div>
+</div>
+
+</section>
+</div><!-- /tab-cet4 -->
 
 <!-- AI答疑浮动按钮 -->
 <button class="chat-float-btn" id="chat-float-btn" onclick="toggleChatPopup()">💬</button>
@@ -2332,6 +2704,7 @@ function switchTab(name) {
   if (name === 'stats') { renderStats(); renderProgress(); }
   if (name === 'resources') { renderResourceTab(); checkStaleLinks(); }
   if (name === 'qa') { renderChatHistory(); }
+  if (name === 'cet4') { renderCET4Checklist(); renderCET4Vocab(); renderCET4CourseViews(); renderCET4Stats(); }
 }
 
 // ── 渲染网课资源到标签页 ──────────────────
@@ -2631,6 +3004,363 @@ function renderStaleResourceList() {
   }
 }
 
+// ═══════════════════════════════════════════
+// CET-4 四级模块 · 完整逻辑
+// ═══════════════════════════════════════════
+
+const CET4_WORDS = [
+  {word:'abandon',phonetic:'/əˈbændən/',meaning:'v. 放弃；遗弃',example:'Never abandon your dreams easily.'},
+  {word:'absorb',phonetic:'/əbˈzɔːrb/',meaning:'v. 吸收；使全神贯注',example:'Plants absorb water through their roots.'},
+  {word:'abundant',phonetic:'/əˈbʌndənt/',meaning:'adj. 丰富的；充裕的',example:'The region has abundant natural resources.'},
+  {word:'accelerate',phonetic:'/əkˈseləreɪt/',meaning:'v. 加速；促进',example:'The car accelerated to 100 mph.'},
+  {word:'accomplish',phonetic:'/əˈkʌmplɪʃ/',meaning:'v. 完成；实现',example:'She accomplished all her goals this year.'},
+  {word:'accumulate',phonetic:'/əˈkjuːmjəleɪt/',meaning:'v. 积累；积聚',example:'He accumulated wealth over many years.'},
+  {word:'adequate',phonetic:'/ˈædɪkwət/',meaning:'adj. 足够的；适当的',example:'We need adequate preparation for the exam.'},
+  {word:'anticipate',phonetic:'/ænˈtɪsɪpeɪt/',meaning:'v. 预期；期望',example:'We anticipate a rise in temperature.'},
+  {word:'apparent',phonetic:'/əˈpærənt/',meaning:'adj. 明显的；表面上的',example:'It was apparent that she was unhappy.'},
+  {word:'appropriate',phonetic:'/əˈproʊpriət/',meaning:'adj. 适当的；v. 拨款',example:'Choose an appropriate time to discuss this.'},
+  {word:'artificial',phonetic:'/ˌɑːrtɪˈfɪʃl/',meaning:'adj. 人工的；人造的',example:'Artificial intelligence is changing our world.'},
+  {word:'available',phonetic:'/əˈveɪləbl/',meaning:'adj. 可获得的；有空的',example:'Is this seat available?'},
+  {word:'barrier',phonetic:'/ˈbæriər/',meaning:'n. 障碍；屏障',example:'Language can be a barrier to communication.'},
+  {word:'benefit',phonetic:'/ˈbenɪfɪt/',meaning:'n. 利益；v. 受益',example:'Exercise benefits both body and mind.'},
+  {word:'budget',phonetic:'/ˈbʌdʒɪt/',meaning:'n. 预算；v. 编预算',example:'We need to plan our monthly budget carefully.'},
+  {word:'capable',phonetic:'/ˈkeɪpəbl/',meaning:'adj. 有能力的；能干的',example:'She is capable of handling any challenge.'},
+  {word:'collapse',phonetic:'/kəˈlæps/',meaning:'v. 倒塌；崩溃',example:'The old building could collapse at any time.'},
+  {word:'commit',phonetic:'/kəˈmɪt/',meaning:'v. 承诺；犯（罪）',example:'He committed himself to the project.'},
+  {word:'communicate',phonetic:'/kəˈmjuːnɪkeɪt/',meaning:'v. 沟通；传达',example:'It is important to communicate clearly.'},
+  {word:'community',phonetic:'/kəˈmjuːnəti/',meaning:'n. 社区；共同体',example:'The local community organized a charity event.'},
+  {word:'comprehensive',phonetic:'/ˌkɑːmprɪˈhensɪv/',meaning:'adj. 全面的；综合的',example:'We need a comprehensive review of the plan.'},
+  {word:'consequence',phonetic:'/ˈkɑːnsɪkwens/',meaning:'n. 结果；后果',example:'Every action has its consequences.'},
+  {word:'considerable',phonetic:'/kənˈsɪdərəbl/',meaning:'adj. 相当大的；重要的',example:'There has been a considerable improvement.'},
+  {word:'consistent',phonetic:'/kənˈsɪstənt/',meaning:'adj. 一致的；始终如一的',example:'Be consistent in your study habits.'},
+  {word:'contribute',phonetic:'/kənˈtrɪbjuːt/',meaning:'v. 贡献；导致',example:'Everyone should contribute to the team effort.'},
+  {word:'controversy',phonetic:'/ˈkɑːntrəvɜːrsi/',meaning:'n. 争论；争议',example:'The policy caused much controversy.'},
+  {word:'conventional',phonetic:'/kənˈvenʃənl/',meaning:'adj. 传统的；常规的',example:'They prefer conventional teaching methods.'},
+  {word:'convince',phonetic:'/kənˈvɪns/',meaning:'v. 说服；使确信',example:'I convinced her to join the team.'},
+  {word:'decent',phonetic:'/ˈdiːsnt/',meaning:'adj. 体面的；正派的',example:'He earns a decent living as a teacher.'},
+  {word:'demonstrate',phonetic:'/ˈdemənstreɪt/',meaning:'v. 展示；证明',example:'The experiment demonstrates the theory.'},
+  {word:'domestic',phonetic:'/dəˈmestɪk/',meaning:'adj. 国内的；家庭的',example:'Domestic flights are cheaper than international ones.'},
+  {word:'efficient',phonetic:'/ɪˈfɪʃnt/',meaning:'adj. 高效的；有效率的',example:'She is a very efficient worker.'},
+  {word:'eliminate',phonetic:'/ɪˈlɪmɪneɪt/',meaning:'v. 消除；淘汰',example:'We must eliminate all errors in the report.'},
+  {word:'emphasis',phonetic:'/ˈemfəsɪs/',meaning:'n. 强调；重点',example:'The emphasis is on quality, not quantity.'},
+  {word:'evaluate',phonetic:'/ɪˈvæljueɪt/',meaning:'v. 评估；评价',example:'We need to evaluate the risks carefully.'},
+  {word:'fundamental',phonetic:'/ˌfʌndəˈmentl/',meaning:'adj. 基本的；根本的',example:'Reading is a fundamental skill.'},
+  {word:'guarantee',phonetic:'/ˌɡærənˈtiː/',meaning:'v./n. 保证；担保',example:'We guarantee the quality of our products.'},
+  {word:'harmony',phonetic:'/ˈhɑːrməni/',meaning:'n. 和谐；协调',example:'They lived in harmony with nature.'},
+  {word:'implement',phonetic:'/ˈɪmplɪment/',meaning:'v. 实施；n. 工具',example:'We need to implement the new policy soon.'},
+  {word:'inevitable',phonetic:'/ɪnˈevɪtəbl/',meaning:'adj. 不可避免的',example:'Change is inevitable in life.'},
+  {word:'maintain',phonetic:'/meɪnˈteɪn/',meaning:'v. 维持；保养',example:'It is important to maintain good health.'},
+  {word:'massive',phonetic:'/ˈmæsɪv/',meaning:'adj. 大量的；巨大的',example:'There was a massive increase in sales.'},
+  {word:'obstacle',phonetic:'/ˈɑːbstəkl/',meaning:'n. 障碍；阻碍',example:'Lack of funding is the main obstacle.'},
+  {word:'permanent',phonetic:'/ˈpɜːrmənənt/',meaning:'adj. 永久的；持久的',example:'This is not a permanent solution.'},
+  {word:'perspective',phonetic:'/pərˈspektɪv/',meaning:'n. 观点；视角',example:'Try to see things from a different perspective.'},
+  {word:'potential',phonetic:'/pəˈtenʃl/',meaning:'adj. 潜在的；n. 潜力',example:'She has great potential as a leader.'},
+  {word:'preserve',phonetic:'/prɪˈzɜːrv/',meaning:'v. 保存；保护',example:'We must preserve the environment for future generations.'},
+  {word:'relevant',phonetic:'/ˈreləvənt/',meaning:'adj. 相关的；切题的',example:'Only include relevant information in the essay.'},
+  {word:'resist',phonetic:'/rɪˈzɪst/',meaning:'v. 抵抗；抵制',example:'It is hard to resist temptation.'},
+  {word:'substantial',phonetic:'/səbˈstænʃl/',meaning:'adj. 大量的；实质的',example:'There has been a substantial improvement recently.'}
+];
+
+const CET4_TASKS = [
+  { id:'cet4_vocab', icon:'📖', label:'背单词', target:'30 个' },
+  { id:'cet4_listen', icon:'🎧', label:'听力练习', target:'1 套或 20 分钟' },
+  { id:'cet4_read', icon:'📕', label:'阅读训练', target:'2 篇' },
+  { id:'cet4_write', icon:'✍️', label:'翻译/写作', target:'任选 1 项' },
+  { id:'cet4_course', icon:'📺', label:'网课学习', target:'至少 1 个视频' },
+];
+
+// ── CET-4 任务管理 ──────────────────────
+function getCET4Tasks() { return S('cet4_tasks_' + today()) || {}; }
+function saveCET4Task(id, v) { const c = getCET4Tasks(); c[id] = v; S('cet4_tasks_' + today(), c); }
+function toggleCET4Task(id) { saveCET4Task(id, !getCET4Tasks()[id]); renderCET4Checklist(); renderCET4Stats(); }
+
+function renderCET4Checklist() {
+  const checks = getCET4Tasks();
+  const doneCount = CET4_TASKS.filter(t => checks[t.id]).length;
+  document.getElementById('cet4-checklist').innerHTML = CET4_TASKS.map(item => {
+    const done = checks[item.id];
+    return `
+      <div class="check-row ${done ? 'done' : ''}" onclick="toggleCET4Task('${item.id}')">
+        <div class="check-mark">${done ? '✓' : ''}</div>
+        <div class="check-icon">${item.icon}</div>
+        <div class="check-label">${item.label}</div>
+        <div class="check-target">${item.target}</div>
+      </div>
+    `;
+  }).join('');
+
+  // 更新进度条
+  const pct = Math.round(doneCount / CET4_TASKS.length * 100);
+  const fill = document.getElementById('cet4-progress-fill');
+  const text = document.getElementById('cet4-progress-text');
+  if (fill) fill.style.width = pct + '%';
+  if (text) text.textContent = doneCount + ' / ' + CET4_TASKS.length;
+
+  // 保存每日统计快照
+  saveCET4DailySnapshot();
+}
+
+// ── CET-4 背单词 ────────────────────────
+let cet4VocabIndex = 0;
+
+function getCET4VocabState() {
+  return S('cet4_vocab_' + today()) || { seen:[], mastered:[], review:[], index:0 };
+}
+function saveCET4VocabState(state) { S('cet4_vocab_' + today(), state); }
+
+function getCET4AllMastered() {
+  return S('cet4_vocab_all_mastered') || [];
+}
+function saveCET4AllMastered(list) { S('cet4_vocab_all_mastered', list); }
+
+function renderCET4Vocab() {
+  const state = getCET4VocabState();
+  cet4VocabIndex = state.index || 0;
+
+  if (cet4VocabIndex >= CET4_WORDS.length) {
+    document.getElementById('vocab-word').textContent = '🎉';
+    document.getElementById('vocab-phonetic').textContent = '';
+    document.getElementById('vocab-meaning').textContent = '今日单词已全部背完！';
+    document.getElementById('vocab-example').textContent = '点击"重置今日单词"可以重新开始';
+  } else {
+    const w = CET4_WORDS[cet4VocabIndex];
+    document.getElementById('vocab-word').textContent = w.word;
+    document.getElementById('vocab-phonetic').textContent = w.phonetic;
+    document.getElementById('vocab-meaning').textContent = w.meaning;
+    document.getElementById('vocab-example').textContent = w.example;
+  }
+
+  // 更新统计
+  document.getElementById('vocab-today-count').textContent = state.seen.length;
+  document.getElementById('vocab-mastered-count').textContent = state.mastered.length;
+  document.getElementById('vocab-review-count').textContent = state.review.length;
+
+  // 总掌握率
+  const allMastered = getCET4AllMastered();
+  const rate = CET4_WORDS.length > 0 ? Math.round(allMastered.length / CET4_WORDS.length * 100) : 0;
+  document.getElementById('vocab-mastery-rate').textContent = rate + '%';
+}
+
+function cet4VocabMark(known) {
+  const state = getCET4VocabState();
+  if (cet4VocabIndex >= CET4_WORDS.length) return;
+
+  const word = CET4_WORDS[cet4VocabIndex].word;
+  if (!state.seen.includes(cet4VocabIndex)) state.seen.push(cet4VocabIndex);
+
+  if (known) {
+    if (!state.mastered.includes(cet4VocabIndex)) state.mastered.push(cet4VocabIndex);
+    // 全局掌握
+    const allM = getCET4AllMastered();
+    if (!allM.includes(word)) { allM.push(word); saveCET4AllMastered(allM); }
+    // 从 review 移除
+    state.review = state.review.filter(i => i !== cet4VocabIndex);
+  } else {
+    if (!state.review.includes(cet4VocabIndex)) state.review.push(cet4VocabIndex);
+    // 从全局掌握移除
+    const allM = getCET4AllMastered();
+    const idx = allM.indexOf(word);
+    if (idx > -1) { allM.splice(idx, 1); saveCET4AllMastered(allM); }
+  }
+
+  saveCET4VocabState(state);
+
+  // 自动跳下一个
+  state.index = Math.min(cet4VocabIndex + 1, CET4_WORDS.length);
+  saveCET4VocabState(state);
+  cet4VocabIndex = state.index;
+  renderCET4Vocab();
+  renderCET4Stats();
+  saveCET4DailySnapshot();
+}
+
+function cet4VocabNext() {
+  const state = getCET4VocabState();
+  if (cet4VocabIndex < CET4_WORDS.length) {
+    // 标记为已看过但未标记
+    if (!state.seen.includes(cet4VocabIndex)) state.seen.push(cet4VocabIndex);
+    state.index = cet4VocabIndex + 1;
+    saveCET4VocabState(state);
+    cet4VocabIndex = state.index;
+    renderCET4Vocab();
+  }
+}
+
+function cet4VocabReset() {
+  S('cet4_vocab_' + today(), null);
+  cet4VocabIndex = 0;
+  renderCET4Vocab();
+  renderCET4Stats();
+  toast('今日单词已重置');
+}
+
+// ── CET-4 网课点击追踪 ──────────────────
+function cet4TrackCourse(el) {
+  const id = el.getAttribute('data-cet4res');
+  if (!id) return;
+  const clicks = S('cet4_course_clicks') || {};
+  clicks[id] = { count: (clicks[id]?.count || 0) + 1, last: today() };
+  S('cet4_course_clicks', clicks);
+  renderCET4CourseViews();
+  renderCET4Stats();
+  saveCET4DailySnapshot();
+}
+
+function renderCET4CourseViews() {
+  const clicks = S('cet4_course_clicks') || {};
+  document.querySelectorAll('[id^="cet4-views-"]').forEach(el => {
+    const id = el.id.replace('cet4-views-', '');
+    const data = clicks[id];
+    if (data) {
+      el.textContent = data.count + '次 · ' + data.last;
+    }
+  });
+}
+
+// ── CET-4 每日快照 ──────────────────────
+function saveCET4DailySnapshot() {
+  const vocabState = getCET4VocabState();
+  const tasks = getCET4Tasks();
+  const doneCount = CET4_TASKS.filter(t => tasks[t.id]).length;
+  const courseClicks = S('cet4_course_clicks') || {};
+  let totalClicks = 0;
+  Object.values(courseClicks).forEach(v => { totalClicks += v.count; });
+
+  const snapshots = S('cet4_daily_snapshots') || {};
+  snapshots[today()] = {
+    vocabSeen: vocabState.seen.length,
+    vocabMastered: vocabState.mastered.length,
+    vocabReview: vocabState.review.length,
+    taskDone: doneCount,
+    taskTotal: CET4_TASKS.length,
+    courseClicks: totalClicks,
+    allMastered: (getCET4AllMastered()).length,
+  };
+  S('cet4_daily_snapshots', snapshots);
+}
+
+// ── CET-4 统计渲染 ──────────────────────
+function renderCET4Stats() {
+  const vocabState = getCET4VocabState();
+  const tasks = getCET4Tasks();
+  const doneCount = CET4_TASKS.filter(t => tasks[t.id]).length;
+  const courseClicks = S('cet4_course_clicks') || {};
+  let totalClicks = 0;
+  Object.values(courseClicks).forEach(v => { totalClicks += v.count; });
+  const allMastered = getCET4AllMastered();
+
+  const el = (id) => document.getElementById(id);
+  if (el('cet4-stat-vocab-today')) el('cet4-stat-vocab-today').textContent = vocabState.seen.length;
+  if (el('cet4-stat-vocab-mastered')) el('cet4-stat-vocab-mastered').textContent = allMastered.length;
+  if (el('cet4-stat-vocab-review')) el('cet4-stat-vocab-review').textContent = vocabState.review.length;
+  if (el('cet4-stat-task-rate')) {
+    el('cet4-stat-task-rate').textContent = Math.round(doneCount / CET4_TASKS.length * 100) + '%';
+  }
+  if (el('cet4-stat-course-clicks')) el('cet4-stat-course-clicks').textContent = totalClicks;
+
+  // 绘制7天趋势图
+  drawCET4WeeklyChart();
+}
+
+// ── CET-4 7天趋势图 ─────────────────────
+function drawCET4WeeklyChart() {
+  const canvas = document.getElementById('cet4-chart-weekly');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = 160 * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = 160;
+  ctx.clearRect(0, 0, w, h);
+
+  const snapshots = S('cet4_daily_snapshots') || {};
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+
+  const vocabData = days.map(d => snapshots[d]?.vocabSeen || 0);
+  const taskData = days.map(d => snapshots[d]?.taskDone || 0);
+
+  // 网格
+  ctx.strokeStyle = 'rgba(240,236,228,0.05)'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(40, 20 + i * 25); ctx.lineTo(w - 10, 20 + i * 25); ctx.stroke(); }
+
+  const px = i => 50 + (w - 70) * i / 6;
+  const maxV = Math.max(30, ...vocabData, 1);
+
+  // 背词折线（金色）
+  const py1 = v => 130 - (v / maxV) * 100;
+
+  // 渐变填充
+  const grad = ctx.createLinearGradient(0, 20, 0, 130);
+  grad.addColorStop(0, 'rgba(201,169,110,0.15)'); grad.addColorStop(1, 'rgba(201,169,110,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.moveTo(50, 130);
+  vocabData.forEach((v, i) => { ctx.lineTo(px(i), py1(v)); });
+  ctx.lineTo(px(6), 130); ctx.closePath(); ctx.fill();
+
+  ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 2; ctx.beginPath();
+  vocabData.forEach((v, i) => { i === 0 ? ctx.moveTo(px(i), py1(v)) : ctx.lineTo(px(i), py1(v)); });
+  ctx.stroke();
+
+  // 任务完成数（绿色虚线）
+  const maxT = Math.max(5, ...taskData, 1);
+  const py2 = v => 130 - (v / maxT) * 100;
+  ctx.strokeStyle = '#7a9e7e'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]); ctx.beginPath();
+  taskData.forEach((v, i) => { i === 0 ? ctx.moveTo(px(i), py2(v)) : ctx.lineTo(px(i), py2(v)); });
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // 点 + 数值（背词）
+  vocabData.forEach((v, i) => {
+    const x = px(i), y = py1(v);
+    ctx.fillStyle = '#0d0d12'; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#c9a96e'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (v > 0) {
+      ctx.fillStyle = '#c9a96e'; ctx.font = '9px SF Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(v + '词', x, y - 8);
+    }
+  });
+
+  // 点（任务）
+  taskData.forEach((v, i) => {
+    const x = px(i), y = py2(v);
+    ctx.fillStyle = '#7a9e7e'; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+    if (v > 0) {
+      ctx.fillStyle = '#7a9e7e'; ctx.font = '8px SF Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(v + '/5', x, y - 7);
+    }
+  });
+
+  // 日期标签
+  ctx.fillStyle = '#8b887e'; ctx.font = '9px Georgia, PingFang SC, serif';
+  days.forEach((d, i) => { ctx.fillText(d.slice(5), px(i), 152); });
+
+  // 图例
+  ctx.fillStyle = '#c9a96e'; ctx.fillRect(w - 120, 8, 10, 3);
+  ctx.fillStyle = '#8b887e'; ctx.font = '9px Georgia, PingFang SC, serif'; ctx.textAlign = 'left';
+  ctx.fillText('背词数', w - 106, 13);
+  ctx.fillStyle = '#7a9e7e'; ctx.fillRect(w - 60, 8, 10, 3);
+  ctx.fillStyle = '#8b887e';
+  ctx.fillText('任务数', w - 46, 13);
+}
+
+// ── CET-4 初始化 ────────────────────────
+function initCET4() {
+  renderCET4Checklist();
+  renderCET4Vocab();
+  renderCET4CourseViews();
+  renderCET4Stats();
+
+  // URL hash 导航
+  if (window.location.hash === '#cet4-section') {
+    switchTab('cet4');
+  }
+}
+
 // ── 初始化 ──────────────────────────────
 function init() {
   // 恢复 API 设置
@@ -2679,6 +3409,14 @@ function init() {
 
   // 渲染今日建议
   renderAdvice();
+
+  // 初始化 CET-4 四级模块
+  initCET4();
+
+  // URL hash 变化时切换对应标签
+  window.addEventListener('hashchange', function() {
+    if (window.location.hash === '#cet4-section') switchTab('cet4');
+  });
 }
 
 init();
